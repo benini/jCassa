@@ -1,0 +1,169 @@
+<html>
+<head>
+ <link rel="stylesheet" type="text/css" href="jcassa.css">
+</head>
+<body style="background-color: black" onmouseup="mup()">
+<div class="metro-surface">
+ <div style="height: 480px; overflow: auto;">
+ <table id="prezzi">
+ </table>
+ </div>
+ 
+ <table>
+  <tr style="height:10px">
+  </tr>
+  <tr>
+   <td><div id="rep0" class="metro-tile"></div></td>
+   <td><div id="rep1" class="metro-tile"></div></td>
+   <td><div id="rep2" class="metro-tile"></div></td>
+   <td><div id="rep3" class="metro-tile"></div></td>
+   <td><div id="rep4" class="metro-tile"></div></td>
+   <td><div id="rep5" class="metro-tile"></div></td>
+   <td><div id="rep6" class="metro-tile"></div></td>
+   <td style="width: 30px"></td>
+   <td><div id="tot1" class="metro-tile contanti metro-tile-blue">Totale</div></td>
+  </tr>
+ </table>
+</div>
+
+<script type="text/javascript">
+var audioElement = document.createElement('audio');
+audioElement.setAttribute('src', 'click.ogg');
+audioElement.load();
+
+var mdown_obj;
+
+function mdown (obj) {
+    mdown_obj = obj;
+    mdown_obj.className = mdown_obj.className.replace(" tile_reset", "");
+    mdown_obj.className += " tile_middle";
+	audioElement.play();
+    return false;
+}
+
+function mup () {
+    mdown_obj.className = mdown_obj.className.replace(" tile_middle", " tile_reset");
+    return false;
+}
+
+function cambiaReparto (r) {
+    var table=document.getElementById("prezzi");
+    var parent = table.parentNode;
+    parent.removeChild(table);
+    table = document.createElement("table");
+    table.id= "prezzi";
+    parent.appendChild(table);
+    var MAX_RIGA = 7;
+    var h = 0;
+    var row=table.insertRow(-1);
+	var pr_array = reparti[r].prezzi;
+    for (var i=0; i < pr_array.length; i++, h++) {
+        if (h == MAX_RIGA) { h = 0; row=table.insertRow(-1); }
+        var cell1=row.insertCell(-1);
+        var divTile = document.createElement("div"); 
+        divTile.className = "metro-tile tile-prezzi " + reparti[r].col;
+        cell1.appendChild(divTile); 
+        var divDesc = document.createElement("div"); 
+        divDesc.className = "desc "  + reparti[r].col; 
+        divDesc.innerHTML = pr_array[i].desc;
+        divTile.appendChild(divDesc); 
+        var divPrezzo = document.createElement("div"); 
+        divPrezzo.className = "prezzo";
+        divPrezzo.innerHTML = "&euro; " + pr_array[i].prezzo;
+        divTile.appendChild(divPrezzo);   
+    }
+}
+
+var reparti = [];
+reparti.push({reparto: "BAR", col: "metro-tile-orange", prezzi: [] });
+reparti.push({reparto: "BAR", col: "metro-tile-green", prezzi: [] });
+reparti.push({reparto: "BAR", col: "metro-tile-blue", prezzi: [
+{desc: "CAFFE", prezzo: "1,10"},
+{desc: "COCA", prezzo: "2,00"}
+] });
+reparti.push({reparto: "BAR", col: "metro-tile-purple", prezzi: [] });
+reparti.push({reparto: "BAR", col: "metro-tile-pink", prezzi: [] });
+reparti.push({reparto: "BAR", col: "metro-tile-xbox-green", prezzi: [] });
+reparti.push({reparto: "BAR", col: "metro-tile-orange", prezzi: [] });
+ var prezzi = ["BAR", "PRIMI", "PIZZE", "A", "b", "11,40", "7", "BAR", "PRIMI"];
+
+reparti[0].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
+reparti[1].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
+reparti[1].prezzi.push({desc: "COCA", prezzo: "2,00"});
+reparti[1].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
+reparti[1].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
+reparti[1].prezzi.push({desc: "TEA", prezzo: "1,80"});
+reparti[1].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
+reparti[1].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
+reparti[1].prezzi.push({desc: "COCA", prezzo: "2,00"});
+reparti[1].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
+reparti[1].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
+reparti[1].prezzi.push({desc: "TEA", prezzo: "1,80"});
+reparti[1].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
+reparti[1].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
+reparti[1].prezzi.push({desc: "COCA", prezzo: "2,00"});
+reparti[1].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
+reparti[1].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
+reparti[1].prezzi.push({desc: "TEA", prezzo: "1,80"});
+reparti[1].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
+reparti[1].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
+reparti[1].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
+reparti[1].prezzi.push({desc: "COCA", prezzo: "2,00"});
+reparti[1].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
+reparti[1].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
+reparti[1].prezzi.push({desc: "TEA", prezzo: "1,80"});
+reparti[1].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
+reparti[1].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
+reparti[2].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
+reparti[2].prezzi.push({desc: "COCA", prezzo: "2,00"});
+reparti[2].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
+reparti[2].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
+reparti[2].prezzi.push({desc: "TEA", prezzo: "1,80"});
+reparti[3].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
+reparti[3].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
+reparti[3].prezzi.push({desc: "COCA", prezzo: "2,00"});
+reparti[3].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
+reparti[3].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
+reparti[3].prezzi.push({desc: "TEA", prezzo: "1,80"});
+reparti[3].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
+reparti[4].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
+reparti[4].prezzi.push({desc: "COCA", prezzo: "2,00"});
+reparti[4].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
+reparti[4].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
+reparti[4].prezzi.push({desc: "TEA", prezzo: "1,80"});
+reparti[4].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
+reparti[5].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
+reparti[5].prezzi.push({desc: "COCA", prezzo: "2,00"});
+reparti[5].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
+reparti[5].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
+reparti[5].prezzi.push({desc: "TEA", prezzo: "1,80"});
+reparti[5].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
+reparti[6].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
+reparti[6].prezzi.push({desc: "COCA", prezzo: "2,00"});
+reparti[6].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
+reparti[6].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
+reparti[6].prezzi.push({desc: "TEA", prezzo: "1,80"});
+reparti[6].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
+
+
+
+
+
+
+
+ for (var i = 0; i < reparti.length; i++) {
+   var r = document.getElementById('rep' + i);
+   r.className += " " + reparti[i].col;
+   r.innerHTML = reparti[i].reparto;
+   r.onmousedown = (function() { 
+       var currI = i;
+       var currR = r;
+       return function () { mdown(currR); cambiaReparto(currI); return false;};
+       })();
+ }
+
+</script>
+
+
+</body>
+</html>

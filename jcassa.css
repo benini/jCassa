@@ -1,0 +1,88 @@
+.metro-tile {
+	background-color: #D8512B;
+	border-color: #DC6241;
+	width: 99px;
+	height: 66px;
+	padding: 4px;
+	color: #FFF;
+	font-family: sans-serif;
+	font-size: 20px;
+	border-width: 3px;
+	border-style: solid;
+	cursor: default;
+}
+.contanti {
+	width: 150px;
+	height: 66px;
+	font-size: 40px;
+}
+.metro-tile-orange {
+	background-color: #D8512B;
+	border-color: #DC6241;
+}
+.metro-tile-green {
+	background-color: #009719;
+	border-color: #1A9F30;
+}
+.metro-tile-blue {
+	background-color: #2878EC;
+	border-color: #4396F1;
+}
+.metro-tile-purple {
+	background-color: #5636B0;
+	border-color: #6449B5;	
+}
+.metro-tile-pink {
+	background-color: #BD1E4A;
+	border-color: #B93154;	
+}
+.metro-tile-xbox-green {
+	background-color: #6CB71E;
+	border-color: #7ABD34;	
+}
+
+.tile_reset {
+	-webkit-transform: perspective(400px) rotateY(0deg) rotateX(0deg);
+	-moz-transform: perspective(400px) rotateY(0deg) rotateX(0deg);
+	-ms-transform: perspective(400px) rotateY(0deg) rotateX(0deg);
+	transform: perspective(400px) rotateY(0deg) rotateX(0deg);
+}
+.tile_middle {
+	-webkit-transform: scale(0.92) perspective(400px) rotateY(0deg) rotateX(0deg);
+	-moz-transform: scale(0.92) perspective(400px) rotateY(0deg) rotateX(0deg);
+	-ms-transform: scale(0.92) perspective(400px) rotateY(0deg) rotateX(0deg);
+	transform: scale(0.92) perspective(400px) rotateY(0deg) rotateX(0deg);
+	border-width: 3px;
+	border-style:solid; 
+}
+
+.tile-prezzi {
+	font-size: 18px;
+    background-color:#eeeeee;
+    width: 107px;
+	height: 107px;
+	padding: 0px;
+}
+
+
+.desc {
+    height:80px;
+	padding: 4px;
+    -moz-border-radius-bottomright: 50px 25px;
+    border-bottom-right-radius: 0px 0px;
+}
+
+.prezzo_old {
+    background-color:#cccccc;
+    opacity:0.6;
+    font-weight:bold;
+    color:#000000;
+    text-align:right;
+}
+
+.prezzo {
+	padding-right: 3px;
+    font-weight:bold;
+    color:#000000;
+    text-align:right;
+}
