@@ -14,7 +14,9 @@
 .contanti {
 	width: 150px;
 	height: 66px;
-	font-size: 40px;
+	color: #FFF;
+	font-size: 30px;
+	text-align:right;
 }
 .metro-tile-orange {
 	background-color: #D8512B;

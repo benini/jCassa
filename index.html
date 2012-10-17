@@ -1,32 +1,41 @@
 <html>
-<head>
- <link rel="stylesheet" type="text/css" href="jcassa.css">
-</head>
-<body style="background-color: black" onmouseup="mup()">
-<div class="metro-surface">
- <div style="height: 480px; overflow: auto;">
- <table id="prezzi">
- </table>
- </div>
- 
- <table>
-  <tr style="height:10px">
-  </tr>
-  <tr>
-   <td><div id="rep0" class="metro-tile"></div></td>
-   <td><div id="rep1" class="metro-tile"></div></td>
-   <td><div id="rep2" class="metro-tile"></div></td>
-   <td><div id="rep3" class="metro-tile"></div></td>
-   <td><div id="rep4" class="metro-tile"></div></td>
-   <td><div id="rep5" class="metro-tile"></div></td>
-   <td><div id="rep6" class="metro-tile"></div></td>
-   <td style="width: 30px"></td>
-   <td><div id="tot1" class="metro-tile contanti metro-tile-blue">Totale</div></td>
-  </tr>
- </table>
-</div>
-
-<script type="text/javascript">
+	<head>
+		<link rel="stylesheet" type="text/css" href="jcassa.css">
+	</head>
+	<body style="background-color: black" onmouseup="mup()">
+		<div class="metro-surface">
+			<div style="height: 480px; overflow: auto;">
+				<table id="prezzi">
+				</table>
+			</div>
+			<table>
+				<tr style="height:10px">
+				</tr>
+				<tr>
+					<td><div id="rep0" class="metro-tile"></div>
+					</td>
+					<td><div id="rep1" class="metro-tile"></div>
+					</td>
+					<td><div id="rep2" class="metro-tile"></div>
+					</td>
+					<td><div id="rep3" class="metro-tile"></div>
+					</td>
+					<td><div id="rep4" class="metro-tile"></div>
+					</td>
+					<td><div id="rep5" class="metro-tile"></div>
+					</td>
+					<td><div id="rep6" class="metro-tile"></div>
+					</td>
+					<td style="width: 30px"></td>
+					<td><div id="tot1" class="metro-tile contanti metro-tile-blue">
+							<div id="tot1_riga1">TOTALE</div>
+							<div id="tot1_riga2"></div>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<script type="text/javascript">
 var audioElement = document.createElement('audio');
 audioElement.setAttribute('src', 'click.ogg');
 audioElement.load();
@@ -46,6 +55,19 @@ function mup () {
     return false;
 }
 
+function updateReparti() {
+  for (var i = 0; i < reparti.length; i++) {
+    var r = document.getElementById('rep' + i);
+    r.className += " " + reparti[i].col;
+    r.innerHTML = reparti[i].reparto;
+    r.onmousedown = (function() { 
+      var currI = i;
+      var currR = r;
+      return function () { mdown(currR); cambiaReparto(currI); return false;};
+    })();
+  }
+}
+
 function cambiaReparto (r) {
     var table=document.getElementById("prezzi");
     var parent = table.parentNode;
@@ -62,6 +84,12 @@ function cambiaReparto (r) {
         var cell1=row.insertCell(-1);
         var divTile = document.createElement("div"); 
         divTile.className = "metro-tile tile-prezzi " + reparti[r].col;
+        divTile.onmousedown = (function() { 
+          var prezzo = pr_array[i].prezzo;
+          var desc = pr_array[i].desc;
+          var currDiv = divTile;
+          return function () { mdown(currDiv); addPrezzo(prezzo, desc); return false;};
+        })();
         cell1.appendChild(divTile); 
         var divDesc = document.createElement("div"); 
         divDesc.className = "desc "  + reparti[r].col; 
@@ -73,6 +101,61 @@ function cambiaReparto (r) {
         divTile.appendChild(divPrezzo);   
     }
 }
+
+function addPrezzo (prezzo, desc) {
+    var tot = document.getElementById("tot1");
+    tot.onmousedown = (function() { 
+          var currDiv = tot;
+          return function () { mdown(currDiv); chiudiScontrino(); return false;};
+        })();
+    
+    document.getElementById("tot1_riga1").innerHTML = "SubTotale"; 
+    var tot = document.getElementById("tot1_riga2");
+    if (! scontrino || scontrino.isClosed()) { scontrino = new Scontrino (); } 
+    tot.innerHTML = "&euro; " + scontrino.addRiga(1, desc, prezzo).replace(".",",");
+}
+
+function chiudiScontrino() {
+    scontrino.chiudi();
+    var tot = document.getElementById("tot1");    
+    tot.onmousedown = (function() { 
+          var currDiv = tot;
+          return function () { mdown(currDiv); inviaScontrino(); return false;};
+        })();
+    document.getElementById("tot1_riga1").innerHTML = ""; 
+    var tot = document.getElementById("tot1_riga2");
+    tot.innerHTML = "STAMPA";
+}
+
+function inviaScontrino() {
+    scontrino.invia();
+    var tot = document.getElementById("tot1");
+    tot.onmousedown = function () { return false; }
+    document.getElementById("tot1_riga1").innerHTML = "";
+    var tot = document.getElementById("tot1_riga2");    
+    tot.innerHTML = "";
+}
+
+function Scontrino () {
+    this.righe = [];
+    this.totale = 0;
+    this.isClosed = function () { return false; }
+    this.chiudi = function () {
+        this.isClosed = function () { return true; }
+    }
+    this.addRiga = function (quantita, desc, prezzo) {
+        this.totale += Number(prezzo.replace(",","."));
+        return this.totale.toFixed(2);
+    }
+    this.invia = function () {}    
+}
+
+var scontrino = new Scontrino();
+
+
+
+
+
 
 var reparti = [];
 reparti.push({reparto: "BAR", col: "metro-tile-orange", prezzi: [] });
@@ -147,23 +230,15 @@ reparti[6].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
 
 
 
+function loadPrezzi() {
+// Leggi da file onload
+  updateReparti();
+}
+
+loadPrezzi();
 
 
-
-
- for (var i = 0; i < reparti.length; i++) {
-   var r = document.getElementById('rep' + i);
-   r.className += " " + reparti[i].col;
-   r.innerHTML = reparti[i].reparto;
-   r.onmousedown = (function() { 
-       var currI = i;
-       var currR = r;
-       return function () { mdown(currR); cambiaReparto(currI); return false;};
-       })();
- }
 
 </script>
-
-
-</body>
+	</body>
 </html>
