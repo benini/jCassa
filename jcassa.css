@@ -1,6 +1,4 @@
 .metro-tile {
-	background-color: #D8512B;
-	border-color: #DC6241;
 	width: 99px;
 	height: 66px;
 	padding: 4px;
@@ -93,8 +91,8 @@
 }
 
 .prezzo {
-	padding-right: 3px;
-    font-weight:bold;
+	padding-right: 3px;    
     color:#000000;
+    font-weight:bold;
     text-align:right;
 }

@@ -1,5 +1,6 @@
 <html>
 	<head>
+		<link rel="stylesheet" type="text/css" href="config/colori.css">
 		<link rel="stylesheet" type="text/css" href="jcassa.css">
 	</head>
 	<body style="background-color: black;" onmouseup="mup()">
@@ -8,51 +9,78 @@
 				<table id="prezzi">
 				</table>
 			</div>
-            <div style=" height: 480px; overflow: auto; float: left;">
-                <div class="metro-tile orange"> Prova </div>
-                <div class="metro-tile brown" style="margin-top:10px;
-margin-bottom:10px;"> Prova </div>
-                <div class="metro-tile orange"> Prova </div>
-                <div class="metro-tile brown"> Prova </div>
-                <div class="metro-tile orange"> Prova </div>
-                <div class="metro-tile brown"> Prova </div>
-                <div class="metro-tile orange"> Prova </div>
-                <div class="metro-tile brown"> Prova </div>
-                <div class="metro-tile orange"> Prova </div>
-                <div class="metro-tile brown"> Prova </div>
-                <div class="metro-tile orange"> Prova </div>
-                <div class="metro-tile brown"> Prova </div>
-            </div>
+			<div style=" height: 480px; overflow: auto; float: left;">
+				<div class="metro-tile orange">
+					Prova
+				</div>
+				<div class="metro-tile brown" style="margin-top:10px;
+margin-bottom:10px;">
+					Prova
+				</div>
+				<div class="metro-tile orange">
+					Prova
+				</div>
+				<div class="metro-tile brown">
+					Prova
+				</div>
+				<div class="metro-tile orange">
+					Prova
+				</div>
+				<div class="metro-tile brown">
+					Prova
+				</div>
+				<div class="metro-tile orange">
+					Prova
+				</div>
+				<div class="metro-tile brown">
+					Prova
+				</div>
+				<div class="metro-tile orange">
+					Prova
+				</div>
+				<div class="metro-tile brown">
+					Prova
+				</div>
+				<div class="metro-tile orange">
+					Prova
+				</div>
+				<div class="metro-tile brown">
+					Prova
+				</div>
+			</div>
 			<table>
 				<tr style="height:10px">
 				</tr>
 				<tr>
-					<td><div id="rep0" class="metro-tile" style=
-                        "background-image:url('config/rep0.jpg');
-                         background-size:107px 74px;">
-                    </div>
+					<td><div id="rep0" class="metro-tile"
+					     style="background-image:url('config/rep1.jpg'); background-size:107px 74px;">
+						</div>
 					</td>
+					<td><div id="rep1" class="metro-tile"
+					     style="background-image:url('config/rep2.png'); background-size:107px 74px;">
+						</div>
 					</td>
-					<td><div id="rep1" class="metro-tile"></div>
-					<td><div id="rep2" class="metro-tile" style=
-                        "background-image:url('config/rep2.jpg');
-                         background-size:107px 74px;">
-                    </div>
+					<td><div id="rep2" class="metro-tile"
+					     style="background-image:url('config/rep3.jpg'); background-size:107px 74px;">
+						</div>
 					</td>
-					<td><div id="rep3" class="metro-tile"></div>
+					<td><div id="rep3" class="metro-tile"
+					     style="background-image:url('config/rep4.png'); background-size:107px 74px;">
+						</div>
 					</td>
-					<td><div id="rep4" class="metro-tile" style=
-                        "background-image:url('config/rep4.png');
-                         background-size:107px 74px;">
-                    </div>
+					<td><div id="rep4" class="metro-tile"
+					     style="background-image:url('config/rep5.png'); background-size:107px 74px;">
+						</div>
 					</td>
-					<td><div id="rep5" class="metro-tile" style=
-                        "background-image:url('config/rep5.gif');
-                         background-size:107px 74px;">
-                    </div>
+					<td><div id="rep5" class="metro-tile" 
+					     style="background-image:url('config/rep6.gif'); background-size:107px 74px;">
+						</div>
 					</td>
-					<td><div id="rep6" class="metro-tile"></div>
+					<td><div id="rep6" class="metro-tile" 
+					     style="background-image:url('config/rep7.gif'); background-size:107px 74px;">
+						</div>
 					</td>
+					
 					<td style="width: 30px"></td>
 					<td><div id="tot1" class="metro-tile contanti metro-tile-blue">
 							<div id="tot1_riga1">TOTALE</div>
@@ -193,7 +221,7 @@ reparti.push({reparto: "PANINI", col: "metro-tile-blue", prezzi: [
 {desc: "COCA", prezzo: "2,00"}
 ] });
 reparti.push({reparto: "BAR", col: "metro-tile-purple", prezzi: [] });
-reparti.push({reparto: "VINI", col: "metro-tile-pink", prezzi: [] });
+reparti.push({reparto: "VINI", col: "colore_rep5", prezzi: [] });
 reparti.push({reparto: "BIRRE", col: "yellow", prezzi: [] });
 reparti.push({reparto: "BAR", col: "metro-tile-orange", prezzi: [] });
  var prezzi = ["BAR", "PRIMI", "PIZZE", "A", "b", "11,40", "7", "BAR", "PRIMI"];
@@ -271,6 +299,6 @@ loadPrezzi();
 
 
 
-</script>
+		</script>
 	</body>
 </html>
