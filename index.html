@@ -2,27 +2,54 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="jcassa.css">
 	</head>
-	<body style="background-color: black" onmouseup="mup()">
+	<body style="background-color: black;" onmouseup="mup()">
 		<div class="metro-surface">
-			<div style="height: 480px; overflow: auto;">
+			<div style="width: 836px; height: 480px; overflow: auto; float: left;">
 				<table id="prezzi">
 				</table>
 			</div>
+            <div style=" height: 480px; overflow: auto; float: left;">
+                <div class="metro-tile orange"> Prova </div>
+                <div class="metro-tile brown" style="margin-top:10px;
+margin-bottom:10px;"> Prova </div>
+                <div class="metro-tile orange"> Prova </div>
+                <div class="metro-tile brown"> Prova </div>
+                <div class="metro-tile orange"> Prova </div>
+                <div class="metro-tile brown"> Prova </div>
+                <div class="metro-tile orange"> Prova </div>
+                <div class="metro-tile brown"> Prova </div>
+                <div class="metro-tile orange"> Prova </div>
+                <div class="metro-tile brown"> Prova </div>
+                <div class="metro-tile orange"> Prova </div>
+                <div class="metro-tile brown"> Prova </div>
+            </div>
 			<table>
 				<tr style="height:10px">
 				</tr>
 				<tr>
-					<td><div id="rep0" class="metro-tile"></div>
+					<td><div id="rep0" class="metro-tile" style=
+                        "background-image:url('config/rep0.jpg');
+                         background-size:107px 74px;">
+                    </div>
+					</td>
 					</td>
 					<td><div id="rep1" class="metro-tile"></div>
-					</td>
-					<td><div id="rep2" class="metro-tile"></div>
+					<td><div id="rep2" class="metro-tile" style=
+                        "background-image:url('config/rep2.jpg');
+                         background-size:107px 74px;">
+                    </div>
 					</td>
 					<td><div id="rep3" class="metro-tile"></div>
 					</td>
-					<td><div id="rep4" class="metro-tile"></div>
+					<td><div id="rep4" class="metro-tile" style=
+                        "background-image:url('config/rep4.png');
+                         background-size:107px 74px;">
+                    </div>
 					</td>
-					<td><div id="rep5" class="metro-tile"></div>
+					<td><div id="rep5" class="metro-tile" style=
+                        "background-image:url('config/rep5.gif');
+                         background-size:107px 74px;">
+                    </div>
 					</td>
 					<td><div id="rep6" class="metro-tile"></div>
 					</td>
@@ -97,7 +124,8 @@ function cambiaReparto (r) {
         divTile.appendChild(divDesc); 
         var divPrezzo = document.createElement("div"); 
         divPrezzo.className = "prezzo";
-        divPrezzo.innerHTML = "&euro; " + pr_array[i].prezzo;
+		if (pr_array[i].prezzo == "") { divPrezzo.innerHTML = ""; }
+        else { divPrezzo.innerHTML = "&euro; " + pr_array[i].prezzo; }
         divTile.appendChild(divPrezzo);   
     }
 }
@@ -158,18 +186,19 @@ var scontrino = new Scontrino();
 
 
 var reparti = [];
-reparti.push({reparto: "BAR", col: "metro-tile-orange", prezzi: [] });
+reparti.push({reparto: "BAR", col: "brown", prezzi: [] });
 reparti.push({reparto: "BAR", col: "metro-tile-green", prezzi: [] });
-reparti.push({reparto: "BAR", col: "metro-tile-blue", prezzi: [
+reparti.push({reparto: "PANINI", col: "metro-tile-blue", prezzi: [
 {desc: "CAFFE", prezzo: "1,10"},
 {desc: "COCA", prezzo: "2,00"}
 ] });
 reparti.push({reparto: "BAR", col: "metro-tile-purple", prezzi: [] });
-reparti.push({reparto: "BAR", col: "metro-tile-pink", prezzi: [] });
-reparti.push({reparto: "BAR", col: "metro-tile-xbox-green", prezzi: [] });
+reparti.push({reparto: "VINI", col: "metro-tile-pink", prezzi: [] });
+reparti.push({reparto: "BIRRE", col: "yellow", prezzi: [] });
 reparti.push({reparto: "BAR", col: "metro-tile-orange", prezzi: [] });
  var prezzi = ["BAR", "PRIMI", "PIZZE", "A", "b", "11,40", "7", "BAR", "PRIMI"];
 
+reparti[0].prezzi.push({desc: "BAR", prezzo: ""});
 reparti[0].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
 reparti[1].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
 reparti[1].prezzi.push({desc: "COCA", prezzo: "2,00"});
@@ -190,6 +219,9 @@ reparti[1].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00
 reparti[1].prezzi.push({desc: "TEA", prezzo: "1,80"});
 reparti[1].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
 reparti[1].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
+reparti[1].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
+reparti[1].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
+reparti[1].prezzi.push({desc: "COCA", prezzo: "2,00"});
 reparti[1].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
 reparti[1].prezzi.push({desc: "COCA", prezzo: "2,00"});
 reparti[1].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});

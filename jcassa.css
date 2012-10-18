@@ -43,6 +43,16 @@
 	border-color: #7ABD34;	
 }
 
+.brown {
+	background-color: #723a2b;
+	border-color: #804130;	
+}
+
+.yellow {
+	background-color: #d6a208;
+	border-color: #e3ac08;	
+}
+
 .tile_reset {
 	-webkit-transform: perspective(400px) rotateY(0deg) rotateX(0deg);
 	-moz-transform: perspective(400px) rotateY(0deg) rotateX(0deg);
