@@ -8,6 +8,7 @@
 	border-width: 3px;
 	border-style: solid;
 	cursor: default;
+    overflow: hidden;
 }
 .contanti {
 	width: 150px;
@@ -72,6 +73,16 @@
     width: 107px;
 	height: 107px;
 	padding: 0px;
+}
+
+.tile-scontrino {
+	font-size: 15px;
+    width: 180px;
+	height: 40px;
+	padding: 0px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    border-right-width: 0px;
 }
 
 

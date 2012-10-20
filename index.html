@@ -5,48 +5,11 @@
 	</head>
 	<body style="background-color: black;" onmouseup="mup()">
 		<div class="metro-surface">
-			<div style="width: 836px; height: 480px; overflow: auto; float: left;">
+			<div style="height: 480px; overflow: auto;">
 				<table id="prezzi">
 				</table>
 			</div>
-			<div style=" height: 480px; overflow: auto; float: left;">
-				<div class="metro-tile orange">
-					Prova
-				</div>
-				<div class="metro-tile brown" style="margin-top:10px;
-margin-bottom:10px;">
-					Prova
-				</div>
-				<div class="metro-tile orange">
-					Prova
-				</div>
-				<div class="metro-tile brown">
-					Prova
-				</div>
-				<div class="metro-tile orange">
-					Prova
-				</div>
-				<div class="metro-tile brown">
-					Prova
-				</div>
-				<div class="metro-tile orange">
-					Prova
-				</div>
-				<div class="metro-tile brown">
-					Prova
-				</div>
-				<div class="metro-tile orange">
-					Prova
-				</div>
-				<div class="metro-tile brown">
-					Prova
-				</div>
-				<div class="metro-tile orange">
-					Prova
-				</div>
-				<div class="metro-tile brown">
-					Prova
-				</div>
+			<div id="scontr" style="height: 480px; overflow: auto; position:fixed; right:0px; top:10px;">
 			</div>
 			<table>
 				<tr style="height:10px">
@@ -77,7 +40,7 @@ margin-bottom:10px;">
 						</div>
 					</td>
 					<td><div id="rep6" class="metro-tile" 
-					     style="background-image:url('config/rep7.gif'); background-size:107px 74px;">
+					     style="background-image:url('config/rep7.png'); background-size:107px 74px;">
 						</div>
 					</td>
 					
@@ -143,7 +106,9 @@ function cambiaReparto (r) {
           var prezzo = pr_array[i].prezzo;
           var desc = pr_array[i].desc;
           var currDiv = divTile;
-          return function () { mdown(currDiv); addPrezzo(prezzo, desc); return false;};
+          var idx_reparto = r;
+          var idx_prezzo = i;
+          return function () { mdown(currDiv); addPrezzo(idx_reparto, idx_prezzo); return false;};
         })();
         cell1.appendChild(divTile); 
         var divDesc = document.createElement("div"); 
@@ -158,12 +123,25 @@ function cambiaReparto (r) {
     }
 }
 
-function addPrezzo (prezzo, desc) {
+function addPrezzo (idx_reparto, idx_prezzo) {
+    var prezzo = reparti[idx_reparto].prezzi[idx_prezzo].prezzo;
+    var desc = reparti[idx_reparto].prezzi[idx_prezzo].desc;
+
     var tot = document.getElementById("tot1");
     tot.onmousedown = (function() { 
           var currDiv = tot;
           return function () { mdown(currDiv); chiudiScontrino(); return false;};
         })();
+
+    var divTile = document.createElement("div"); 
+    divTile.className = "metro-tile tile-scontrino " + reparti[idx_reparto].col;
+    divTile.onmousedown = (function() { 
+        var currDiv = divTile;
+        return function () { mdown(currDiv); return false;};
+    })();
+    divTile.innerHTML = prezzo + "<br>" + desc;
+    document.getElementById("scontr").appendChild(divTile); 
+
     
     document.getElementById("tot1_riga1").innerHTML = "SubTotale"; 
     var tot = document.getElementById("tot1_riga2");
@@ -222,7 +200,7 @@ reparti.push({reparto: "PANINI", col: "metro-tile-blue", prezzi: [
 ] });
 reparti.push({reparto: "BAR", col: "metro-tile-purple", prezzi: [] });
 reparti.push({reparto: "VINI", col: "colore_rep5", prezzi: [] });
-reparti.push({reparto: "BIRRE", col: "yellow", prezzi: [] });
+reparti.push({reparto: "BIRRE", col: "colore_rep6", prezzi: [] });
 reparti.push({reparto: "BAR", col: "metro-tile-orange", prezzi: [] });
  var prezzi = ["BAR", "PRIMI", "PIZZE", "A", "b", "11,40", "7", "BAR", "PRIMI"];
 
