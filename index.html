@@ -9,6 +9,8 @@
 	</head>
 	<body style="background-color: black;" onmouseup="mup()">
 
+<audio id="click_snd" src="click.ogg"></audio>
+
 <script>
 function readQuant() {
 console.log(document.getElementById("quant").value);
@@ -102,19 +104,13 @@ document.getElementById("unknow-height").style.height = dyn_height;
 window.onresize=function() { dyn_dimensions(); }
 dyn_dimensions();
 
-
-
-var audioElement = document.createElement('audio');
-audioElement.setAttribute('src', 'click.ogg');
-audioElement.load();
-
 var mdown_obj;
 
 function mdown (obj) {
     mdown_obj = obj;
     mdown_obj.className = mdown_obj.className.replace(" tile_reset", "");
     mdown_obj.className += " tile_middle";
-	audioElement.play();
+	document.getElementById("click_snd").play();
     return false;
 }
 
