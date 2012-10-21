@@ -2,6 +2,9 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="config/colori.css">
 		<link rel="stylesheet" type="text/css" href="jcassa.css">
+
+		<script type='application/javascript' src='fastclick.js'></script>
+
         <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 	</head>
 	<body style="background-color: black;" onmouseup="mup()">
@@ -83,6 +86,8 @@ display:none;">
 </div>
 
 		<script type="text/javascript">
+
+window.addEventListener('load', function() { new FastClick(document.body); }, false);
 
 function dyn_dimensions() {
 var dyn_height = window.innerHeight - Math.floor(1.20 * document.getElementById("tot1").offsetHeight);
