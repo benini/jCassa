@@ -16,43 +16,41 @@
 
 <div id="unknow-width" style="overflow: auto; position: fixed; left: 0px; bottom: 0px;">
 	<div id="reparti">
-                <table>
-				<tr>
-					<td><div id="rep0" class="metro-tile"
+
+					<div id="rep0" class="metro-tile tile-reparti"
 					     style="background-image:url('config/rep1.jpg'); background-size:107px 74px;">
 						</div>
-					</td>
-					<td><div id="rep1" class="metro-tile"
+					
+					<div id="rep1" class="metro-tile tile-reparti"
 					     style="background-image:url('config/rep2.png'); background-size:107px 74px;">
 						</div>
-					</td>
-					<td><div id="rep2" class="metro-tile"
+					
+					<div id="rep2" class="metro-tile tile-reparti"
 					     style="background-image:url('config/rep3.jpg'); background-size:107px 74px;">
 						</div>
-					</td>
-					<td><div id="rep3" class="metro-tile"
+					
+					<div id="rep3" class="metro-tile tile-reparti"
 					     style="background-image:url('config/rep4.png'); background-size:107px 74px;">
 						</div>
-					</td>
-					<td><div id="rep4" class="metro-tile"
+					
+					<div id="rep4" class="metro-tile tile-reparti"
 					     style="background-image:url('config/rep5.png'); background-size:107px 74px;">
 						</div>
-					</td>
-					<td><div id="rep5" class="metro-tile" 
+					
+					<div id="rep5" class="metro-tile tile-reparti" 
 					     style="background-image:url('config/rep6.gif'); background-size:107px 74px;">
 						</div>
-					</td>
-					<td><div id="rep6" class="metro-tile" 
+					
+					<div id="rep6" class="metro-tile tile-reparti" 
 					     style="background-image:url('config/rep7.png'); background-size:107px 74px;">
 						</div>
-					</td>					
-				</tr>
-			    </table>
+										
+
 	</div>
 </div>
 
 <div style="position: fixed; right: 0px; bottom: 0px;">
-	<div id="tot1" class="metro-tile contanti metro-tile-blue">
+	<div id="tot1" class="metro-tile tile-contanti metro-tile-blue">
 		<div id="tot1_riga1">TOTALE</div>
 		<div id="tot1_riga2"></div>
 	</div>
@@ -61,9 +59,9 @@
 		<script type="text/javascript">
 
 function dyn_dimensions() {
-var dyn_height = window.innerHeight - Math.floor(1.15 * document.getElementById("tot1").offsetHeight);
+var dyn_height = window.innerHeight - Math.floor(1.20 * document.getElementById("tot1").offsetHeight);
 console.log("Dyn_height: "+ dyn_height);
-var dyn_width = window.innerWidth - Math.floor(1.05 * document.getElementById("tot1").offsetWidth);
+var dyn_width = window.innerWidth - Math.floor(1.10 * document.getElementById("tot1").offsetWidth);
 console.log("Dyn_width: "+ dyn_width);
 
 document.getElementById("unknow-width-and-height").style.width = dyn_width;
@@ -193,6 +191,7 @@ function addPrezzo (idx_reparto, idx_prezzo) {
     divTile.className += " tile-scontrino-selected";
     divTile.id = "scontr_selected";
     div_scontr.appendChild(divTile);
+    divTile.scrollIntoView();
 //    var scroll = 465 - div_scontr.offsetHeight;
 //    if (scroll < 0) {
 //        div_scontr.style.webkitTransform = "translateY(" + scroll + "px)";

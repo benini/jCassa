@@ -7,16 +7,9 @@
 	font-size: 20px;
 	border-width: 3px;
 	border-style: solid;
-	cursor: default;
     overflow: hidden;
 }
-.contanti {
-	width: 150px;
-	height: 66px;
-	color: #FFF;
-	font-size: 30px;
-	text-align:right;
-}
+
 .metro-tile-orange {
 	background-color: #D8512B;
 	border-color: #DC6241;
@@ -67,6 +60,19 @@
 	border-style:solid; 
 }
 
+.tile-reparti {
+    float: left;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.tile-contanti {
+	width: 160px;
+	color: #FFF;
+	font-size: 30px;
+	text-align:right;
+}
+
 .tile-prezzi {
 	font-size: 18px;
     background-color:#eeeeee;
@@ -77,9 +83,8 @@
 
 .tile-scontrino {
 	font-size: 15px;
-    width: 180px;
-	height: 40px;
-	padding: 0px;
+    width: 163px;
+	height: 34px;
     margin-top: 2px;
     margin-bottom: 2px;
     border-right-width: 0px;
