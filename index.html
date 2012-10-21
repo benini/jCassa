@@ -4,36 +4,11 @@
 		<link rel="stylesheet" type="text/css" href="jcassa.css">
 
 		<script type='application/javascript' src='fastclick.js'></script>
-
         <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 	</head>
 	<body style="background-color: black;" onmouseup="mup()">
 
 <audio id="click_snd" src="click.ogg"></audio>
-
-<script>
-function readQuant() {
-console.log(document.getElementById("quant").value);
-console.log(document.getElementById("quantita").style.display = "none");
-
-}
-</script>
-
-<div id="quantita" style="
-position:absolute;
-left:0px;
-top:0px;
-background-color:#eeeeee;
-width:300px;
-height:300px;
-z-index: 9002;
-display:none;">
-<form>
-<input id="quant" type="number" name="favcolor">
-</form>
-<div class="metro-tile" onclick="readQuant();">
-</div>
-</div>
 
 <div id="unknow-width-and-height" style="overflow: auto; position: fixed; left: 0px; top: 0px;">
     <table id="prezzi"></table>
@@ -44,40 +19,7 @@ display:none;">
 </div>
 
 <div id="unknow-width" style="overflow: auto; position: fixed; left: 0px; bottom: 0px;">
-	<div id="reparti">
-<table>
-<tr>
-<td>
-					<div id="rep0" class="metro-tile tile-reparti"
-					     style="background-image:url('config/rep1.jpg'); background-size:107px 74px;">
-						</div>
-</td><td>					
-					<div id="rep1" class="metro-tile tile-reparti"
-					     style="background-image:url('config/rep2.png'); background-size:107px 74px;">
-						</div>
-</td><td>				
-					<div id="rep2" class="metro-tile tile-reparti"
-					     style="background-image:url('config/rep3.jpg'); background-size:107px 74px;">
-						</div>
-</td><td>				
-					<div id="rep3" class="metro-tile tile-reparti"
-					     style="background-image:url('config/rep4.png'); background-size:107px 74px;">
-						</div>
-</td><td>				
-					<div id="rep4" class="metro-tile tile-reparti"
-					     style="background-image:url('config/rep5.png'); background-size:107px 74px;">
-						</div>
-</td><td>				
-					<div id="rep5" class="metro-tile tile-reparti" 
-					     style="background-image:url('config/rep6.gif'); background-size:107px 74px;">
-						</div>
-</td><td>				
-					<div id="rep6" class="metro-tile tile-reparti" 
-					     style="background-image:url('config/rep7.png'); background-size:107px 74px;">
-						</div>
-</td></tr></table>									
-
-	</div>
+	<table><tr id="reparti"></tr></table>
 </div>
 
 <div style="position: fixed; right: 0px; bottom: 0px;">
@@ -87,7 +29,33 @@ display:none;">
 	</div>
 </div>
 
-		<script type="text/javascript">
+<script>
+function readQuant() {
+console.log(document.getElementById("quant").value);
+console.log(document.getElementById("quantita").style.display = "none");
+
+}
+</script>
+
+
+<div id="quantita" style="
+position:absolute;
+left:0px;
+top:0px;
+background-color:#eeeeee;
+width:300px;
+
+height:300px;
+z-index: 9002;
+display:none;">
+<form>
+<input id="quant" type="number" name="favcolor">
+</form>
+<div class="metro-tile" onclick="readQuant();">
+</div>
+</div>
+
+<script type="text/javascript">
 
 window.addEventListener('load', function() { new FastClick(document.body); }, false);
 
@@ -121,14 +89,15 @@ function mup () {
 
 function updateReparti() {
   for (var i = 0; i < reparti.length; i++) {
-    var r = document.getElementById('rep' + i);
-    r.className += " " + reparti[i].col;
-    r.innerHTML = reparti[i].reparto;
-    r.onmousedown = (function() { 
+    var divTile = document.createElement("div"); 
+    divTile.className = "metro-tile tile-reparti " + reparti[i].col;
+    divTile.innerHTML = reparti[i].reparto;
+    divTile.onmousedown = (function() { 
       var currI = i;
-      var currR = r;
+      var currR = divTile;
       return function () { mdown(currR); cambiaReparto(currI); return false;};
     })();
+	document.getElementById('reparti').insertCell(-1).appendChild(divTile);
   }
 }
 
@@ -148,7 +117,7 @@ function cambiaReparto (r) {
         if (h == MAX_RIGA) { h = 0; row=table.insertRow(-1); }
         var cell1=row.insertCell(-1);
         var divTile = document.createElement("div"); 
-        divTile.className = "metro-tile tile-prezzi " + reparti[r].col;
+        divTile.className = "metro-tile " + reparti[r].col + " tile-prezzi";
         divTile.onmousedown = (function() { 
           var prezzo = pr_array[i].prezzo;
           var desc = pr_array[i].desc;
@@ -267,15 +236,15 @@ function inviaScontrino() {
 
 
 var reparti = [];
-reparti.push({reparto: "BAR", col: "brown", prezzi: [] });
+reparti.push({reparto: "BAR", col: "colore_caffe", prezzi: [] });
 reparti.push({reparto: "BAR", col: "metro-tile-green", prezzi: [] });
 reparti.push({reparto: "PANINI", col: "metro-tile-blue", prezzi: [
 {desc: "CAFFE", prezzo: "1,10"},
 {desc: "COCA", prezzo: "2,00"}
 ] });
 reparti.push({reparto: "BAR", col: "metro-tile-purple", prezzi: [] });
-reparti.push({reparto: "VINI", col: "colore_rep5", prezzi: [] });
-reparti.push({reparto: "BIRRE", col: "colore_rep6", prezzi: [] });
+reparti.push({reparto: "VINI", col: "colore_vini", prezzi: [] });
+reparti.push({reparto: "BIRRE", col: "colore_birre", prezzi: [] });
 reparti.push({reparto: "BAR", col: "metro-tile-orange", prezzi: [] });
  var prezzi = ["BAR", "PRIMI", "PIZZE", "A", "b", "11,40", "7", "BAR", "PRIMI"];
 

@@ -1,9 +1,16 @@
-.colore_rep5 {
-	background-color: #a20000;
-	border-color: #750300;
+.colore_caffe {
+	background-color: #723a2b;
+	border-color: #804130;
+	background-image: url('caffe.jpg');
 }
-.colore_rep6 {
+.colore_vini {
+	background-color: #680200;
+	border-color: #730200;
+	background-image: url('vini.jpg');
+}
+.colore_birre {
 	background-color: #f6bd00;
 	border-color: #ffc400;
+	background-image: url('birre.jpg');
 }
 
