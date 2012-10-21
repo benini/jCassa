@@ -40,35 +40,37 @@ display:none;">
 
 <div id="unknow-width" style="overflow: auto; position: fixed; left: 0px; bottom: 0px;">
 	<div id="reparti">
-
+<table>
+<tr>
+<td>
 					<div id="rep0" class="metro-tile tile-reparti"
 					     style="background-image:url('config/rep1.jpg'); background-size:107px 74px;">
 						</div>
-					
+</td><td>					
 					<div id="rep1" class="metro-tile tile-reparti"
 					     style="background-image:url('config/rep2.png'); background-size:107px 74px;">
 						</div>
-					
+</td><td>				
 					<div id="rep2" class="metro-tile tile-reparti"
 					     style="background-image:url('config/rep3.jpg'); background-size:107px 74px;">
 						</div>
-					
+</td><td>				
 					<div id="rep3" class="metro-tile tile-reparti"
 					     style="background-image:url('config/rep4.png'); background-size:107px 74px;">
 						</div>
-					
+</td><td>				
 					<div id="rep4" class="metro-tile tile-reparti"
 					     style="background-image:url('config/rep5.png'); background-size:107px 74px;">
 						</div>
-					
+</td><td>				
 					<div id="rep5" class="metro-tile tile-reparti" 
 					     style="background-image:url('config/rep6.gif'); background-size:107px 74px;">
 						</div>
-					
+</td><td>				
 					<div id="rep6" class="metro-tile tile-reparti" 
 					     style="background-image:url('config/rep7.png'); background-size:107px 74px;">
 						</div>
-										
+</td></tr></table>									
 
 	</div>
 </div>
@@ -84,9 +86,7 @@ display:none;">
 
 function dyn_dimensions() {
 var dyn_height = window.innerHeight - Math.floor(1.20 * document.getElementById("tot1").offsetHeight);
-console.log("Dyn_height: "+ dyn_height);
 var dyn_width = window.innerWidth - Math.floor(1.10 * document.getElementById("tot1").offsetWidth);
-console.log("Dyn_width: "+ dyn_width);
 
 document.getElementById("unknow-width-and-height").style.width = dyn_width;
 document.getElementById("unknow-width-and-height").style.height = dyn_height;
@@ -94,6 +94,7 @@ document.getElementById("unknow-width").style.width = dyn_width;
 document.getElementById("unknow-height").style.height = dyn_height;
 }
 
+window.onresize=function() { dyn_dimensions(); }
 dyn_dimensions();
 
 
