@@ -6,6 +6,30 @@
 	</head>
 	<body style="background-color: black;" onmouseup="mup()">
 
+<script>
+function readQuant() {
+console.log(document.getElementById("quant").value);
+console.log(document.getElementById("quantita").style.display = "none");
+
+}
+</script>
+
+<div id="quantita" style="
+position:absolute;
+left:0px;
+top:0px;
+background-color:#eeeeee;
+width:300px;
+height:300px;
+z-index: 9002;
+display:none;">
+<form>
+<input id="quant" type="number" name="favcolor">
+</form>
+<div class="metro-tile" onclick="readQuant();">
+</div>
+</div>
+
 <div id="unknow-width-and-height" style="overflow: auto; position: fixed; left: 0px; top: 0px;">
     <table id="prezzi"></table>
 </div>
@@ -144,77 +168,78 @@ function cambiaReparto (r) {
     }
 }
 
+var scontrino_idx = [];
+var scontrino_righe = [];
 
 function addPrezzo (idx_reparto, idx_prezzo) {
+    var div_scontr = document.getElementById("scontr");
     var prezzo = reparti[idx_reparto].prezzi[idx_prezzo].prezzo;
     var desc = reparti[idx_reparto].prezzi[idx_prezzo].desc;
 
-    if (! scontrino || scontrino.isClosed()) { 
-        scontrino = new Scontrino ();
-
-        var div_scontr = document.getElementById("scontr");
-		var parent = div_scontr.parentNode;
-        parent.removeChild(div_scontr);
-        div_scontr = document.createElement("div");
-        div_scontr.id= "scontr";
-        parent.appendChild(div_scontr);
-
-/* Error prone, bisogna ricordarsi di resettare anche tutti gli attributi come webkitTransform
+    if (scontrino_idx.length == 0) {
+        scontrino_righe.length = 0;
         while (div_scontr.hasChildNodes()) {
             div_scontr.removeChild(div_scontr.lastChild);
         }
-        div_scontr.style.webkitTransform = "translateY(0px)";
-*/
-    } 
+    }
 
+    var divTile;
+    var idx = scontrino_idx.indexOf("r" + idx_reparto + "p" + idx_prezzo);
+    if (idx == -1) {
+        idx = scontrino_idx.push("r" + idx_reparto + "p" + idx_prezzo) -1;
+        scontrino_righe.push({quant: 1, desc: desc, prezzo: prezzo});
 
+    	divTile = document.createElement("div"); 
+    	divTile.className = "metro-tile tile-scontrino " + reparti[idx_reparto].col;
+	    divTile.onmousedown = (function() { 
+    	    var currDiv = divTile;
+    	    return function () { mdown(currDiv); changeScontrino(currDiv); return false;};
+    	})();
+        document.getElementById("scontr").appendChild(divTile);
+    } else {
+        divTile = document.getElementById("scontr").childNodes[idx];
+        scontrino_righe[idx].quant += 1;
+    }
+
+  	divTile.innerHTML = desc + "<br>" + "N. " + scontrino_righe[idx].quant + "  x  &euro; " + prezzo;
+	ScontrinoSelectTile(divTile);
+    updateTotale();
+}
+
+function ScontrinoSelectTile(divTile) {
+    var scontr_last_sel = document.getElementById("scontr_selected");
+    if (scontr_last_sel) {
+        scontr_last_sel.className = scontr_last_sel.className.replace(" tile-scontrino-selected", "");
+        scontr_last_sel.id = "";
+    }
+    divTile.className += " tile-scontrino-selected";
+    divTile.id = "scontr_selected";
+    divTile.scrollIntoView();
+}
+
+function updateTotale() {
     var tot = document.getElementById("tot1");
     tot.onmousedown = (function() { 
           var currDiv = tot;
           return function () { mdown(currDiv); chiudiScontrino(); return false;};
-        })();
-
-    var divTile = document.createElement("div"); 
-    divTile.className = "metro-tile tile-scontrino " + reparti[idx_reparto].col;
-    divTile.onmousedown = (function() { 
-        var currDiv = divTile;
-        return function () { mdown(currDiv); changeScontrino(currDiv); return false;};
-    })();
-    divTile.innerHTML = prezzo + "<br>" + desc;
-    var div_scontr = document.getElementById("scontr");
-
-    var scontr_last_sel = document.getElementById("scontr_selected");
-    if (scontr_last_sel) {
-        scontr_last_sel.className = scontr_last_sel.className.replace(" tile-scontrino-selected", "");
-        scontr_last_sel.id = "";
-    }
-    divTile.className += " tile-scontrino-selected";
-    divTile.id = "scontr_selected";
-    div_scontr.appendChild(divTile);
-    divTile.scrollIntoView();
-//    var scroll = 465 - div_scontr.offsetHeight;
-//    if (scroll < 0) {
-//        div_scontr.style.webkitTransform = "translateY(" + scroll + "px)";
-//    }
-
-    
+        })();    
     document.getElementById("tot1_riga1").innerHTML = "SubTotale"; 
-    var tot = document.getElementById("tot1_riga2");
-    tot.innerHTML = "&euro; " + scontrino.addRiga(1, desc, prezzo).replace(".",",");
+
+    var scontrino_totale = 0;
+    for (var i=0; i < scontrino_righe.length; ++i) {
+		scontrino_totale += scontrino_righe[i].quant * scontrino_righe[i].prezzo.replace(",",".");
+    }
+    document.getElementById("tot1_riga2").innerHTML = "&euro; " + scontrino_totale.toFixed(2);
 }
 
 function changeScontrino(divTile) {
-    var scontr_last_sel = document.getElementById("scontr_selected");
-    if (scontr_last_sel) {
-        scontr_last_sel.className = scontr_last_sel.className.replace(" tile-scontrino-selected", "");
-        scontr_last_sel.id = "";
-    }
-    divTile.className += " tile-scontrino-selected";
-    divTile.id = "scontr_selected";
+    ScontrinoSelectTile(divTile);
+    document.getElementById("quantita").style.display = "block";
 }
 
 function chiudiScontrino() {
-    scontrino.chiudi();
+    scontrino_idx.length = 0;
+
     var tot = document.getElementById("tot1");    
     tot.onmousedown = (function() { 
           var currDiv = tot;
@@ -226,30 +251,14 @@ function chiudiScontrino() {
 }
 
 function inviaScontrino() {
-    scontrino.invia();
+// Invia alla cassa
+
     var tot = document.getElementById("tot1");
     tot.onmousedown = function () { return false; }
     document.getElementById("tot1_riga1").innerHTML = "";
     var tot = document.getElementById("tot1_riga2");    
     tot.innerHTML = "";
 }
-
-function Scontrino () {
-    this.righe = [];
-    this.totale = 0;
-    this.isClosed = function () { return false; }
-    this.chiudi = function () {
-        this.isClosed = function () { return true; }
-    }
-    this.addRiga = function (quantita, desc, prezzo) {
-        this.totale += Number(prezzo.replace(",","."));
-        return this.totale.toFixed(2);
-    }
-    this.invia = function () {}    
-}
-
-var scontrino = new Scontrino();
-
 
 
 
