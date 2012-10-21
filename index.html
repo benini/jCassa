@@ -2,18 +2,21 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="config/colori.css">
 		<link rel="stylesheet" type="text/css" href="jcassa.css">
+        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 	</head>
 	<body style="background-color: black;" onmouseup="mup()">
-		<div class="metro-surface">
-			<div style="height: 480px; overflow: auto;">
-				<table id="prezzi">
-				</table>
-			</div>
-			<div id="scontr" style="height: 480px; overflow: auto; position:fixed; right:0px; top:10px;">
-			</div>
-			<table>
-				<tr style="height:10px">
-				</tr>
+
+<div id="unknow-width-and-height" style="overflow: auto; position: fixed; left: 0px; top: 0px;">
+    <table id="prezzi"></table>
+</div>
+
+<div id="unknow-height" style="overflow: auto; position: fixed; right: 0px; top: 0px;">
+    <div id="scontr"></div>
+</div>
+
+<div id="unknow-width" style="overflow: auto; position: fixed; left: 0px; bottom: 0px;">
+	<div id="reparti">
+                <table>
 				<tr>
 					<td><div id="rep0" class="metro-tile"
 					     style="background-image:url('config/rep1.jpg'); background-size:107px 74px;">
@@ -42,18 +45,37 @@
 					<td><div id="rep6" class="metro-tile" 
 					     style="background-image:url('config/rep7.png'); background-size:107px 74px;">
 						</div>
-					</td>
-					
-					<td style="width: 30px"></td>
-					<td><div id="tot1" class="metro-tile contanti metro-tile-blue">
-							<div id="tot1_riga1">TOTALE</div>
-							<div id="tot1_riga2"></div>
-						</div>
-					</td>
+					</td>					
 				</tr>
-			</table>
-		</div>
+			    </table>
+	</div>
+</div>
+
+<div style="position: fixed; right: 0px; bottom: 0px;">
+	<div id="tot1" class="metro-tile contanti metro-tile-blue">
+		<div id="tot1_riga1">TOTALE</div>
+		<div id="tot1_riga2"></div>
+	</div>
+</div>
+
 		<script type="text/javascript">
+
+function dyn_dimensions() {
+var dyn_height = window.innerHeight - Math.floor(1.15 * document.getElementById("tot1").offsetHeight);
+console.log("Dyn_height: "+ dyn_height);
+var dyn_width = window.innerWidth - Math.floor(1.05 * document.getElementById("tot1").offsetWidth);
+console.log("Dyn_width: "+ dyn_width);
+
+document.getElementById("unknow-width-and-height").style.width = dyn_width;
+document.getElementById("unknow-width-and-height").style.height = dyn_height;
+document.getElementById("unknow-width").style.width = dyn_width;
+document.getElementById("unknow-height").style.height = dyn_height;
+}
+
+dyn_dimensions();
+
+
+
 var audioElement = document.createElement('audio');
 audioElement.setAttribute('src', 'click.ogg');
 audioElement.load();
@@ -93,6 +115,7 @@ function cambiaReparto (r) {
     table = document.createElement("table");
     table.id= "prezzi";
     parent.appendChild(table);
+
     var MAX_RIGA = 7;
     var h = 0;
     var row=table.insertRow(-1);
@@ -123,9 +146,29 @@ function cambiaReparto (r) {
     }
 }
 
+
 function addPrezzo (idx_reparto, idx_prezzo) {
     var prezzo = reparti[idx_reparto].prezzi[idx_prezzo].prezzo;
     var desc = reparti[idx_reparto].prezzi[idx_prezzo].desc;
+
+    if (! scontrino || scontrino.isClosed()) { 
+        scontrino = new Scontrino ();
+
+        var div_scontr = document.getElementById("scontr");
+		var parent = div_scontr.parentNode;
+        parent.removeChild(div_scontr);
+        div_scontr = document.createElement("div");
+        div_scontr.id= "scontr";
+        parent.appendChild(div_scontr);
+
+/* Error prone, bisogna ricordarsi di resettare anche tutti gli attributi come webkitTransform
+        while (div_scontr.hasChildNodes()) {
+            div_scontr.removeChild(div_scontr.lastChild);
+        }
+        div_scontr.style.webkitTransform = "translateY(0px)";
+*/
+    } 
+
 
     var tot = document.getElementById("tot1");
     tot.onmousedown = (function() { 
@@ -137,16 +180,38 @@ function addPrezzo (idx_reparto, idx_prezzo) {
     divTile.className = "metro-tile tile-scontrino " + reparti[idx_reparto].col;
     divTile.onmousedown = (function() { 
         var currDiv = divTile;
-        return function () { mdown(currDiv); return false;};
+        return function () { mdown(currDiv); changeScontrino(currDiv); return false;};
     })();
     divTile.innerHTML = prezzo + "<br>" + desc;
-    document.getElementById("scontr").appendChild(divTile); 
+    var div_scontr = document.getElementById("scontr");
+
+    var scontr_last_sel = document.getElementById("scontr_selected");
+    if (scontr_last_sel) {
+        scontr_last_sel.className = scontr_last_sel.className.replace(" tile-scontrino-selected", "");
+        scontr_last_sel.id = "";
+    }
+    divTile.className += " tile-scontrino-selected";
+    divTile.id = "scontr_selected";
+    div_scontr.appendChild(divTile);
+//    var scroll = 465 - div_scontr.offsetHeight;
+//    if (scroll < 0) {
+//        div_scontr.style.webkitTransform = "translateY(" + scroll + "px)";
+//    }
 
     
     document.getElementById("tot1_riga1").innerHTML = "SubTotale"; 
     var tot = document.getElementById("tot1_riga2");
-    if (! scontrino || scontrino.isClosed()) { scontrino = new Scontrino (); } 
     tot.innerHTML = "&euro; " + scontrino.addRiga(1, desc, prezzo).replace(".",",");
+}
+
+function changeScontrino(divTile) {
+    var scontr_last_sel = document.getElementById("scontr_selected");
+    if (scontr_last_sel) {
+        scontr_last_sel.className = scontr_last_sel.className.replace(" tile-scontrino-selected", "");
+        scontr_last_sel.id = "";
+    }
+    divTile.className += " tile-scontrino-selected";
+    divTile.id = "scontr_selected";
 }
 
 function chiudiScontrino() {

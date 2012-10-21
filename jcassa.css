@@ -85,6 +85,11 @@
     border-right-width: 0px;
 }
 
+.tile-scontrino-selected {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
 
 .desc {
     height:80px;
