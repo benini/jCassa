@@ -1,12 +1,12 @@
 <html>
-	<head>
-		<link rel="stylesheet" type="text/css" href="config/colori.css">
-		<link rel="stylesheet" type="text/css" href="jcassa.css">
+<head>
+	<link rel="stylesheet" type="text/css" href="config/colori.css">
+	<link rel="stylesheet" type="text/css" href="jcassa.css">
 
-		<script type='application/javascript' src='fastclick.js'></script>
-        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
-	</head>
-	<body style="background-color: black;" onmouseup="mup()">
+	<script type='application/javascript' src='fastclick.js'></script>
+	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+</head>
+<body style="background-color: black;">
 
 <audio id="click_snd" src="click.ogg"></audio>
 
@@ -56,180 +56,189 @@ display:none;">
 </div>
 
 <script type="text/javascript">
+	// Caricamento FastClick per iPad
+	window.addEventListener('load', function() { new FastClick(document.body); }, false);
+	
+	
+	// Calcolo della dimensione della sezione "prezzi" in base alla spazio disponbile
+	function dyn_dimensions() {
+		var dyn_height = window.innerHeight - Math.floor(1.20 * document.getElementById("tot1").offsetHeight);
+		var dyn_width = window.innerWidth - Math.floor(1.10 * document.getElementById("tot1").offsetWidth);
 
-window.addEventListener('load', function() { new FastClick(document.body); }, false);
+		document.getElementById("unknow-width-and-height").style.width = dyn_width;
+		document.getElementById("unknow-width-and-height").style.height = dyn_height;
+		document.getElementById("unknow-width").style.width = dyn_width;
+		document.getElementById("unknow-height").style.height = dyn_height;
+	}
+	window.onresize=function() { dyn_dimensions(); }
 
-function dyn_dimensions() {
-var dyn_height = window.innerHeight - Math.floor(1.20 * document.getElementById("tot1").offsetHeight);
-var dyn_width = window.innerWidth - Math.floor(1.10 * document.getElementById("tot1").offsetWidth);
+	
+	function animaClick(tile, uiEvent) {
+		return function () {	
+			tile.className = tile.className.replace(" tile_reset", "");
+			tile.className += " tile_middle";
+			setTimeout(function() {tile.className = tile.className.replace(" tile_middle", " tile_reset");}, 100);
+			document.getElementById("click_snd").play();
+			
+			uiEvent();
+		}
+	}
+	
+	function animaSelezionaRigaScontrino(divTile) {
+		var scontr_last_sel = document.getElementById("scontr_selected");
+		if (scontr_last_sel) {
+			scontr_last_sel.className = scontr_last_sel.className.replace(" tile-scontrino-selected", "");
+			scontr_last_sel.id = "";
+		}
+		divTile.className += " tile-scontrino-selected";
+		divTile.id = "scontr_selected";
+		divTile.scrollIntoView();
+	}
+	
+	
+	function uiEventCambiaReparto (r) {
+		return function () {
+		    var table=document.getElementById("prezzi");
+		    while (table.hasChildNodes()) { table.removeChild(table.lastChild); }
+        
+			var MAX_RIGA = 7;
+			var h = 0;
+			var row=table.insertRow(-1);
+			var pr_array = reparti[r].prezzi;
+			for (var i=0; i < pr_array.length; i++, h++) {
+				if (h == MAX_RIGA) { h = 0; row=table.insertRow(-1); }
+				var cell1=row.insertCell(-1);
+				var divTile = document.createElement("div"); 
+				divTile.className = "metro-tile " + reparti[r].col + " tile-prezzi";
+				divTile.onclick = animaClick(divTile, uiEventAggiungiProdotto(r, i));
+				cell1.appendChild(divTile); 
+				var divDesc = document.createElement("div"); 
+				divDesc.className = "desc "  + reparti[r].col; 
+				divDesc.innerHTML = pr_array[i].desc;
+				divTile.appendChild(divDesc); 
+				var divPrezzo = document.createElement("div"); 
+				divPrezzo.className = "prezzo";
+				if (pr_array[i].prezzo == "") { divPrezzo.innerHTML = ""; }
+				else { divPrezzo.innerHTML = "&euro; " + pr_array[i].prezzo; }
+				divTile.appendChild(divPrezzo);   
+			}
+		}
+	}
+	
+	function uiEventAggiungiProdotto(idx_reparto, idx_prezzo) {
+		return function () {			
+			if (! scontrino.isAperto()) {
+				var div_scontr = document.getElementById("scontr");
+				while (div_scontr.hasChildNodes()) { div_scontr.removeChild(div_scontr.lastChild);	}
+			}		
+			
+			var prezzo = reparti[idx_reparto].prezzi[idx_prezzo].prezzo;
+			var desc = reparti[idx_reparto].prezzi[idx_prezzo].desc;
+			var divTile;
+			var idx = scontrino.indexOf(idx_reparto, desc, prezzo);
+			if (idx == -1) {
+				idx = scontrino.push(idx_reparto, 1, desc, prezzo);
 
-document.getElementById("unknow-width-and-height").style.width = dyn_width;
-document.getElementById("unknow-width-and-height").style.height = dyn_height;
-document.getElementById("unknow-width").style.width = dyn_width;
-document.getElementById("unknow-height").style.height = dyn_height;
-}
+    			divTile = document.createElement("div"); 
+    			divTile.className = "metro-tile tile-scontrino " + reparti[idx_reparto].col;
+				divTile.onclick = animaClick(divTile, uiEventCambiaRigaScontrino(divTile));
+				document.getElementById("scontr").appendChild(divTile);
+			} else {
+				divTile = document.getElementById("scontr").childNodes[idx];
+				scontrino.righe[idx].quant += 1;
+			}
 
-window.onresize=function() { dyn_dimensions(); }
-dyn_dimensions();
+  			divTile.innerHTML = desc + "<br>" + "N. " + scontrino.righe[idx].quant + "  x  &euro; " + scontrino.righe[idx].prezzo;
+			animaSelezionaRigaScontrino(divTile);
+			updateTotale();
+		}
+	}
+	
+	function updateTotale() {
+		var tot = document.getElementById("tot1");
+		tot.onclick = animaClick(tot, uiEventChiudiScontrino(tot));
+		document.getElementById("tot1_riga1").innerHTML = "SubTotale"; 
+		document.getElementById("tot1_riga2").innerHTML = "&euro; " + scontrino.getTotale().toFixed(2);
+	}
+	
+	function uiEventCambiaRigaScontrino(tile) {
+		return function () {
+			animaSelezionaRigaScontrino(tile);
+			document.getElementById("quantita").style.display = "block";
+		}
+	}
+	
+	function uiEventChiudiScontrino (tile) {
+		return function () {
+			scontrino.chiudi();
+						
+			tile.onclick = animaClick(tile, uiEventInviaScontrino(tile));
+			document.getElementById("tot1_riga1").innerHTML = ""; 
+			document.getElementById("tot1_riga2").innerHTML = "STAMPA";
+		}
+	}
+	
+	function uiEventInviaScontrino(tile) {
+		return function () {
+			// scontrino.invia();
+			
+			tile.onclick = "none";
+			document.getElementById("tot1_riga1").innerHTML = ""; 
+			document.getElementById("tot1_riga2").innerHTML = "";
+		}
+	}
+	
+	var scontrino = {};
+	scontrino.id = [];
+	scontrino.righe = [];
+	
+	scontrino.push = function (rep, quant, desc, prezzo) {
+		if (scontrino.id.length != scontrino.righe.length) { scontrino.righe.length = scontrino.id.length; }
+		scontrino.righe.push({rep: rep, quant: quant, desc: desc, prezzo: prezzo});		
+		return scontrino.id.push(scontrino.creaID(rep, desc, prezzo)) -1;
+	}		
+	scontrino.getTotale = function () {
+		var scontrino_totale = 0;
+		for (var i=0; i < scontrino.righe.length; ++i) {
+			scontrino_totale += scontrino.righe[i].quant * scontrino.righe[i].prezzo.replace(",",".");
+		}
+		return scontrino_totale;
+	}
+	scontrino.chiudi = function () { scontrino.id.length = 0; }
+	scontrino.Riapri = function () {
+		scontrino.id.length = 0;
+		for (var i=0; i<scontrino.righe.length; ++i) { 
+			var riga = scontrino.righe[i];
+			scontrino.id.push(scontrino.creaID(riga.rep, riga.desc, riga.prezzo));
+		} 
+	}
+	scontrino.isAperto = function () { return scontrino.id.length == scontrino.righe.length; }
+	scontrino.creaID = function (rep, desc, prezzo) { return "r" + rep + "d" + desc + "p" + prezzo; }
+	scontrino.indexOf = function (rep, desc, prezzo) { 
+		var id = scontrino.creaID(rep, desc, prezzo); 
+		return scontrino.id.indexOf(id); 
+	}
 
-var mdown_obj;
+</script>
 
-function mdown (obj) {
-    mdown_obj = obj;
-    mdown_obj.className = mdown_obj.className.replace(" tile_reset", "");
-    mdown_obj.className += " tile_middle";
-	document.getElementById("click_snd").play();
-    return false;
-}
 
-function mup () {
-    mdown_obj.className = mdown_obj.className.replace(" tile_middle", " tile_reset");
-    return false;
-}
+<script type="text/javascript">
 
 function updateReparti() {
   for (var i = 0; i < reparti.length; i++) {
     var divTile = document.createElement("div"); 
     divTile.className = "metro-tile tile-reparti " + reparti[i].col;
     divTile.innerHTML = reparti[i].reparto;
-    divTile.onmousedown = (function() { 
-      var currI = i;
-      var currR = divTile;
-      return function () { mdown(currR); cambiaReparto(currI); return false;};
-    })();
+    divTile.onclick = animaClick(divTile, uiEventCambiaReparto(i));
 	document.getElementById('reparti').insertCell(-1).appendChild(divTile);
   }
 }
 
-function cambiaReparto (r) {
-    var table=document.getElementById("prezzi");
-    var parent = table.parentNode;
-    parent.removeChild(table);
-    table = document.createElement("table");
-    table.id= "prezzi";
-    parent.appendChild(table);
 
-    var MAX_RIGA = 7;
-    var h = 0;
-    var row=table.insertRow(-1);
-	var pr_array = reparti[r].prezzi;
-    for (var i=0; i < pr_array.length; i++, h++) {
-        if (h == MAX_RIGA) { h = 0; row=table.insertRow(-1); }
-        var cell1=row.insertCell(-1);
-        var divTile = document.createElement("div"); 
-        divTile.className = "metro-tile " + reparti[r].col + " tile-prezzi";
-        divTile.onmousedown = (function() { 
-          var prezzo = pr_array[i].prezzo;
-          var desc = pr_array[i].desc;
-          var currDiv = divTile;
-          var idx_reparto = r;
-          var idx_prezzo = i;
-          return function () { mdown(currDiv); addPrezzo(idx_reparto, idx_prezzo); return false;};
-        })();
-        cell1.appendChild(divTile); 
-        var divDesc = document.createElement("div"); 
-        divDesc.className = "desc "  + reparti[r].col; 
-        divDesc.innerHTML = pr_array[i].desc;
-        divTile.appendChild(divDesc); 
-        var divPrezzo = document.createElement("div"); 
-        divPrezzo.className = "prezzo";
-		if (pr_array[i].prezzo == "") { divPrezzo.innerHTML = ""; }
-        else { divPrezzo.innerHTML = "&euro; " + pr_array[i].prezzo; }
-        divTile.appendChild(divPrezzo);   
-    }
-}
 
-var scontrino_idx = [];
-var scontrino_righe = [];
 
-function addPrezzo (idx_reparto, idx_prezzo) {
-    var div_scontr = document.getElementById("scontr");
-    var prezzo = reparti[idx_reparto].prezzi[idx_prezzo].prezzo;
-    var desc = reparti[idx_reparto].prezzi[idx_prezzo].desc;
 
-    if (scontrino_idx.length == 0) {
-        scontrino_righe.length = 0;
-        while (div_scontr.hasChildNodes()) {
-            div_scontr.removeChild(div_scontr.lastChild);
-        }
-    }
 
-    var divTile;
-    var idx = scontrino_idx.indexOf("r" + idx_reparto + "p" + idx_prezzo);
-    if (idx == -1) {
-        idx = scontrino_idx.push("r" + idx_reparto + "p" + idx_prezzo) -1;
-        scontrino_righe.push({quant: 1, desc: desc, prezzo: prezzo});
-
-    	divTile = document.createElement("div"); 
-    	divTile.className = "metro-tile tile-scontrino " + reparti[idx_reparto].col;
-	    divTile.onmousedown = (function() { 
-    	    var currDiv = divTile;
-    	    return function () { mdown(currDiv); changeScontrino(currDiv); return false;};
-    	})();
-        document.getElementById("scontr").appendChild(divTile);
-    } else {
-        divTile = document.getElementById("scontr").childNodes[idx];
-        scontrino_righe[idx].quant += 1;
-    }
-
-  	divTile.innerHTML = desc + "<br>" + "N. " + scontrino_righe[idx].quant + "  x  &euro; " + prezzo;
-	ScontrinoSelectTile(divTile);
-    updateTotale();
-}
-
-function ScontrinoSelectTile(divTile) {
-    var scontr_last_sel = document.getElementById("scontr_selected");
-    if (scontr_last_sel) {
-        scontr_last_sel.className = scontr_last_sel.className.replace(" tile-scontrino-selected", "");
-        scontr_last_sel.id = "";
-    }
-    divTile.className += " tile-scontrino-selected";
-    divTile.id = "scontr_selected";
-    divTile.scrollIntoView();
-}
-
-function updateTotale() {
-    var tot = document.getElementById("tot1");
-    tot.onmousedown = (function() { 
-          var currDiv = tot;
-          return function () { mdown(currDiv); chiudiScontrino(); return false;};
-        })();    
-    document.getElementById("tot1_riga1").innerHTML = "SubTotale"; 
-
-    var scontrino_totale = 0;
-    for (var i=0; i < scontrino_righe.length; ++i) {
-		scontrino_totale += scontrino_righe[i].quant * scontrino_righe[i].prezzo.replace(",",".");
-    }
-    document.getElementById("tot1_riga2").innerHTML = "&euro; " + scontrino_totale.toFixed(2);
-}
-
-function changeScontrino(divTile) {
-    ScontrinoSelectTile(divTile);
-    document.getElementById("quantita").style.display = "block";
-}
-
-function chiudiScontrino() {
-    scontrino_idx.length = 0;
-
-    var tot = document.getElementById("tot1");    
-    tot.onmousedown = (function() { 
-          var currDiv = tot;
-          return function () { mdown(currDiv); inviaScontrino(); return false;};
-        })();
-    document.getElementById("tot1_riga1").innerHTML = ""; 
-    var tot = document.getElementById("tot1_riga2");
-    tot.innerHTML = "STAMPA";
-}
-
-function inviaScontrino() {
-// Invia alla cassa
-
-    var tot = document.getElementById("tot1");
-    tot.onmousedown = function () { return false; }
-    document.getElementById("tot1_riga1").innerHTML = "";
-    var tot = document.getElementById("tot1_riga2");    
-    tot.innerHTML = "";
-}
 
 
 
@@ -237,15 +246,15 @@ function inviaScontrino() {
 
 var reparti = [];
 reparti.push({reparto: "BAR", col: "colore_caffe", prezzi: [] });
-reparti.push({reparto: "BAR", col: "metro-tile-green", prezzi: [] });
-reparti.push({reparto: "PANINI", col: "metro-tile-blue", prezzi: [
+reparti.push({reparto: "PANINI", col: "colore_panini", prezzi: [] });
+reparti.push({reparto: "CUCINA", col: "colore_cucina", prezzi: [
 {desc: "CAFFE", prezzo: "1,10"},
 {desc: "COCA", prezzo: "2,00"}
 ] });
 reparti.push({reparto: "BAR", col: "metro-tile-purple", prezzi: [] });
 reparti.push({reparto: "VINI", col: "colore_vini", prezzi: [] });
 reparti.push({reparto: "BIRRE", col: "colore_birre", prezzi: [] });
-reparti.push({reparto: "BAR", col: "metro-tile-orange", prezzi: [] });
+reparti.push({reparto: "GELATI", col: "colore_gelati", prezzi: [] });
  var prezzi = ["BAR", "PRIMI", "PIZZE", "A", "b", "11,40", "7", "BAR", "PRIMI"];
 
 reparti[0].prezzi.push({desc: "BAR", prezzo: ""});

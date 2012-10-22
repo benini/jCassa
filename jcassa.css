@@ -7,11 +7,7 @@
 	font-size: 20px;
 	border-width: 3px;
 	border-style: solid;
-    overflow: hidden;
-	-webkit-transform: scale(1);
-	-moz-transform: scale(1);
-	-ms-transform: scale(1);
-	transform: scale(1);
+    overflow: hidden;	
 }
 .tile_reset {
 	-webkit-transform: scale(1);

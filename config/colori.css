@@ -3,6 +3,11 @@
 	border-color: #804130;
 	background-image: url('caffe.jpg');
 }
+.colore_cucina {
+	background-color: #2958ef;
+	border-color: #2c5eff;
+	background-image: url('cucina.jpg');
+}
 .colore_vini {
 	background-color: #680200;
 	border-color: #730200;
@@ -13,4 +18,15 @@
 	border-color: #ffc400;
 	background-image: url('birre.jpg');
 }
+.colore_gelati {
+	background-color: #baa050;
+	border-color: #c7ab55;
+	background-image: url('gelati.jpg');
+}
+.colore_panini {
+	background-color: #009719;
+	border-color: #1A9F30;
+	background-image: url('panini.jpg');
+}
+
 
