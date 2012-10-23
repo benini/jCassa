@@ -35,18 +35,11 @@ function readQuant() {
 }
 </script>
 
-
-<div style="
-position:absolute; left:100px; top:30px;
-width: 80px;
-line-height: 80px;
-border:solid 2px #ffffff;
-background-color:#333333; color: blue;
-border-radius: 10px;
-z-index: 9;
-text-align: center;
-font-size: 50px;
-">9</div>
+<table class="keypad">
+<tr>
+<td> 9 </td>
+</tr>
+</table>
 
 
 
@@ -67,7 +60,7 @@ display:none;">
 
 <script type="text/javascript">
 	// Caricamento FastClick per iPad
-	window.addEventListener('load', function() { new FastClick(document.body); }, false);
+	window.addEventListener('load', function() { new FastClick(document.body); dyn_dimsensions(); }, false);
 
 
 	// Calcolo della dimensione della sezione "prezzi" in base alla spazio disponbile
