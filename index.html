@@ -11,7 +11,7 @@
 <audio id="click_snd" src="click.ogg"></audio>
 
 <div id="unknow-width-and-height" style="overflow: auto; position: fixed; left: 0px; top: 0px;">
-    <table id="prezzi"></table>
+    <div id="prezzi" style="width:100%"></div>    
 </div>
 
 <div id="unknow-height" style="overflow: auto; position: fixed; right: 0px; top: 0px;">
@@ -112,17 +112,12 @@ display:none;">
 		    var table=document.getElementById("prezzi");
 		    while (table.hasChildNodes()) { table.removeChild(table.lastChild); }
 
-			var MAX_RIGA = 7;
-			var h = 0;
-			var row=table.insertRow(-1);
 			var pr_array = reparti[r].prezzi;
-			for (var i=0; i < pr_array.length; i++, h++) {
-				if (h == MAX_RIGA) { h = 0; row=table.insertRow(-1); }
-				var cell1=row.insertCell(-1);
+			for (var i=0; i < pr_array.length; i++) {
 				var divTile = document.createElement("div");
 				divTile.className = "metro-tile " + reparti[r].col + " tile-prezzi";
 				divTile.onclick = animaClick(divTile, uiEventAggiungiProdotto(r, i));
-				cell1.appendChild(divTile);
+				table.appendChild(divTile);
 				var divDesc = document.createElement("div");
 				divDesc.className = "desc "  + reparti[r].col;
 				divDesc.innerHTML = pr_array[i].desc;

@@ -65,7 +65,9 @@
     width: 107px;
 	height: 107px;
 	padding: 0px;
+    margin: 2px;
     background-image: none;
+    float: left;
 }
 
 .desc {
@@ -80,7 +82,7 @@
 	padding-right: 3px;    
     color:#000000;
     font-weight:bold;
-    text-align:right;
+    text-align:right;    
 }
 
 .tile-scontrino {
