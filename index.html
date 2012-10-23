@@ -22,7 +22,7 @@
 	<table><tr id="reparti"></tr></table>
 </div>
 
-<div style="position: fixed; right: 0px; bottom: 2px;">
+<div style="position: fixed; right: 0px; bottom: 4px;">
 	<div id="tot1" class="metro-tile tile-contanti metro-tile-blue">
 		<div id="tot1_riga1">TOTALE</div>
 		<div id="tot1_riga2"></div>
@@ -79,7 +79,7 @@ opacity: 0.80;">
         // agli oggetti che ne avevano bisogno, ma è più complicato di quanto pensassi senza jQuery
         // e per adesso voglio scrivere puro Javascript per imparare i dettagli
 		var dyn_height = window.innerHeight - Math.floor(1.20 * document.getElementById("tot1").offsetHeight);
-		var dyn_width = window.innerWidth - Math.floor(1.10 * document.getElementById("tot1").offsetWidth);
+		var dyn_width = window.innerWidth - Math.floor(1.05 * document.getElementById("tot1").offsetWidth);
 
 		document.getElementById("unknow-width-and-height").style.width = dyn_width;
 		document.getElementById("unknow-width-and-height").style.height = dyn_height;
