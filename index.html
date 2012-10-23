@@ -22,7 +22,7 @@
 	<table><tr id="reparti"></tr></table>
 </div>
 
-<div style="position: fixed; right: 0px; bottom: 0px;">
+<div style="position: fixed; right: 0px; bottom: 2px;">
 	<div id="tot1" class="metro-tile tile-contanti metro-tile-blue">
 		<div id="tot1_riga1">TOTALE</div>
 		<div id="tot1_riga2"></div>
@@ -36,29 +36,37 @@ function readQuant() {
 </script>
 
 
-<table class="keypad">
-<tr><td> 1 </td><td> 2 </td><td> 3 </td></tr>
-<tr><td> 4 </td><td> 5 </td><td> 6 </td></tr>
-<tr><td> 7 </td><td> 8 </td><td> 9 </td></tr>
-<tr><td style="color: red"> C </td><td> 0 </td><td> 00 </td></tr>
-</table>
-
 
 
 <div id="modalInput" style="
 position:absolute;
 left:0px;
 top:0px;
-background-color:#333333;
-opacity: 0.80;
-width:300px;
-height:300px;
 z-index: 5;
 display:none;">
 
+<div style="
+position:absolute;
+left:0px;
+top:0px;
+width: 100%; height: 100%;
+background-color:#333333;
+z-index: -1;
+opacity: 0.80;">
+</div>
+
 <div class="metro-tile" onclick="readQuant();">
 </div>
+
+<table class="keypad">
+<tr><td> 1 </td><td> 2 </td><td> 3 </td></tr>
+<tr><td> 4 </td><td> 5 </td><td> 6 </td></tr>
+<tr><td> 7 </td><td> 8 </td><td> 9 </td></tr>
+<tr><td> 0 </td><td> 00 </td><td style="color: red"> C </td></tr>
+</table>
+
 </div>
+
 
 <script type="text/javascript">
 	// Caricamento FastClick per iPad
