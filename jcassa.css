@@ -126,7 +126,25 @@
 	text-align:right;
 }
 
+.modalInput {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 5;
+	display:none;
+}
 
+.modalInputBackground {
+	position:absolute;
+	left:0px;
+	top:0px;
+	width: 100%; height: 100%;
+	background-color:#333333;
+	z-index: -1;
+	opacity: 0.80;
+}
 
 .keypad {
     position:absolute; top:10px; right:30px;	

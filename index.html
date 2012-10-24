@@ -29,52 +29,98 @@
 	</div>
 </div>
 
+<div id="modalInput" class="modalInput">
 
-
-<div id="modalInput" style="
-position:absolute;
-left:0px;
-top:0px;
-z-index: 5;
-display:none;">
-
-<div style="
-position:absolute;
-left:0px;
-top:0px;
-width: 100%; height: 100%;
-background-color:#333333;
-z-index: -1;
-opacity: 0.80;">
+<div id="modalInputChiusura" class="modalInput">
+	<div class="modalInputBackground"></div>
+<ul style="color: white;">
+<li>Lettura/Chiusura fiscale</li>
+<li>Ristampa non fiscale ultimo scontrino</li>
+<li>Stampa DGFE fra date</li>
+</ul>
 </div>
 
-<div class="metro-tile" onclick="modalInputAnnulla();">
+<div id="modalInputProdotto" class="modalInput">
+	<div class="modalInputBackground"></div>
+<ul style="color: white;">
+<li>Cambia Quantita</li>
+<li>Cambia prezzo unitario</li>
+<li>Elimina Riga Scontrino</li>
+</ul>
+	<div class="metro-tile" onclick="modalInputAnnulla();"></div>
+
+	<table class="keypad">
+		<tr><td> 1 </td><td> 2 </td><td> 3 </td></tr>
+		<tr><td> 4 </td><td> 5 </td><td> 6 </td></tr>
+		<tr><td> 7 </td><td> 8 </td><td> 9 </td></tr>
+		<tr><td> 0 </td><td> 00 </td><td style="color: red"> C </td></tr>
+	</table>
 </div>
 
-<table class="keypad">
-<tr><td> 1 </td><td> 2 </td><td> 3 </td></tr>
-<tr><td> 4 </td><td> 5 </td><td> 6 </td></tr>
-<tr><td> 7 </td><td> 8 </td><td> 9 </td></tr>
-<tr><td> 0 </td><td> 00 </td><td style="color: red"> C </td></tr>
-</table>
+<div id="modalInputTotale" class="modalInput">
+	<div class="modalInputBackground"></div>
+<ul style="color: white;">
+<li>Annulla scontrino</li>
+<li>Scegli totale di chiusura</li>
+<li>Buoni Pasto</li>
+<li>Fattura/Scontrino parlante</li>
+</ul>
+</div>
+
+<div id="modalInputResto" class="modalInput">
+	<div class="modalInputBackground"></div>
+
+<ul style="color: white;">
+<li>Visualizza resto direttamente mentre viene battuto un prezzo</li>
+<li>Pulsante di conferma (il resto verrà stampato sullo scontrino)</li>
+<li>Pulsante di annulla</li>
+</ul>
+<script>
+function annullaResto() { 
+	if (scontrino.righe != 0) { modalInput('Totale'); }
+	else { modalInputAnnulla(); }
+}
+</script>
+	<div class="metro-tile" onclick="annullaResto();"></div>
+
+	<table class="keypad">
+		<tr><td> 1 </td><td> 2 </td><td> 3 </td></tr>
+		<tr><td> 4 </td><td> 5 </td><td> 6 </td></tr>
+		<tr><td> 7 </td><td> 8 </td><td> 9 </td></tr>
+		<tr><td> 0 </td><td> 00 </td><td style="color: red"> C </td></tr>
+	</table>
+</div>
 
 </div>
 
 <script>
 /*
-Ci vogliono diverse finestre di input:
-1) Click su prodotto-nello-scontrino: Cambio quantità e prezzo
-2) Click su subtotale: Scelta totali (contanti di default) e fattura (e buoni pasto?)
-3) Click su totale-disabilitato-perchè-scontrino-chiuso: Lettura e chiusura di cassa, ristampa ultimo scontrino dgfe, stampa giornata dgfe, cambia prodotti
-4) Click su tile-resto dopo chiusura scontrino: Calcolo manuale del resto
+Diverse finestre di input:
+- "Chiusura": 
+		attivata cliccando su totale senza scontrini aperti, cioè dopo aver stampato (o annullato) uno scontrino
+		permette di fare le letture/chiusure di cassa e le stampe del dgfe
+- "Prodotto":
+		attivata cliccando su tile-scontrino
+		permette di cambiare la quantità ed il prezzo del prodotto nello scontrino
+- "Totale": 
+		attivata cliccando su subtotale (scontrino aperto)
+		permette di cambiare il totale di chiusura, fare fatture e scontrini parlanti e pagamenti con i buoni pasto
+- "Resto":
+		attivata cliccando su tile-scontrino-resto
+		permette di inserire l'importo esatto su cui calcolare il resto; se attivata prima di stampare lo scontrino l'importo verrà scritto sullo scontrino  stesso
 */
-
-function modalInput() {
+function modalInput(tipo) {
+	modalInputAnnulla();
+	document.getElementById("modalInput" + tipo).style.display = "block";
 	document.getElementById("modalInput").style.display = "block";
 }
 
 function modalInputAnnulla() {
 	document.getElementById("modalInput").style.display = "none";
+	document.getElementById("modalInputChiusura").style.display = "none";
+	document.getElementById("modalInputProdotto").style.display = "none";
+	document.getElementById("modalInputTotale").style.display = "none";
+	document.getElementById("modalInputResto").style.display = "none";
 }
 </script>
 
@@ -192,12 +238,15 @@ function modalInputAnnulla() {
 
 	function uiEventCambiaRigaScontrino(tile) {
 		return function () {
+			if (! scontrino.isAperto()) { 
+				(uiEventRiapriScontrino())(); 
+			}
 			animaSelezionaRigaScontrino(tile);
-			modalInput();
+			modalInput("Prodotto");
 		}
 	}
 
-	function uiEventRiapriScontrino (tile) {
+	function uiEventRiapriScontrino() {
 		return function () {
 			scontrino.Riapri();
             var div_scontr = document.getElementById("scontr");
@@ -220,13 +269,14 @@ function modalInputAnnulla() {
 
    			var divTile = document.createElement("div");
    			divTile.className = "metro-tile tile-scontrino-totale";
-			divTile.onclick = animaClick(uiEventRiapriScontrino	(divTile));
+			divTile.onclick = animaClick(uiEventRiapriScontrino	());
 			document.getElementById("scontr").appendChild(divTile);
   			divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>CONTANTI</div>";
             divTile.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotale();
 
    			var divTile = document.createElement("div");
    			divTile.className = "metro-tile tile-scontrino-resto";
+			divTile.onclick = animaClick(function () { modalInput("Resto"); });
 			document.getElementById("scontr").appendChild(divTile);
   			divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>RESTO</div>";
 			var i = 0;
@@ -235,13 +285,13 @@ function modalInputAnnulla() {
 	            divTile.innerHTML += "&euro; " + resti[i++] + " ==> &euro; " + resti[i++] + "<br>";
 			}
 
-            modalInput();
+            modalInput("Totale");
 		}
 	}
 
 	function uiEventInviaScontrino(tile) {
 		return function () {
-			tile.onclick = "";
+			tile.onclick = animaClick(uiEventLetture());
 			document.getElementById("tot1_riga1").innerHTML = "";
 			document.getElementById("tot1_riga2").innerHTML = "";
 			modalInputAnnulla();
@@ -258,6 +308,12 @@ function modalInputAnnulla() {
             div_scontr.firstChild.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotale();
             
             scontrino.invia();
+		}
+	}
+
+	function uiEventLetture() {
+		return function () {
+			modalInput("Chiusura");
 		}
 	}
 
@@ -305,7 +361,8 @@ function modalInputAnnulla() {
 		}
 	}
 	scontrino.isAperto = function () {
-        return scontrino.id.length != 0; }
+        return scontrino.id.length != 0; 
+	}
 	scontrino.indexOf = function (rep, desc, prezzo) {
 		var id = scontrino.creaID(rep, desc, prezzo);
 		return scontrino.id.indexOf(id);
