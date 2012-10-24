@@ -11,7 +11,7 @@
 <audio id="click_snd" src="click.ogg"></audio>
 
 <div id="unknow-width-and-height" style="overflow: auto; position: fixed; left: 0px; top: 0px;">
-    <div id="prezzi" style="width:100%"></div>    
+    <div id="prezzi" style="width:100%"></div>
 </div>
 
 <div id="unknow-height" style="overflow: auto; position: fixed; right: 0px; top: 0px;">
@@ -170,6 +170,7 @@ function modalInputAnnulla() {
 				document.getElementById("scontr").appendChild(divTile);
 			} else {
 				divTile = document.getElementById("scontr").childNodes[idx];
+                //TODO: non è bello accedere direttamente all'array
 				scontrino.righe[idx].quant += 1;
 			}
 
@@ -183,7 +184,7 @@ function modalInputAnnulla() {
 		var tot = document.getElementById("tot1");
 		tot.onclick = animaClick(uiEventChiudiScontrino(tot));
 		document.getElementById("tot1_riga1").innerHTML = "SubTotale";
-		document.getElementById("tot1_riga2").innerHTML = "&euro; " + scontrino.getTotale().toFixed(2);
+		document.getElementById("tot1_riga2").innerHTML = "&euro; " + scontrino.getTotale();
 	}
 
 	function uiEventCambiaRigaScontrino(tile) {
@@ -211,33 +212,42 @@ function modalInputAnnulla() {
 			scontrino.chiudi();
 
    			var divTile = document.createElement("div");
-			divTile.id = "TotSc";
-   			divTile.className = "metro-tile tile-scontrino orange";
+   			divTile.className = "metro-tile tile-scontrino-totale";
 			divTile.onclick = animaClick(uiEventRiapriScontrino	(divTile));
 			document.getElementById("scontr").appendChild(divTile);
-  			divTile.innerHTML = "TOT. CONTANTI <br>  &euro; " + scontrino.getTotale().toFixed(2);
+  			divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>CONTANTI</div>";
+            divTile.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotale();
 			animaSelezionaRigaScontrino(divTile);
-
-			modalInput();
+            modalInput();
 		}
 	}
 
 	function uiEventInviaScontrino(tile) {
 		return function () {
-			scontrino.invia();
-
-			tile.onclick = "none";
+			tile.onclick = "";
 			document.getElementById("tot1_riga1").innerHTML = "";
 			document.getElementById("tot1_riga2").innerHTML = "";
 			modalInputAnnulla();
-			var divTile = document.getElementById("TotSc");
-			divTile.onclick = "none";
+
+            // Disabilitare il click sui prodotti nello scontrino e su riapri scontrino
+            // Mettere anche una qualche segno visivo che lo scontrino è stato stampato?
+            var div_scontr = document.getElementById("scontr");
+            for (var i = div_scontr.childNodes.length; i > 1; i--) {
+                div_scontr.removeChild(div_scontr.firstChild);
+            }
+            
+			div_scontr.firstChild.onclick = "";
+            div_scontr.firstChild.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>ULTIMO SCONTR.</div>";
+            div_scontr.firstChild.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotale();
+            
+            scontrino.invia();
 		}
 	}
 
 	var scontrino = {};
 	scontrino.id = [];
 	scontrino.righe = [];
+	scontrino.creaID = function (rep, desc, prezzo) { return "r" + rep + "d" + desc + "p" + prezzo; }
 
 	scontrino.push = function (rep, quant, desc, prezzo) {
 		if (scontrino.id.length != scontrino.righe.length) { scontrino.righe.length = scontrino.id.length; }
@@ -249,9 +259,11 @@ function modalInputAnnulla() {
 		for (var i=0; i < scontrino.righe.length; ++i) {
 			scontrino_totale += scontrino.righe[i].quant * scontrino.righe[i].prezzo.replace(",",".");
 		}
-		return scontrino_totale;
+		return scontrino_totale.toFixed(2).replace(".", ",");
 	}
-	scontrino.chiudi = function () { scontrino.id.length = 0; }
+	scontrino.chiudi = function () {
+        scontrino.id.length = 0;
+    }
 	scontrino.Riapri = function () {
 		scontrino.id.length = 0;
 		for (var i=0; i<scontrino.righe.length; ++i) {
@@ -259,13 +271,16 @@ function modalInputAnnulla() {
 			scontrino.id.push(scontrino.creaID(riga.rep, riga.desc, riga.prezzo));
 		}
 	}
-	scontrino.isAperto = function () { return scontrino.id.length == scontrino.righe.length; }
-	scontrino.creaID = function (rep, desc, prezzo) { return "r" + rep + "d" + desc + "p" + prezzo; }
+	scontrino.isAperto = function () {
+        return scontrino.id.length != 0; }
 	scontrino.indexOf = function (rep, desc, prezzo) {
 		var id = scontrino.creaID(rep, desc, prezzo);
 		return scontrino.id.indexOf(id);
 	}
-	scontrino.invia = function () { scontrino.id.length = 0; scontrino.righe.length = 0; }
+	scontrino.invia = function () {
+        scontrino.id.length = 0;
+        scontrino.righe.length = 0;
+    }
 
 </script>
 
