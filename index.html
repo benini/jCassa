@@ -120,9 +120,12 @@ function modalInputAnnulla() {
 			scontr_last_sel.className = scontr_last_sel.className.replace(" tile-scontrino-selected", "");
 			scontr_last_sel.id = "";
 		}
-		divTile.className += " tile-scontrino-selected";
-		divTile.id = "scontr_selected";
-		divTile.scrollIntoView();
+
+		if (divTile) {
+			divTile.className += " tile-scontrino-selected";
+			divTile.id = "scontr_selected";
+			divTile.scrollIntoView();
+		}
 	}
 
 
@@ -197,7 +200,9 @@ function modalInputAnnulla() {
 	function uiEventRiapriScontrino (tile) {
 		return function () {
 			scontrino.Riapri();
-			document.getElementById("scontr").removeChild(tile);
+            var div_scontr = document.getElementById("scontr");
+			if (div_scontr.lastChild) { div_scontr.removeChild(div_scontr.lastChild); }
+			if (div_scontr.lastChild) { div_scontr.removeChild(div_scontr.lastChild); }
 			updateTotale();
 			modalInputAnnulla();
 		}
@@ -211,13 +216,25 @@ function modalInputAnnulla() {
 
 			scontrino.chiudi();
 
+			animaSelezionaRigaScontrino();
+
    			var divTile = document.createElement("div");
    			divTile.className = "metro-tile tile-scontrino-totale";
 			divTile.onclick = animaClick(uiEventRiapriScontrino	(divTile));
 			document.getElementById("scontr").appendChild(divTile);
   			divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>CONTANTI</div>";
             divTile.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotale();
-			animaSelezionaRigaScontrino(divTile);
+
+   			var divTile = document.createElement("div");
+   			divTile.className = "metro-tile tile-scontrino-resto";
+			document.getElementById("scontr").appendChild(divTile);
+  			divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>RESTO</div>";
+			var i = 0;
+			var resti = scontrino.getResto();
+			while (i < resti.length) {
+	            divTile.innerHTML += "&euro; " + resti[i++] + " ==> &euro; " + resti[i++] + "<br>";
+			}
+
             modalInput();
 		}
 	}
@@ -232,7 +249,7 @@ function modalInputAnnulla() {
             // Disabilitare il click sui prodotti nello scontrino e su riapri scontrino
             // Mettere anche una qualche segno visivo che lo scontrino è stato stampato?
             var div_scontr = document.getElementById("scontr");
-            for (var i = div_scontr.childNodes.length; i > 1; i--) {
+            for (var i = div_scontr.childNodes.length; i > 2; i--) {
                 div_scontr.removeChild(div_scontr.firstChild);
             }
             
@@ -264,6 +281,22 @@ function modalInputAnnulla() {
 	scontrino.chiudi = function () {
         scontrino.id.length = 0;
     }
+	scontrino.getResto = function () {
+		var res = [];
+		var tot = scontrino.getTotale().replace(",", ".");
+
+		var tagli = [1, 5, 10, 50];
+		for (var i = 0; i < tagli.length; i++) {
+			var a = Math.ceil(tot / tagli[i]) * tagli[i];
+			var b = a - tot;
+			if (b != 0 && res.indexOf(a) == -1) { res.push(a); res.push(b); }
+		}
+
+		for (var i = 0; i < res.length; i++) {
+			res[i] = res[i].toFixed(2).replace(".", ",");
+		}
+		return res;
+	}
 	scontrino.Riapri = function () {
 		scontrino.id.length = 0;
 		for (var i=0; i<scontrino.righe.length; ++i) {
