@@ -29,13 +29,6 @@
 	</div>
 </div>
 
-<script>
-function readQuant() {
-    document.getElementById("modalInput").style.display = "none";
-}
-</script>
-
-
 
 
 <div id="modalInput" style="
@@ -55,7 +48,7 @@ z-index: -1;
 opacity: 0.80;">
 </div>
 
-<div class="metro-tile" onclick="readQuant();">
+<div class="metro-tile" onclick="modalInputAnnulla();">
 </div>
 
 <table class="keypad">
@@ -67,6 +60,23 @@ opacity: 0.80;">
 
 </div>
 
+<script>
+/*
+Ci vogliono diverse finestre di input:
+1) Click su prodotto-nello-scontrino: Cambio quantità e prezzo
+2) Click su subtotale: Scelta totali (contanti di default) e fattura (e buoni pasto?)
+3) Click su totale-disabilitato-perchè-scontrino-chiuso: Lettura e chiusura di cassa, ristampa ultimo scontrino dgfe, stampa giornata dgfe, cambia prodotti
+4) Click su tile-resto dopo chiusura scontrino: Calcolo manuale del resto
+*/
+
+function modalInput() {
+	document.getElementById("modalInput").style.display = "block";
+}
+
+function modalInputAnnulla() {
+	document.getElementById("modalInput").style.display = "none";
+}
+</script>
 
 <script type="text/javascript">
 	// Caricamento FastClick per iPad
@@ -92,10 +102,11 @@ opacity: 0.80;">
 	window.onresize=function() { dyn_dimensions(); }
 
 
-	function animaClick(tile, uiEvent) {
+	function animaClick(uiEvent) {
 		return function () {
-			tile.className = tile.className.replace(" tile_reset", "");
-			tile.className += " tile_middle";
+			this.className = this.className.replace(" tile_reset", "");
+			this.className += " tile_middle";
+			var tile = this;
 			setTimeout(function() {tile.className = tile.className.replace(" tile_middle", " tile_reset");}, 100);
 			document.getElementById("click_snd").play();
 
@@ -124,7 +135,7 @@ opacity: 0.80;">
 			for (var i=0; i < pr_array.length; i++) {
 				var divTile = document.createElement("div");
 				divTile.className = "metro-tile " + reparti[r].col + " tile-prezzi";
-				divTile.onclick = animaClick(divTile, uiEventAggiungiProdotto(r, i));
+				divTile.onclick = animaClick(uiEventAggiungiProdotto(r, i));
 				table.appendChild(divTile);
 				var divDesc = document.createElement("div");
 				divDesc.className = "desc "  + reparti[r].col;
@@ -155,7 +166,7 @@ opacity: 0.80;">
 
     			divTile = document.createElement("div");
     			divTile.className = "metro-tile tile-scontrino " + reparti[idx_reparto].col;
-				divTile.onclick = animaClick(divTile, uiEventCambiaRigaScontrino(divTile));
+				divTile.onclick = animaClick(uiEventCambiaRigaScontrino(divTile));
 				document.getElementById("scontr").appendChild(divTile);
 			} else {
 				divTile = document.getElementById("scontr").childNodes[idx];
@@ -170,7 +181,7 @@ opacity: 0.80;">
 
 	function updateTotale() {
 		var tot = document.getElementById("tot1");
-		tot.onclick = animaClick(tot, uiEventChiudiScontrino(tot));
+		tot.onclick = animaClick(uiEventChiudiScontrino(tot));
 		document.getElementById("tot1_riga1").innerHTML = "SubTotale";
 		document.getElementById("tot1_riga2").innerHTML = "&euro; " + scontrino.getTotale().toFixed(2);
 	}
@@ -178,27 +189,49 @@ opacity: 0.80;">
 	function uiEventCambiaRigaScontrino(tile) {
 		return function () {
 			animaSelezionaRigaScontrino(tile);
-			document.getElementById("modalInput").style.display = "block";
+			modalInput();
+		}
+	}
+
+	function uiEventRiapriScontrino (tile) {
+		return function () {
+			scontrino.Riapri();
+			document.getElementById("scontr").removeChild(tile);
+			updateTotale();
+			modalInputAnnulla();
 		}
 	}
 
 	function uiEventChiudiScontrino (tile) {
 		return function () {
-			scontrino.chiudi();
-
-			tile.onclick = animaClick(tile, uiEventInviaScontrino(tile));
+			tile.onclick = animaClick(uiEventInviaScontrino(tile));
 			document.getElementById("tot1_riga1").innerHTML = "";
 			document.getElementById("tot1_riga2").innerHTML = "STAMPA";
+
+			scontrino.chiudi();
+
+   			var divTile = document.createElement("div");
+			divTile.id = "TotSc";
+   			divTile.className = "metro-tile tile-scontrino orange";
+			divTile.onclick = animaClick(uiEventRiapriScontrino	(divTile));
+			document.getElementById("scontr").appendChild(divTile);
+  			divTile.innerHTML = "TOT. CONTANTI <br>  &euro; " + scontrino.getTotale().toFixed(2);
+			animaSelezionaRigaScontrino(divTile);
+
+			modalInput();
 		}
 	}
 
 	function uiEventInviaScontrino(tile) {
 		return function () {
-			// scontrino.invia();
+			scontrino.invia();
 
 			tile.onclick = "none";
 			document.getElementById("tot1_riga1").innerHTML = "";
 			document.getElementById("tot1_riga2").innerHTML = "";
+			modalInputAnnulla();
+			var divTile = document.getElementById("TotSc");
+			divTile.onclick = "none";
 		}
 	}
 
@@ -232,6 +265,7 @@ opacity: 0.80;">
 		var id = scontrino.creaID(rep, desc, prezzo);
 		return scontrino.id.indexOf(id);
 	}
+	scontrino.invia = function () { scontrino.id.length = 0; scontrino.righe.length = 0; }
 
 </script>
 
@@ -243,7 +277,7 @@ function updateReparti() {
     var divTile = document.createElement("div");
     divTile.className = "metro-tile tile-reparti " + reparti[i].col;
     divTile.innerHTML = reparti[i].reparto;
-    divTile.onclick = animaClick(divTile, uiEventCambiaReparto(i));
+    divTile.onclick = animaClick(uiEventCambiaReparto(i));
 	document.getElementById('reparti').insertCell(-1).appendChild(divTile);
   }
 }
