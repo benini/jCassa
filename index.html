@@ -284,6 +284,7 @@ function modalInputAnnulla() {
 			while (i < resti.length) {
 	            divTile.innerHTML += "&euro; " + resti[i++] + " ==> &euro; " + resti[i++] + "<br>";
 			}
+			divTile.scrollIntoView();
 
             modalInput("Totale");
 		}
@@ -399,16 +400,19 @@ function updateReparti() {
 
 var reparti = [];
 reparti.push({reparto: "BAR", col: "colore_caffe", prezzi: [] });
+reparti.push({reparto: "BIRRE", col: "colore_birre", prezzi: [] });
+reparti.push({reparto: "VINI", col: "colore_vini", prezzi: [] });
 reparti.push({reparto: "PANINI", col: "colore_panini", prezzi: [] });
 reparti.push({reparto: "CUCINA", col: "colore_cucina", prezzi: [
 {desc: "CAFFE", prezzo: "1,10"},
 {desc: "COCA", prezzo: "2,00"}
 ] });
+reparti.push({reparto: "DESSERT", col: "colore_dessert", prezzi: [] });
 reparti.push({reparto: "BAR", col: "metro-tile-purple", prezzi: [] });
-reparti.push({reparto: "VINI", col: "colore_vini", prezzi: [] });
-reparti.push({reparto: "BIRRE", col: "colore_birre", prezzi: [] });
-reparti.push({reparto: "GELATI", col: "colore_gelati", prezzi: [] });
- var prezzi = ["BAR", "PRIMI", "PIZZE", "A", "b", "11,40", "7", "BAR", "PRIMI"];
+
+
+
+
 
 reparti[0].prezzi.push({desc: "BAR", prezzo: ""});
 reparti[0].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
