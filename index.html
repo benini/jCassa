@@ -282,7 +282,8 @@ function modalInputAnnulla() {
 			var i = 0;
 			var resti = scontrino.getResto();
 			while (i < resti.length) {
-	            divTile.innerHTML += "&euro; " + resti[i++] + " ==> &euro; " + resti[i++] + "<br>";
+	            divTile.innerHTML += "<div style='float:left; width: 35%;'> &euro; " + resti[i++] + 
+				"</div><div style='float:left; width: 30%;'><img src='img/r_arrow.gif' style='height: 10px;'></div> &euro; " + resti[i++] + "<br>";
 			}
 			divTile.scrollIntoView();
 
