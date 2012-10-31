@@ -101,6 +101,7 @@
 	padding: 0px 4px;
     margin-top: 2px;
     margin-bottom: 2px;
+    padding-bottom: 4px;
     border-right-width: 0px;    
     background-color: #D8512B;
 	border-color: #DC6241;
@@ -119,11 +120,24 @@
     text-align:right;
 }
 
-.tile-contanti {
+.tile-totale {
     width: 160px;
 	color: #FFF;
 	font-size: 30px;
 	text-align:right;
+}
+
+.tile-totale-subtotale {
+    background-color: #D8512B;
+    border-color: #DC6241;
+}
+.tile-totale-stampa {
+	background-color: #009719;
+	border-color: #1A9F30;
+}
+.tile-totale-chiusura {
+	background-color: #2878EC;
+	border-color: #4396F1;
 }
 
 .modalInput {

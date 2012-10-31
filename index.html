@@ -23,7 +23,7 @@
 </div>
 
 <div style="position: fixed; right: 0px; bottom: 4px;">
-	<div id="tot1" class="metro-tile tile-contanti metro-tile-blue">
+	<div id="tot1" class="metro-tile tile-totale tile-totale-chiusura">
 		<div id="tot1_riga1">TOTALE</div>
 		<div id="tot1_riga2"></div>
 	</div>
@@ -204,6 +204,9 @@ function modalInputAnnulla() {
 			if (! scontrino.isAperto()) {
 				var div_scontr = document.getElementById("scontr");
 				while (div_scontr.hasChildNodes()) { div_scontr.removeChild(div_scontr.lastChild);	}
+                
+                var tot = document.getElementById("tot1");
+                tot.className = tot.className.replace(" tile-totale-chiusura", " tile-totale-subtotale");
 			}
 
 			var prezzo = reparti[idx_reparto].prezzi[idx_prezzo].prezzo;
@@ -252,6 +255,9 @@ function modalInputAnnulla() {
             var div_scontr = document.getElementById("scontr");
 			if (div_scontr.lastChild) { div_scontr.removeChild(div_scontr.lastChild); }
 			if (div_scontr.lastChild) { div_scontr.removeChild(div_scontr.lastChild); }
+            
+            var tot = document.getElementById("tot1");
+            tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-subtotale");
 			updateTotale();
 			modalInputAnnulla();
 		}
@@ -260,6 +266,8 @@ function modalInputAnnulla() {
 	function uiEventChiudiScontrino (tile) {
 		return function () {
 			tile.onclick = animaClick(uiEventInviaScontrino(tile));
+            var tot = document.getElementById("tot1");
+            tot.className = tot.className.replace(" tile-totale-subtotale", " tile-totale-stampa");
 			document.getElementById("tot1_riga1").innerHTML = "";
 			document.getElementById("tot1_riga2").innerHTML = "STAMPA";
 
@@ -282,8 +290,9 @@ function modalInputAnnulla() {
 			var i = 0;
 			var resti = scontrino.getResto();
 			while (i < resti.length) {
-	            divTile.innerHTML += "<div style='float:left; width: 35%;'> &euro; " + resti[i++] + 
-				"</div><div style='float:left; width: 30%;'><img src='img/r_arrow.gif' style='height: 10px;'></div> &euro; " + resti[i++] + "<br>";
+	            divTile.innerHTML += "<div style='float:left; width: 40%;'> &euro; " + resti[i++] + 
+    			"</div><div style='float:left; width: 20%;'>==></div> &euro; " + resti[i++] + "<br>";
+//				"</div><div style='float:left; width: 20%; height: 10px; background-image: url(img/r_arrow.gif); background-position: center;'></div> &euro; " + resti[i++] + "<br>";
 			}
 			divTile.scrollIntoView();
 
@@ -294,6 +303,8 @@ function modalInputAnnulla() {
 	function uiEventInviaScontrino(tile) {
 		return function () {
 			tile.onclick = animaClick(uiEventLetture());
+            var tot = document.getElementById("tot1");
+            tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-chiusura");
 			document.getElementById("tot1_riga1").innerHTML = "";
 			document.getElementById("tot1_riga2").innerHTML = "";
 			modalInputAnnulla();
