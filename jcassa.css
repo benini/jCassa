@@ -124,7 +124,7 @@
     width: 160px;
 	color: #FFF;
 	font-size: 30px;
-	text-align:right;
+	text-align: right;
 }
 
 .tile-totale-subtotale {
@@ -132,8 +132,11 @@
     border-color: #DC6241;
 }
 .tile-totale-stampa {
-	background-color: #009719;
-	border-color: #1A9F30;
+	font-size: 18px;
+	text-align: left;
+	background-color: #6CB71E;
+	border-color: #7ABD34;
+	background-image: url('img/Tot-Stampa.gif');
 }
 .tile-totale-chiusura {
 	background-color: #2878EC;
