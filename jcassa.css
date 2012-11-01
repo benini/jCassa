@@ -7,7 +7,7 @@
 	font-size: 20px;
 	border-width: 3px;
 	border-style: solid;
-    overflow: hidden;	
+    overflow: hidden;
 }
 .tile_reset {
 	-webkit-transform: scale(1);
@@ -164,7 +164,7 @@
 }
 
 .keypad {
-    position:absolute; top:10px; right:30px;	
+    position:absolute; top:30px; right:120px;	
 	border-spacing: 10px;
 }
 
@@ -179,3 +179,9 @@
 	color: blue;
 }
 
+.resto td {
+	text-align: right;
+	font-size: 30px;
+	padding: 3px 10px;
+	color: white;
+}
