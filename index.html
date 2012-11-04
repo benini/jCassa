@@ -43,20 +43,33 @@
 
 <div id="modalInputProdotto" class="modalInput">
 	<div class="modalInputBackground"></div>
-<ul style="color: white;">
-<li>Cambia Quantita</li>
-<li>Cambia prezzo unitario</li>
-<li>Elimina Riga Scontrino</li>
-</ul>
-	<div class="metro-tile" onclick="modalInputAnnulla();"></div>
 
-	<table class="keypad">
-		<tr><td> 1 </td><td> 2 </td><td> 3 </td></tr>
-		<tr><td> 4 </td><td> 5 </td><td> 6 </td></tr>
-		<tr><td> 7 </td><td> 8 </td><td> 9 </td></tr>
-		<tr><td> 0 </td><td> 00 </td><td style="color: red"> C </td></tr>
+	<div style="float:right; margin-right: 10px;">
+		<div onclick="modalInputAnnulla();" class="pulsante pulsante_annulla"></div>
+		<div id="prodotto_elimina" class="pulsante pulsante_annulla" style="margin-top: 26px"></div>
+		<div id="prodotto_prezzo" class="pulsante pulsante_annulla" style="margin-top: 26px"></div>
+		<div id="prodotto_quant" class="pulsante pulsante_annulla" style="margin-top: 6px"></div>
+		<div id="prodotto_conferma" class="pulsante pulsante_annulla" style="margin-top: 26px"></div>
+	</div>
+
+
+	<table id="prodotto_keypad" class="keypad" style="margin-top: 34px; margin-right: 50px;">
+
+		<tr><td colspan=3>
+		<div style="font-size:18px; margin-bottom: 2px; text-align:center;">QUANTITA'</div>
+		<div id="prodotto_digit"></div>
+		</td></tr>
+		<tr><td>1</td><td>2</td><td>3</td></tr>
+		<tr><td>4</td><td>5</td><td>6</td></tr>
+		<tr><td>7</td><td>8</td><td>9</td></tr>
+		<tr><td>0</td><td>00</td><td style="color: red;">C</td></tr>
 	</table>
+
+
+
 </div>
+
+
 
 <div id="modalInputTotale" class="modalInput">
 	<div class="modalInputBackground"></div>
@@ -90,7 +103,7 @@
 	border-radius: 100%;">
 	</div>
 
-	<div onclick="annullaResto();" style="
+	<div onclick="modalInputAnnulla();" style="
 	width: 80px;
 	height: 80px;
 	color: #FFF;
@@ -129,10 +142,18 @@ var resto_str = "";
 document.getElementById("resto_annulla").onclick = uiEventAnnullaResto();
 var tasti = document.getElementById("resto_keypad").getElementsByTagName("TD");
 for (var i = 0; i < tasti.length; i++) {
-	if (tasti[i].innerHTML.length < 3) {
+	if (tasti[i].colSpan == 1) {
 		tasti[i].onclick = uiEventRestoKeypad();
 	}
 }
+
+tasti = document.getElementById("prodotto_keypad").getElementsByTagName("TD");
+for (var i = 0; i < tasti.length; i++) {
+	if (tasti[i].colSpan == 1) {
+		tasti[i].onclick = uiEventProdottoKeypad();
+	}
+}
+
 
 function uiEventAnnullaResto() { 
 	return function () {
@@ -158,6 +179,21 @@ function uiEventRestoKeypad() {
 
 		var b = scontrino.getResto(a)[1];
 		document.getElementById("resto_calcolato").innerHTML = "&euro; " + b.replace(".", ",");
+	}
+}
+
+var prodotto_str = "";
+
+function uiEventProdottoKeypad() { 
+	return function () {
+		animaClick(this);
+		var tasto = this.innerHTML;
+		if (tasto == "C") {
+			tasto = "";
+			prodotto_str = "";
+		}
+		prodotto_str += tasto;
+		document.getElementById("prodotto_digit").innerHTML = prodotto_str;
 	}
 }
 

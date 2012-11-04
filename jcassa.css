@@ -188,3 +188,19 @@
 	padding: 0px 16px;
 }
 
+.pulsante {
+	width: 70px;
+	height: 70px;
+	color: #FFF;
+	padding: 0px;
+	border-width: 3px;
+	border-style: solid;
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+.pulsante_annulla {
+	background-image: url('img/close.png');
+	background-size: 60%;
+	background-color: red;
+}
