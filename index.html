@@ -59,9 +59,9 @@
 
 	    <div style="float:right; margin-right: 10px;">
 		    <div onclick="modalInputAnnulla();" class="pulsante pulsante_annulla"></div>
-		    <div id="prodotto_elimina" class="pulsante pulsante_annulla" style="margin-top: 26px" 
+		    <div id="prodotto_elimina" class="pulsante pulsante_elimina" style="margin-top: 40px" 
                 onclick="uiEventProdottoElimina()"></div>
-		    <div id="prodotto_conferma" class="pulsante pulsante_annulla" style="margin-top: 26px"
+		    <div id="prodotto_conferma" class="pulsante pulsante_ok" style="margin-top: 40px"
                 onclick="uiEventProdottoOK()"></div>
 	    </div>
 
@@ -337,7 +337,9 @@ function modalInputAnnulla() {
 		tile.className = tile.className.replace(" tile_reset", "");
 		tile.className += " tile_middle";
 		setTimeout(function() {tile.className = tile.className.replace(" tile_middle", " tile_reset");}, 100);
-		document.getElementById("click_snd").play();
+		var click = document.getElementById("click_snd")
+		click.currentTime = 0;
+		click.play();
 	}
 
 	function animaSelezionaRigaScontrino(divTile) {
@@ -409,14 +411,14 @@ function modalInputAnnulla() {
 			} else {
 				divTile = document.getElementById("scontr").childNodes[idx];
                 //TODO: non è bello accedere direttamente all'array
-				quant = scontrino.righe[idx].quant +1;
+				quant = Number(scontrino.righe[idx].quant) +1;
 			}
             
             updateTileProdotto(divTile, quant);
 		}
 	}
     
-    function updateTileProdotto(tile, quant, prezzo, desc) {        
+    function updateTileProdotto(tile, quant, prezzo, desc) {
         var idx = 0;
         var tiles = document.getElementById("scontr").childNodes;
         for (; idx < tiles.length && tiles[idx] != tile; ++idx) {}        
@@ -424,7 +426,7 @@ function modalInputAnnulla() {
         
         //TODO: non è bello accedere direttamente all'array
         if (desc && desc != "") { scontrino.righe[idx].desc = desc; }
-        if (quant && quant != "") { scontrino.righe[idx].quant = quant; }
+        if (quant && quant != "") { scontrino.righe[idx].quant = Number(quant); }
         if (prezzo && prezzo != "") { scontrino.righe[idx].prezzo = prezzo; }
         
         tile.innerHTML = scontrino.righe[idx].desc + "<br>" + "N. " + String(scontrino.righe[idx].quant).replace(".",",") + "  x  &euro; " + scontrino.righe[idx].prezzo;

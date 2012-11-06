@@ -195,6 +195,7 @@
 	padding: 0px;
 	border-width: 3px;
 	border-style: solid;
+	border-radius: 6px;
 	background-position: center center;
 	background-repeat: no-repeat;
 }
@@ -203,4 +204,16 @@
 	background-image: url('img/close.png');
 	background-size: 60%;
 	background-color: red;
+}
+
+.pulsante_ok {
+	background-image: url('img/ok.png');
+	background-size: 60%;
+	background-color: #59bd00;
+}
+
+.pulsante_elimina {
+	background-image: url('img/elimina.png');
+	background-size: 70%;
+	background-color: #893bbb;
 }
