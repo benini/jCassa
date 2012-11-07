@@ -66,12 +66,12 @@
 	    </div>
 
     	<table id="prodotto_keypad" class="keypad" style="margin-right: 50px;">
-        	<tr><td colspan=3 id="prodotto_prezzo">
+        	<tr><td colspan=3 id="prodotto_prezzo" class="prova">
 		        <div style="font-size:18px; margin-bottom: 2px; text-align:center;">PREZZO UNITARIO</div>
 		        <div id="prodotto_digit_prezzo"></div>
 		    </td></tr>
 			<tr style="height: 30px;"></tr>
-		    <tr><td colspan=3 id="prodotto_quantita">
+		    <tr><td colspan=3 id="prodotto_quantita" class="prova">
 		        <div style="font-size:18px; margin-bottom: 2px; text-align:center;">QUANTITA'</div>
 		        <div id="prodotto_digit_quantita"></div>
 		    </td></tr>
@@ -208,9 +208,18 @@ function uiEventProdottoCambiaPrezzo() {
         prodotto_visore = "prezzo";
         document.getElementById("prodotto_keypad_special").innerHTML = "00";
 
+		var p = document.getElementById("prodotto_prezzo");
+		var q = document.getElementById("prodotto_quantita");
+
+		p.style.setProperty("-webkit-animation-name", "move_down");
+		q.style.setProperty("-webkit-animation-name", "move_up");
+
+
+/*
 		var rows = document.getElementById('prodotto_keypad').getElementsByTagName("TR"); 
 		rows[0].parentNode.insertBefore(rows[1], rows[0]);
 		rows[0].parentNode.insertBefore(rows[2], rows[0]);
+*/
 	}
 }
 
@@ -222,9 +231,8 @@ function uiEventProdottoCambiaQuantita() {
         prodotto_visore = "quantita";
         document.getElementById("prodotto_keypad_special").innerHTML = ",";
 
-		var rows = document.getElementById('prodotto_keypad').getElementsByTagName("TR"); 
-		rows[0].parentNode.insertBefore(rows[1], rows[0]);
-		rows[0].parentNode.insertBefore(rows[2], rows[0]);
+		document.getElementById("prodotto_prezzo").style.setProperty("-webkit-animation-name", "move_down_reverse");
+		document.getElementById("prodotto_quantita").style.setProperty("-webkit-animation-name", "move_up_reverse");
 	}
 }
 
@@ -278,11 +286,9 @@ function modalInput(tipo, tile) {
 		document.getElementById("resto_calcolato").innerHTML = "&euro; 0,00";
 	} else if (tipo == "Prodotto") {
         prodotto_str = "";
-		if (prodotto_visore != "quantita") {
-	        prodotto_visore = "quantita";
-			var rows = document.getElementById('prodotto_keypad').getElementsByTagName("TR"); 
-			rows[0].parentNode.insertBefore(rows[2], rows[0]);
-		}
+        prodotto_visore = "quantita";
+		document.getElementById("prodotto_prezzo").style.setProperty("-webkit-animation-name", "");
+		document.getElementById("prodotto_quantita").style.setProperty("-webkit-animation-name", "");
         document.getElementById("prodotto_keypad_special").innerHTML = ",";
 
         var idx = 0;
@@ -477,7 +483,7 @@ function modalInputAnnulla() {
 
 	function uiEventChiudiScontrino () {
 		return function () {
-            if (document.getElementById("modalInputProdotto").style.display != "none") {
+            if (document.getElementById("modalInputProdotto").style.display == "block") {
                 //TODO: Sarebbe meglio chiamare la conferma della finestra modale?
                 return;
             }

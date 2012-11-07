@@ -172,8 +172,12 @@
 .keypad td {
 	width: 76px;
 	line-height: 76px;
-	border:solid 4px #01c5ff;
+	border:solid 0px #01c5ff;
 	background-color:#01bcf3;
+	background-color:#95bcbc;
+	background-color:#90aaaa;
+	background-color:#55bdd2;
+	background-color:#037be5;
 	text-align: center;
 	font-family: sans-serif; 
 	font-size: 50px;
@@ -216,4 +220,36 @@
 	background-image: url('img/elimina.png');
 	background-size: 70%;
 	background-color: #893bbb;
+}
+
+@-webkit-keyframes move_down {
+	0%   {-webkit-transform: translate(0px,0px);}
+	10%   {-webkit-transform: translate(0px,40px);}
+	70%   {-webkit-transform: translate(-90px,40px) rotate(-40deg);}
+	100% {-webkit-transform: translate(0px,96px);}
+}
+
+@-webkit-keyframes move_down_reverse {
+	0% {-webkit-transform: translate(0px, 96px);}
+	50% {-webkit-transform: translate(0px, 96px);}
+	100%   {-webkit-transform: translate(0px,0px);}
+}
+
+@-webkit-keyframes move_up {
+	50%   {-webkit-transform: translate(0px,0px);}
+	100% {-webkit-transform: translate(0px,-96px);}
+}
+
+@-webkit-keyframes move_up_reverse {
+	0%   {-webkit-transform: translate(0px,-96px);}
+	10%   {-webkit-transform: translate(0px,-56px);}
+	70%   {-webkit-transform: translate(-90px,-56px) rotate(-40deg);}
+	100% {-webkit-transform: translate(0px,0px);}
+}
+
+
+.prova {
+	-webkit-animation-duration:0.3s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-fill-mode: forwards;
 }
