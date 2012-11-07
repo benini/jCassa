@@ -58,145 +58,137 @@
 	    <div class="modalInputBackground"></div>
 
 	    <div style="float:right; margin-right: 10px;">
-		    <div onclick="modalInputAnnulla();" class="pulsante pulsante_annulla"></div>
+		    <div onclick="modalInputChiudi();" class="pulsante pulsante_annulla"></div>
 		    <div id="prodotto_elimina" class="pulsante pulsante_elimina" style="margin-top: 40px"
                 onclick="uiEventProdottoElimina()"></div>
 		    <div id="prodotto_conferma" class="pulsante pulsante_ok" style="margin-top: 40px"
                 onclick="uiEventProdottoOK()"></div>
 	    </div>
+        
+        <div style="float:right; margin-top: 8px; margin-right: 50px;">
+            <div id="prodotto_prezzo" class="keypad_tile keypad_animazione keypad_colore-prezzo" style="margin-bottom: 40px;">
+                <div class="keypad_tile-header">PREZZO UNITARIO</div>
+                <div id="prodotto_digit_prezzo" class="keypad_tile-digits"></div>
+            </div>
+            
+            <div id="prodotto_quantita" class="keypad_tile keypad_animazione keypad_colore-quantita">
+                <div class="keypad_tile-header">QUANTITA'</div>
+                <div id="prodotto_digit_quantita" class="keypad_tile-digits"></div>
+            </div>
 
-    	<table id="prodotto_keypad" class="keypad keypad_quantita" style="margin-right: 50px;">
-        	<tr><td colspan=3 id="prodotto_prezzo" class="keypad_animazione" style="background-color:#037be5; border-color: #037be5;">
-		        <div style="font-size:18px; margin-bottom: 2px; text-align:center;">PREZZO UNITARIO</div>
-		        <div id="prodotto_digit_prezzo"></div>
-		    </td></tr>
-			<tr style="height: 30px;"></tr>
-		    <tr><td colspan=3 id="prodotto_quantita" class="keypad_animazione" style="border-color: #01c5ff; background-color:#01bcf3;">
-		        <div style="font-size:18px; margin-bottom: 2px; text-align:center;">QUANTITA'</div>
-		        <div id="prodotto_digit_quantita"></div>
-		    </td></tr>
-		    <tr><td>1</td><td>2</td><td>3</td></tr>
-		    <tr><td>4</td><td>5</td><td>6</td></tr>
-    		<tr><td>7</td><td>8</td><td>9</td></tr>
-	    	<tr><td>0</td><td id="prodotto_keypad_special">00</td><td style="color: red;">C</td></tr>
-	    </table>
+    	    <table id="prodotto_keypad" class="keypad keypad_quantita">
+		        <tr><td>1</td><td>2</td><td>3</td></tr>
+		        <tr><td>4</td><td>5</td><td>6</td></tr>
+    		    <tr><td>7</td><td>8</td><td>9</td></tr>
+	    	    <tr><td>0</td><td id="prodotto_keypad_special">00</td><td style="color: red;">C</td></tr>
+	        </table>
+        </div>
     </div>
 
     <div id="modalInputResto" class="modalInput">
 	    <div class="modalInputBackground"></div>
 
-	    <div style="float:right">
-        	<div id="resto_annulla" style="
-	width: 70px;
-	height: 70px;
-	color: #FFF;
-	padding: 0px;
-	border-width: 3px;
-	border-style: solid;
-	background-image: url('img/close.png');
-	background-color: red;
-	background-size: 60%;
-	background-position: center center;
-	background-repeat: no-repeat;
-	border-radius: 100%;">
-	        </div>
+        <div style="float:right; margin-right: 10px;">
+    	    <div onclick="modalInputChiudi();" class="pulsante pulsante_annulla"></div>		    
+		    <div onclick="modalInputChiudi();" class="pulsante pulsante_ok" style="margin-top: 40px"></div>
+	    </div>
 
-	        <div onclick="modalInputAnnulla();" style="
-	width: 80px;
-	height: 80px;
-	color: #FFF;
-	padding: 0px;
-	border-width: 3px;
-	border-style: solid;
-	background-image: url('img/close.png');
-	background-color: green;
-	background-size: 60%;
-	background-position: center center;
-	background-repeat: no-repeat;
-	border-radius: 10px;">
-	        </div>
-    	</div>
-
-    	<table id="resto_keypad" class="keypad" style="margin-top: 30px; margin-right: 30px;">
-	    	<tr><td colspan=3 style="background-color: #D8512B; border-color: #DC6241;">
-		        <div style="font-size:18px; margin-bottom: 2px; text-align:center;">RESTO</div>
-		        <div id="resto_calcolato"></div>
-		    </td></tr>
-		    <tr><td colspan=3><div id="resto_digitato"></div></td></tr>
-		    <tr><td>1</td><td>2</td><td>3</td></tr>
-		    <tr><td>4</td><td>5</td><td>6</td></tr>
-		    <tr><td>7</td><td>8</td><td>9</td></tr>
-		    <tr><td>0</td><td>00</td><td style="color: red;">C</td></tr>
-	    </table>
+        <div style="float:right; margin-top: 8px; margin-right: 50px;">
+            <div class="keypad_tile tile-totale-subtotale">
+                <div class="keypad_tile-header">RESTO</div>
+                <div id="resto_calcolato" class="keypad_tile-digits"></div>
+            </div>
+            <div class="keypad_tile keypad_colore-prezzo" style="height: 40px; margin-top: 10px;">
+                <div id="resto_digitato" class="keypad_tile-digits"></div>
+            </div>
+    	    <table id="resto_keypad" class="keypad">
+		        <tr><td>1</td><td>2</td><td>3</td></tr>
+		        <tr><td>4</td><td>5</td><td>6</td></tr>
+		        <tr><td>7</td><td>8</td><td>9</td></tr>
+		        <tr><td>0</td><td>00</td><td style="color: red;">C</td></tr>
+	        </table>
+        </div>
     </div>
 
 </div>
 
 
-<script>
+<script type="text/javascript">
 
-var resto_str = "";
 
-document.getElementById("resto_annulla").onclick = uiEventAnnullaResto();
-var tasti = document.getElementById("resto_keypad").getElementsByTagName("TD");
-for (var i = 0; i < tasti.length; i++) {
-	if (tasti[i].colSpan == 1) {
-		tasti[i].onclick = uiEventRestoKeypad();
+/* *****************************************
+// MODAL_INPUT: Diverse finestre di input:
+- "Chiusura":
+    	attivata cliccando su totale senza scontrini aperti, cioè dopo aver stampato (o annullato) uno scontrino
+		permette di fare le letture/chiusure di cassa e le stampe del dgfe
+- "Prodotto":
+		attivata cliccando su tile-scontrino
+		permette di cambiare la quantità ed il prezzo del prodotto nello scontrino
+- "Totale":
+		attivata cliccando su subtotale (scontrino aperto)
+		permette di cambiare il totale di chiusura, fare fatture e scontrini parlanti e pagamenti con i buoni pasto
+- "Resto":
+		attivata cliccando su tile-scontrino-resto
+		permette di inserire l'importo esatto su cui calcolare il resto; se attivata prima di stampare lo scontrino l'importo verrà scritto sullo scontrino  stesso
+*******************************************/
+function modalInput(tipo, tile) {
+	if (tipo == "Resto") {
+		resto_str = "";
+		document.getElementById("resto_digitato").innerHTML = "&euro; 0,00";
+		document.getElementById("resto_calcolato").innerHTML = "&euro; 0,00";
+	} else if (tipo == "Prodotto") {
+        prodotto_str = "";
+        prodotto_visore = "quantita";
+		document.getElementById("prodotto_prezzo").style.setProperty("-webkit-animation-name", "");
+		document.getElementById("prodotto_quantita").style.setProperty("-webkit-animation-name", "");
+        document.getElementById("prodotto_keypad_special").innerHTML = ",";
+
+        var idx = 0;
+        var tiles = document.getElementById("scontr").childNodes;
+        for (; idx < tiles.length && tiles[idx] != tile; ++idx) {}
+        if (idx == tiles.length) { console.log("Errore in modalInput"); return; }
+        prodotto_tile = tile;
+        prodotto_tile.idx = idx;
+        //TODO: non è bello accedere direttamente all'array
+        document.getElementById("prodotto_digit_prezzo").innerHTML = "&euro; " + scontrino.righe[idx].prezzo;
+        document.getElementById("prodotto_digit_quantita").innerHTML = scontrino.righe[idx].quant;
 	}
+
+	modalInputNascondi();
+	document.getElementById("modalInput" + tipo).style.display = "block";
+	document.getElementById("modalInput").style.display = "block";
 }
 
-document.getElementById("prodotto_prezzo").onclick = uiEventProdottoCambiaPrezzo();
-document.getElementById("prodotto_quantita").onclick = uiEventProdottoCambiaQuantita();
-tasti = document.getElementById("prodotto_keypad").getElementsByTagName("TD");
-for (var i = 0; i < tasti.length; i++) {
-	if (tasti[i].colSpan == 1) {
-		tasti[i].onclick = uiEventProdottoKeypad();
-	}
+function modalInputChiudi() {
+	document.getElementById("modalInput").style.display = "none";
+	document.getElementById("modalInputChiusura").style.display = "none";
+	document.getElementById("modalInputProdotto").style.display = "none";
+	document.getElementById("modalInputTotale").style.display = "none";
+	document.getElementById("modalInputResto").style.display = "none";
 }
 
-function uiEventAnnullaResto() {
-	return function () {
-		animaClick(this);
-//TODO: Questo è un hack da cambiare quando avrò un modo migliore per capire se c'è uno scontrino da inviare
-		var x = document.getElementById("scontr").firstChild.innerHTML;
-		if (x.indexOf("ULTIMA VENDITA") == -1) { modalInput('Totale'); }
-		else { modalInputAnnulla(); }
-	}
+function modalInputNascondi() {
 }
 
-function uiEventRestoKeypad() {
-	return function () {
-		animaClick(this);
-		var tasto = this.innerHTML;
-		if (tasto == "C") {
-			tasto = "";
-			resto_str = "";
-		}
-		resto_str += tasto;
-		var a = String((resto_str / 100).toFixed(2));
-		document.getElementById("resto_digitato").innerHTML = "&euro; " + a.replace(".", ",");
-
-		var b = scontrino.getResto(a)[1];
-		document.getElementById("resto_calcolato").innerHTML = "&euro; " + b.replace(".", ",");
-	}
+function modalInputRipristina() {
 }
 
-var prodotto_str = "";
-var prodotto_visore = "quantita";
-var prodotto_tile;
+/* *****************************************
+// MODAL_INPUT_PRODOTTO: Inizio
+*******************************************/
 
 function uiEventProdottoOK() {
     updateTileProdotto(prodotto_tile,
         document.getElementById("prodotto_digit_quantita").innerHTML.replace(",","."),
         document.getElementById("prodotto_digit_prezzo").innerHTML.replace("\u20ac ", ""));
-    modalInputAnnulla();
+    modalInputChiudi();
 }
 
 function uiEventProdottoElimina() {
     scontrino.elimina(prodotto_tile.idx);
     document.getElementById("scontr").removeChild(prodotto_tile);
     updateTotale();
-    modalInputAnnulla();
+    modalInputChiudi();
 }
 
 
@@ -216,13 +208,6 @@ function uiEventProdottoCambiaPrezzo() {
 
         var keypad = document.getElementById("prodotto_keypad");
         keypad.className = keypad.className.replace(" keypad_quantita", "");
-
-
-/*
-		var rows = document.getElementById('prodotto_keypad').getElementsByTagName("TR");
-		rows[0].parentNode.insertBefore(rows[1], rows[0]);
-		rows[0].parentNode.insertBefore(rows[2], rows[0]);
-*/
 	}
 }
 
@@ -264,66 +249,80 @@ function uiEventProdottoKeypad() {
 	}
 }
 
-</script>
+/* *****************************************
+// MODAL_INPUT_PRODOTTO: Fine
+*******************************************/
 
+/* *****************************************
+// MODAL_INPUT_RESTO: Inizio
+*******************************************/
 
-
-<script>
-/*
-Diverse finestre di input:
-- "Chiusura":
-		attivata cliccando su totale senza scontrini aperti, cioè dopo aver stampato (o annullato) uno scontrino
-		permette di fare le letture/chiusure di cassa e le stampe del dgfe
-- "Prodotto":
-		attivata cliccando su tile-scontrino
-		permette di cambiare la quantità ed il prezzo del prodotto nello scontrino
-- "Totale":
-		attivata cliccando su subtotale (scontrino aperto)
-		permette di cambiare il totale di chiusura, fare fatture e scontrini parlanti e pagamenti con i buoni pasto
-- "Resto":
-		attivata cliccando su tile-scontrino-resto
-		permette di inserire l'importo esatto su cui calcolare il resto; se attivata prima di stampare lo scontrino l'importo verrà scritto sullo scontrino  stesso
-*/
-function modalInput(tipo, tile) {
-	if (tipo == "Resto") {
-		resto_str = "";
-		document.getElementById("resto_digitato").innerHTML = "&euro; 0,00";
-		document.getElementById("resto_calcolato").innerHTML = "&euro; 0,00";
-	} else if (tipo == "Prodotto") {
-        prodotto_str = "";
-        prodotto_visore = "quantita";
-		document.getElementById("prodotto_prezzo").style.setProperty("-webkit-animation-name", "");
-		document.getElementById("prodotto_quantita").style.setProperty("-webkit-animation-name", "");
-        document.getElementById("prodotto_keypad_special").innerHTML = ",";
-
-        var idx = 0;
-        var tiles = document.getElementById("scontr").childNodes;
-        for (; idx < tiles.length && tiles[idx] != tile; ++idx) {}
-        if (idx == tiles.length) { console.log("Errore in modalInput"); return; }
-        prodotto_tile = tile;
-        prodotto_tile.idx = idx;
-        //TODO: non è bello accedere direttamente all'array
-        document.getElementById("prodotto_digit_prezzo").innerHTML = "&euro; " + scontrino.righe[idx].prezzo;
-        document.getElementById("prodotto_digit_quantita").innerHTML = scontrino.righe[idx].quant;
+function uiEventRestoAnnulla() {
+    return function () {
+		animaClick(this);
+//TODO: Questo è un hack da cambiare quando avrò un modo migliore per capire se c'è uno scontrino da inviare
+		var x = document.getElementById("scontr").firstChild.innerHTML;
+		if (x.indexOf("ULTIMA VENDITA") == -1) { modalInput('Totale'); }
+		else { modalInputChiudi(); }
 	}
-
-	modalInputAnnulla();
-	document.getElementById("modalInput" + tipo).style.display = "block";
-	document.getElementById("modalInput").style.display = "block";
 }
 
-function modalInputAnnulla() {
-	document.getElementById("modalInput").style.display = "none";
-	document.getElementById("modalInputChiusura").style.display = "none";
-	document.getElementById("modalInputProdotto").style.display = "none";
-	document.getElementById("modalInputTotale").style.display = "none";
-	document.getElementById("modalInputResto").style.display = "none";
+function uiEventRestoOK() {
+    return function () {
+		animaClick(this);
+//TODO: Questo è un hack da cambiare quando avrò un modo migliore per capire se c'è uno scontrino da inviare
+		var x = document.getElementById("scontr").firstChild.innerHTML;
+		if (x.indexOf("ULTIMA VENDITA") == -1) { modalInput('Totale'); }
+		else { modalInputChiudi(); }
+	}
 }
-</script>
 
-<script type="text/javascript">
-	// Caricamento FastClick per iPad
-	window.addEventListener('load', function() { new FastClick(document.body); dyn_dimensions(); }, false);
+function uiEventRestoKeypad() {
+	return function () {
+		animaClick(this);
+		var tasto = this.innerHTML;
+		if (tasto == "C") {
+			tasto = "";
+			resto_str = "";
+		}
+		resto_str += tasto;
+		var a = String((resto_str / 100).toFixed(2));
+		document.getElementById("resto_digitato").innerHTML = "&euro; " + a.replace(".", ",");
+
+		var b = scontrino.getResto(a)[1];
+		document.getElementById("resto_calcolato").innerHTML = "&euro; " + b.replace(".", ",");
+	}
+}
+
+/* *****************************************
+// MODAL_INPUT_RESTO: Fine
+*******************************************/
+
+
+
+
+    // Variabili globali: chissà se esiste un modo con javascript per renderle più "locali"
+    var resto_str = "";
+    var prodotto_str = "";
+    var prodotto_visore = "quantita";
+    var prodotto_tile;
+    ////////////////////////////////////////
+
+	window.addEventListener('load', function() { 
+        new FastClick(document.body); // Caricamento FastClick per iPad
+        dyn_dimensions();
+        
+        // Keypads
+        document.getElementById("prodotto_prezzo").onclick = uiEventProdottoCambiaPrezzo();
+        document.getElementById("prodotto_quantita").onclick = uiEventProdottoCambiaQuantita();
+
+        var tasti = document.getElementById("resto_keypad").getElementsByTagName("TD");
+        for (var i = 0; i < tasti.length; i++) { tasti[i].onclick = uiEventRestoKeypad(); }
+
+        tasti = document.getElementById("prodotto_keypad").getElementsByTagName("TD");
+        for (var i = 0; i < tasti.length; i++) { tasti[i].onclick = uiEventProdottoKeypad(); }
+        ///////////////////////////
+    }, false);
 
 
 	// Calcolo della dimensione della sezione "prezzi" in base alla spazio disponbile
@@ -486,7 +485,7 @@ function modalInputAnnulla() {
 		var tot = document.getElementById("tot1");
 		tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-subtotale");
 		updateTotale();
-		modalInputAnnulla();
+		modalInputChiudi();
 	}
 
 
@@ -523,7 +522,7 @@ function modalInputAnnulla() {
 			var i = 0;
 			var resti = scontrino.getResto();
 			while (i < resti.length) {
-	            divTile.innerHTML += "<div style='float:left; width: 40%;'> &euro; " + resti[i++] +
+	            divTile.innerHTML += "<div style='float:left; width: 44%;'> &euro; " + resti[i++] +
     			"</div><div style='float:left; width: 20%;'>==></div> &euro; " + resti[i++] + "<br>";
 //				"</div><div style='float:left; width: 20%; height: 10px; background-image: url(img/r_arrow.gif); background-position: center;'></div> &euro; " + resti[i++] + "<br>";
 			}
@@ -541,7 +540,7 @@ function modalInputAnnulla() {
             tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-chiusura");
 			document.getElementById("tot1_riga1").innerHTML = "";
 			document.getElementById("tot1_riga2").innerHTML = "";
-			modalInputAnnulla();
+			modalInputChiudi();
 
             // Disabilitare il click sui prodotti nello scontrino e su riapri scontrino
             // Mettere anche una qualche segno visivo che lo scontrino è stato stampato?

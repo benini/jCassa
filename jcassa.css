@@ -165,25 +165,24 @@
 }
 
 .keypad {
-	float:right;
 	border-spacing: 6px;
+    margin: 0px;
 }
 
 .keypad td {
-	width: 76px;
-	line-height: 76px;
-	border:solid 0px #01c5ff;
-	background-color:#01bcf3;
-	background-color:#95bcbc;
+	width: 70px;
+	line-height: 70px;
+	border-style: solid;
+    border-width: 2px;
+    border-color: #037bf2;
 	background-color:#90aaaa;
-	background-color:#55bdd2;
-	background-color:#037be5;
+    background-color:#037be5;
 	text-align: center;
 	font-family: sans-serif;
 	font-size: 50px;
 	font-weight: 600;
 	color: #ffffff;
-    -webkit-transition: background-color 0.3s, border-color 0.3s;
+    -webkit-transition: background-color 0.2s 0.2s, border-color 0.2s 0.2s;
 }
 
 .keypad_quantita {}
@@ -192,12 +191,69 @@
 	background-color:#01bcf3;
 }
 
-.keypad div {
-	font-size: 32px;
-	line-height: 1em;
+.keypad_tile {
+    margin-left: 6px;
+    width: 236px;
+    height: 56px;
+    border-style: solid;
+    border-width: 2px;
+    font-family: sans-serif;
+    color: #ffffff;
+}
+
+.keypad_tile-header {    
+    font-size:18px; 
+    text-align:center;
+    margin-bottom: 2px; 
+}
+
+.keypad_tile-digits {
+    font-size: 30px;    
 	text-align: right;
 	padding: 0px 16px;
 }
+
+.keypad_colore-prezzo {
+    border-color: #037bf2;
+    background-color:#037be5;
+}
+
+.keypad_colore-quantita {
+    border-color: #01c5ff;
+    background-color: #01bcf3;
+}
+
+@-webkit-keyframes move_down {
+    0%   {-webkit-transform: translate(0px,0px);}
+    10%   {-webkit-transform: translate(0px,40px);}
+	70%   {-webkit-transform: translate(-90px,40px) rotate(-40deg);}
+	100% {-webkit-transform: translate(0px,100px);}
+}
+
+@-webkit-keyframes move_down_reverse {
+	0% {-webkit-transform: translate(0px, 100px);}
+	50% {-webkit-transform: translate(0px, 100px);}
+	100%   {-webkit-transform: translate(0px,0px);}
+}
+
+@-webkit-keyframes move_up {
+	50%   {-webkit-transform: translate(0px,0px);}
+	100% {-webkit-transform: translate(0px,-100px);}
+}
+
+@-webkit-keyframes move_up_reverse {
+	0%   {-webkit-transform: translate(0px,-100px);}
+	10%   {-webkit-transform: translate(0px,-56px);}
+	70%   {-webkit-transform: translate(-90px,-56px) rotate(-40deg);}
+	100% {-webkit-transform: translate(0px,0px);}
+}
+
+.keypad_animazione {
+	-webkit-animation-duration:0.3s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-fill-mode: forwards;
+}
+
 
 .pulsante {
 	width: 70px;
@@ -227,36 +283,4 @@
 	background-image: url('img/elimina.png');
 	background-size: 70%;
 	background-color: #893bbb;
-}
-
-@-webkit-keyframes move_down {
-	0%   {-webkit-transform: translate(0px,0px);}
-	10%   {-webkit-transform: translate(0px,40px);}
-	70%   {-webkit-transform: translate(-90px,40px) rotate(-40deg);}
-	100% {-webkit-transform: translate(0px,96px);}
-}
-
-@-webkit-keyframes move_down_reverse {
-	0% {-webkit-transform: translate(0px, 96px);}
-	50% {-webkit-transform: translate(0px, 96px);}
-	100%   {-webkit-transform: translate(0px,0px);}
-}
-
-@-webkit-keyframes move_up {
-	50%   {-webkit-transform: translate(0px,0px);}
-	100% {-webkit-transform: translate(0px,-96px);}
-}
-
-@-webkit-keyframes move_up_reverse {
-	0%   {-webkit-transform: translate(0px,-96px);}
-	10%   {-webkit-transform: translate(0px,-56px);}
-	70%   {-webkit-transform: translate(-90px,-56px) rotate(-40deg);}
-	100% {-webkit-transform: translate(0px,0px);}
-}
-
-
-.keypad_animazione {
-	-webkit-animation-duration:0.3s;
-	-webkit-animation-timing-function: linear;
-	-webkit-animation-fill-mode: forwards;
 }
