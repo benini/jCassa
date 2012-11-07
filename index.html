@@ -33,7 +33,7 @@
 
     <div id="modalInputChiusura" class="modalInput">
 	    <div class="modalInputBackground"></div>
-        
+
         <ul style="color: white;">
             <li>Lettura/Chiusura fiscale</li>
             <li>Ristampa non fiscale ultimo scontrino</li>
@@ -59,19 +59,19 @@
 
 	    <div style="float:right; margin-right: 10px;">
 		    <div onclick="modalInputAnnulla();" class="pulsante pulsante_annulla"></div>
-		    <div id="prodotto_elimina" class="pulsante pulsante_elimina" style="margin-top: 40px" 
+		    <div id="prodotto_elimina" class="pulsante pulsante_elimina" style="margin-top: 40px"
                 onclick="uiEventProdottoElimina()"></div>
 		    <div id="prodotto_conferma" class="pulsante pulsante_ok" style="margin-top: 40px"
                 onclick="uiEventProdottoOK()"></div>
 	    </div>
 
-    	<table id="prodotto_keypad" class="keypad" style="margin-right: 50px;">
-        	<tr><td colspan=3 id="prodotto_prezzo" class="prova">
+    	<table id="prodotto_keypad" class="keypad keypad_quantita" style="margin-right: 50px;">
+        	<tr><td colspan=3 id="prodotto_prezzo" class="keypad_animazione" style="background-color:#037be5; border-color: #037be5;">
 		        <div style="font-size:18px; margin-bottom: 2px; text-align:center;">PREZZO UNITARIO</div>
 		        <div id="prodotto_digit_prezzo"></div>
 		    </td></tr>
 			<tr style="height: 30px;"></tr>
-		    <tr><td colspan=3 id="prodotto_quantita" class="prova">
+		    <tr><td colspan=3 id="prodotto_quantita" class="keypad_animazione" style="border-color: #01c5ff; background-color:#01bcf3;">
 		        <div style="font-size:18px; margin-bottom: 2px; text-align:center;">QUANTITA'</div>
 		        <div id="prodotto_digit_quantita"></div>
 		    </td></tr>
@@ -154,7 +154,7 @@ for (var i = 0; i < tasti.length; i++) {
 	}
 }
 
-function uiEventAnnullaResto() { 
+function uiEventAnnullaResto() {
 	return function () {
 		animaClick(this);
 //TODO: Questo è un hack da cambiare quando avrò un modo migliore per capire se c'è uno scontrino da inviare
@@ -164,7 +164,7 @@ function uiEventAnnullaResto() {
 	}
 }
 
-function uiEventRestoKeypad() { 
+function uiEventRestoKeypad() {
 	return function () {
 		animaClick(this);
 		var tasto = this.innerHTML;
@@ -186,21 +186,21 @@ var prodotto_visore = "quantita";
 var prodotto_tile;
 
 function uiEventProdottoOK() {
-    updateTileProdotto(prodotto_tile, 
+    updateTileProdotto(prodotto_tile,
         document.getElementById("prodotto_digit_quantita").innerHTML.replace(",","."),
         document.getElementById("prodotto_digit_prezzo").innerHTML.replace("\u20ac ", ""));
     modalInputAnnulla();
 }
 
 function uiEventProdottoElimina() {
-    scontrino.elimina(prodotto_tile.idx);    
+    scontrino.elimina(prodotto_tile.idx);
     document.getElementById("scontr").removeChild(prodotto_tile);
-    updateTotale();    
+    updateTotale();
     modalInputAnnulla();
 }
 
 
-function uiEventProdottoCambiaPrezzo() { 
+function uiEventProdottoCambiaPrezzo() {
     return function () {
 		if (prodotto_visore == "prezzo") return;
     	animaClick(this);
@@ -214,16 +214,19 @@ function uiEventProdottoCambiaPrezzo() {
 		p.style.setProperty("-webkit-animation-name", "move_down");
 		q.style.setProperty("-webkit-animation-name", "move_up");
 
+        var keypad = document.getElementById("prodotto_keypad");
+        keypad.className = keypad.className.replace(" keypad_quantita", "");
+
 
 /*
-		var rows = document.getElementById('prodotto_keypad').getElementsByTagName("TR"); 
+		var rows = document.getElementById('prodotto_keypad').getElementsByTagName("TR");
 		rows[0].parentNode.insertBefore(rows[1], rows[0]);
 		rows[0].parentNode.insertBefore(rows[2], rows[0]);
 */
 	}
 }
 
-function uiEventProdottoCambiaQuantita() { 
+function uiEventProdottoCambiaQuantita() {
     return function () {
 		if (prodotto_visore == "quantita") return;
         animaClick(this);
@@ -233,27 +236,29 @@ function uiEventProdottoCambiaQuantita() {
 
 		document.getElementById("prodotto_prezzo").style.setProperty("-webkit-animation-name", "move_down_reverse");
 		document.getElementById("prodotto_quantita").style.setProperty("-webkit-animation-name", "move_up_reverse");
+
+        document.getElementById("prodotto_keypad").className += " keypad_quantita";
 	}
 }
 
-function uiEventProdottoKeypad() { 
+function uiEventProdottoKeypad() {
 	return function () {
         var tasto = this.innerHTML;
         if (tasto == "," && prodotto_str.indexOf(",") != -1) { return; };
-        
+
 		animaClick(this);
-		
+
 		if (tasto == "C") {
 			tasto = "";
 			prodotto_str = "";
 		}
-        
+
 		prodotto_str += tasto;
-        
+
         if (prodotto_visore == "prezzo") {
             var a = String((prodotto_str / 100).toFixed(2));
     	    document.getElementById("prodotto_digit_prezzo").innerHTML = "&euro; " + a.replace(".", ",");
-        } else {            
+        } else {
     		document.getElementById("prodotto_digit_quantita").innerHTML = prodotto_str;
         }
 	}
@@ -266,13 +271,13 @@ function uiEventProdottoKeypad() {
 <script>
 /*
 Diverse finestre di input:
-- "Chiusura": 
+- "Chiusura":
 		attivata cliccando su totale senza scontrini aperti, cioè dopo aver stampato (o annullato) uno scontrino
 		permette di fare le letture/chiusure di cassa e le stampe del dgfe
 - "Prodotto":
 		attivata cliccando su tile-scontrino
 		permette di cambiare la quantità ed il prezzo del prodotto nello scontrino
-- "Totale": 
+- "Totale":
 		attivata cliccando su subtotale (scontrino aperto)
 		permette di cambiare il totale di chiusura, fare fatture e scontrini parlanti e pagamenti con i buoni pasto
 - "Resto":
@@ -293,11 +298,11 @@ function modalInput(tipo, tile) {
 
         var idx = 0;
         var tiles = document.getElementById("scontr").childNodes;
-        for (; idx < tiles.length && tiles[idx] != tile; ++idx) {}        
+        for (; idx < tiles.length && tiles[idx] != tile; ++idx) {}
         if (idx == tiles.length) { console.log("Errore in modalInput"); return; }
         prodotto_tile = tile;
         prodotto_tile.idx = idx;
-        //TODO: non è bello accedere direttamente all'array        
+        //TODO: non è bello accedere direttamente all'array
         document.getElementById("prodotto_digit_prezzo").innerHTML = "&euro; " + scontrino.righe[idx].prezzo;
         document.getElementById("prodotto_digit_quantita").innerHTML = scontrino.righe[idx].quant;
 	}
@@ -344,7 +349,11 @@ function modalInputAnnulla() {
 		tile.className += " tile_middle";
 		setTimeout(function() {tile.className = tile.className.replace(" tile_middle", " tile_reset");}, 100);
 		var click = document.getElementById("click_snd")
-		click.currentTime = 0;
+        try { // Sull'Ipad currentTime a volte non funziona (quando il suono è già finito?)
+            click.pause();
+		    click.currentTime = 0;
+        } catch (e) {}
+
 		click.play();
 	}
 
@@ -394,7 +403,7 @@ function modalInputAnnulla() {
 			if (! scontrino.isAperto()) {
 				var div_scontr = document.getElementById("scontr");
 				while (div_scontr.hasChildNodes()) { div_scontr.removeChild(div_scontr.lastChild);	}
-                
+
                 var tot = document.getElementById("tot1");
                 tot.className = tot.className.replace(" tile-totale-chiusura", " tile-totale-subtotale");
 			}
@@ -419,26 +428,26 @@ function modalInputAnnulla() {
                 //TODO: non è bello accedere direttamente all'array
 				quant = Number(scontrino.righe[idx].quant) +1;
 			}
-            
+
             updateTileProdotto(divTile, quant);
 		}
 	}
-    
+
     function updateTileProdotto(tile, quant, prezzo, desc) {
         var idx = 0;
         var tiles = document.getElementById("scontr").childNodes;
-        for (; idx < tiles.length && tiles[idx] != tile; ++idx) {}        
+        for (; idx < tiles.length && tiles[idx] != tile; ++idx) {}
         if (idx == tiles.length) { console.log("Errore in updateTileProdotto"); return; }
-        
+
         //TODO: non è bello accedere direttamente all'array
         if (desc && desc != "") { scontrino.righe[idx].desc = desc; }
         if (quant && quant != "") { scontrino.righe[idx].quant = Number(quant); }
         if (prezzo && prezzo != "") { scontrino.righe[idx].prezzo = prezzo; }
-        
+
         tile.innerHTML = scontrino.righe[idx].desc + "<br>" + "N. " + String(scontrino.righe[idx].quant).replace(".",",") + "  x  &euro; " + scontrino.righe[idx].prezzo;
-        
+
         animaSelezionaRigaScontrino(tile);
-        
+
         updateTotale();
     }
 
@@ -452,7 +461,7 @@ function modalInputAnnulla() {
 	function uiEventCambiaRigaScontrino() {
 		return function () {
 			animaClick(this);
-			if (! scontrino.isAperto()) { 
+			if (! scontrino.isAperto()) {
 				uiEventRiapriScontrinoHelper();
 			}
 			var tile = this;
@@ -473,7 +482,7 @@ function modalInputAnnulla() {
 		var div_scontr = document.getElementById("scontr");
 		if (div_scontr.lastChild) { div_scontr.removeChild(div_scontr.lastChild); }
 		if (div_scontr.lastChild) { div_scontr.removeChild(div_scontr.lastChild); }
-            
+
 		var tot = document.getElementById("tot1");
 		tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-subtotale");
 		updateTotale();
@@ -487,7 +496,7 @@ function modalInputAnnulla() {
                 //TODO: Sarebbe meglio chiamare la conferma della finestra modale?
                 return;
             }
-            
+
 			animaClick(this);
             var tot = document.getElementById("tot1");
 			tot.onclick = uiEventInviaScontrino();
@@ -514,7 +523,7 @@ function modalInputAnnulla() {
 			var i = 0;
 			var resti = scontrino.getResto();
 			while (i < resti.length) {
-	            divTile.innerHTML += "<div style='float:left; width: 40%;'> &euro; " + resti[i++] + 
+	            divTile.innerHTML += "<div style='float:left; width: 40%;'> &euro; " + resti[i++] +
     			"</div><div style='float:left; width: 20%;'>==></div> &euro; " + resti[i++] + "<br>";
 //				"</div><div style='float:left; width: 20%; height: 10px; background-image: url(img/r_arrow.gif); background-position: center;'></div> &euro; " + resti[i++] + "<br>";
 			}
@@ -540,11 +549,11 @@ function modalInputAnnulla() {
             for (var i = div_scontr.childNodes.length; i > 2; i--) {
                 div_scontr.removeChild(div_scontr.firstChild);
             }
-            
+
 			div_scontr.firstChild.onclick = "";
             div_scontr.firstChild.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>ULTIMA VENDITA</div>";
             div_scontr.firstChild.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotale();
-            
+
             scontrino.invia();
 		}
 	}
@@ -566,12 +575,12 @@ function modalInputAnnulla() {
 		scontrino.righe.push({rep: rep, quant: quant, desc: desc, prezzo: prezzo});
 		return scontrino.id.push(scontrino.creaID(rep, desc, prezzo)) -1;
 	}
-    
-    scontrino.elimina = function (idx) {        
+
+    scontrino.elimina = function (idx) {
         scontrino.id.splice(idx, 1);
         scontrino.righe.splice(idx, 1);
     }
-    
+
 	scontrino.getTotale = function () {
 		var scontrino_totale = 0;
 		for (var i=0; i < scontrino.righe.length; ++i) {
@@ -614,14 +623,14 @@ function modalInputAnnulla() {
 		}
 	}
 	scontrino.isAperto = function () {
-        return scontrino.id.length != 0; 
+        return scontrino.id.length != 0;
 	}
 	scontrino.indexOf = function (rep, desc, prezzo) {
 		var id = scontrino.creaID(rep, desc, prezzo);
 		return scontrino.id.indexOf(id);
 	}
 	scontrino.invia = function () {
-        scontrino.id.length = 0; 
+        scontrino.id.length = 0;
     }
 
 </script>

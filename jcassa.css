@@ -36,15 +36,15 @@
 }
 .metro-tile-purple {
 	background-color: #5636B0;
-	border-color: #6449B5;	
+	border-color: #6449B5;
 }
 .metro-tile-pink {
 	background-color: #BD1E4A;
-	border-color: #B93154;	
+	border-color: #B93154;
 }
 .metro-tile-xbox-green {
 	background-color: #6CB71E;
-	border-color: #7ABD34;	
+	border-color: #7ABD34;
 }
 
 
@@ -69,10 +69,10 @@
 }
 
 .prezzo {
-	padding-right: 3px;    
+	padding-right: 3px;
     color:#000000;
     font-weight:bold;
-    text-align:right;    
+    text-align:right;
 }
 
 .tile-reparti {
@@ -102,7 +102,7 @@
     margin-top: 2px;
     margin-bottom: 2px;
     padding-bottom: 4px;
-    border-right-width: 0px;    
+    border-right-width: 0px;
     background-color: #D8512B;
 	border-color: #DC6241;
     text-align:right;
@@ -114,7 +114,7 @@
     height: auto;
 	padding: 0px 4px;
     margin-top: 2px;
-    border-right-width: 0px;    
+    border-right-width: 0px;
     background-color: #D8512B;
 	border-color: #DC6241;
     text-align:right;
@@ -179,10 +179,17 @@
 	background-color:#55bdd2;
 	background-color:#037be5;
 	text-align: center;
-	font-family: sans-serif; 
+	font-family: sans-serif;
 	font-size: 50px;
 	font-weight: 600;
 	color: #ffffff;
+    -webkit-transition: background-color 0.3s, border-color 0.3s;
+}
+
+.keypad_quantita {}
+.keypad_quantita td {
+    border-color: #01c5ff;
+	background-color:#01bcf3;
 }
 
 .keypad div {
@@ -248,7 +255,7 @@
 }
 
 
-.prova {
+.keypad_animazione {
 	-webkit-animation-duration:0.3s;
 	-webkit-animation-timing-function: linear;
 	-webkit-animation-fill-mode: forwards;
