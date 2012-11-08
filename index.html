@@ -24,7 +24,7 @@
 
 <div style="position: fixed; right: 0px; bottom: 3px;">
 	<div id="tot1" class="metro-tile tile-totale tile-totale-chiusura">
-		<div id="tot1_riga1">TOTALE</div>
+		<div id="tot1_riga1"></div>
 		<div id="tot1_riga2"></div>
 	</div>
 </div>
@@ -59,10 +59,8 @@
 
 	    <div style="float:right; margin-right: 10px;">
 		    <div id="prodotto_annulla" class="pulsante pulsante_annulla"></div>
-		    <div id="prodotto_elimina" class="pulsante pulsante_elimina" style="margin-top: 40px"
-                onclick="uiEventProdottoElimina()"></div>
-		    <div id="prodotto_conferma" class="pulsante pulsante_ok" style="margin-top: 40px"
-                onclick="uiEventProdottoOK()"></div>
+		    <div id="prodotto_elimina" class="pulsante pulsante_elimina" style="margin-top: 40px"></div>
+		    <div id="prodotto_ok" class="pulsante pulsante_ok" style="margin-top: 40px"></div>
 	    </div>
 
         <div style="float:right; margin-top: 8px; margin-right: 50px;">
@@ -135,124 +133,132 @@ function modalInput(tipo, tile) {
 	if (tipo == "Resto") {
         modalInputResto();
 	} else if (tipo == "Prodotto") {
-
-        /*
-
-        prodotto_str = "";
-        prodotto_visore = "quantita";
-		document.getElementById("prodotto_prezzo").style.setProperty("-webkit-animation-name", "");
-		document.getElementById("prodotto_quantita").style.setProperty("-webkit-animation-name", "");
-        document.getElementById("prodotto_keypad_special").innerHTML = ",";
-
-        var idx = 0;
-        var tiles = document.getElementById("scontr").childNodes;
-        for (; idx < tiles.length && tiles[idx] != tile; ++idx) {}
-        if (idx == tiles.length) { console.log("Errore in modalInput"); return; }
-        prodotto_tile = tile;
-        prodotto_tile.idx = idx;
-        //TODO: non è bello accedere direttamente all'array
-        document.getElementById("prodotto_digit_prezzo").innerHTML = "&euro; " + scontrino.righe[idx].prezzo;
-        document.getElementById("prodotto_digit_quantita").innerHTML = scontrino.righe[idx].quant;
-        */
-	} else {
-	    document.getElementById("modalInput").style.display = "none";
-        return;
+        modalInputProdotto(tile, "quantita");
+	} else if (tipo == "ProdottoPrezzo") {
+        tipo = "Prodotto";
+        modalInputProdotto(tile, "prezzo");        
+	} else if (tipo == "Chiusura") {
+        
+	} else if (tipo == "Totale") {
+        
 	}
-
+    
 	document.getElementById("modalInputChiusura").style.display = "none";
     document.getElementById("modalInputProdotto").style.display = "none";
     document.getElementById("modalInputTotale").style.display = "none";
 	document.getElementById("modalInputResto").style.display = "none";
     
-	document.getElementById("modalInput" + tipo).style.display = "block";
-	document.getElementById("modalInput").style.display = "block";
-}
-
-
-/* *****************************************
-// MODAL_INPUT_PRODOTTO: Inizio
-*******************************************/
-
-function uiEventProdottoOK() {
-    updateTileProdotto(prodotto_tile,
-        document.getElementById("prodotto_digit_quantita").innerHTML.replace(",","."),
-        document.getElementById("prodotto_digit_prezzo").innerHTML.replace("\u20ac ", ""));
-    modalInput("");
-}
-
-function uiEventProdottoElimina() {
-    scontrino.elimina(prodotto_tile.idx);
-    document.getElementById("scontr").removeChild(prodotto_tile);
-    updateTotale();
-    modalInput("");
-}
-
-
-function uiEventProdottoCambiaPrezzo() {
-    return function () {
-		if (prodotto_visore == "prezzo") return;
-    	animaClick(this);
-        prodotto_str = "";
-        prodotto_visore = "prezzo";
-        document.getElementById("prodotto_keypad_special").innerHTML = "00";
-
-		var p = document.getElementById("prodotto_prezzo");
-		var q = document.getElementById("prodotto_quantita");
-
-		p.style.setProperty("-webkit-animation-name", "move_down");
-		q.style.setProperty("-webkit-animation-name", "move_up");
-
-        var keypad = document.getElementById("prodotto_keypad");
-        keypad.className = keypad.className.replace(" keypad_quantita", "");
+    if (tipo == "") {
+        document.getElementById("modalInput").style.display = "none";
+        return;
+	} else {
+    	document.getElementById("modalInput" + tipo).style.display = "block";
+	    document.getElementById("modalInput").style.display = "block";
 	}
 }
 
-function uiEventProdottoCambiaQuantita() {
-    return function () {
-		if (prodotto_visore == "quantita") return;
+function modalInputProdotto (tile, tipo) {
+    var tiles = document.getElementById("scontr").childNodes;
+    for (var idx = 0; idx < tiles.length && tiles[idx] != tile; ++idx) {}
+    if (idx == tiles.length) { console.log("Errore in modalInputProdotto"); return; }
+    
+    var digits = "";
+    var prodotto_visore = "";
+    keypadReset(tipo);
+    console.log("qual'è il problema");
+    if (tipo == "prezzo") {
+        document.getElementById("prodotto_prezzo").style.setProperty("-webkit-animation-name", "move_down_fast");
+    	document.getElementById("prodotto_quantita").style.setProperty("-webkit-animation-name", "move_up_fast");
+    } else {
+	    document.getElementById("prodotto_quantita").style.setProperty("-webkit-animation-name", "");
+        document.getElementById("prodotto_prezzo").style.setProperty("-webkit-animation-name", "");
+    }    
+    
+    document.getElementById("prodotto_annulla").onclick = uiEventAnnulla;
+    document.getElementById("prodotto_elimina").onclick = uiEventElimina;
+    document.getElementById("prodotto_ok").onclick = uiEventOK;
+    document.getElementById("prodotto_prezzo").onclick = uiEventCambiaPrezzo;
+    document.getElementById("prodotto_quantita").onclick = uiEventCambiaQuantita;
+    var tasti = document.getElementById("prodotto_keypad").getElementsByTagName("TD");
+    for (var i = 0; i < tasti.length; i++) { tasti[i].onclick = uiEventKeypad; }
+
+    document.getElementById("prodotto_digit_prezzo").innerHTML = "&euro; " + scontrino.getPrezzo(idx);
+    document.getElementById("prodotto_digit_quantita").innerHTML = scontrino.getQuantita(idx);
+
+    function uiEventAnnulla() {
         animaClick(this);
-        prodotto_str = "";
-        prodotto_visore = "quantita";
-        document.getElementById("prodotto_keypad_special").innerHTML = ",";
+        modalInput("");
+    }
 
-		document.getElementById("prodotto_prezzo").style.setProperty("-webkit-animation-name", "move_down_reverse");
-		document.getElementById("prodotto_quantita").style.setProperty("-webkit-animation-name", "move_up_reverse");
+    function uiEventOK() {
+        animaClick(this);
+        updateTileProdotto(tile, document.getElementById("prodotto_digit_quantita").innerHTML, document.getElementById("prodotto_digit_prezzo").innerHTML);
+        modalInput("");        
+    }
 
-        document.getElementById("prodotto_keypad").className += " keypad_quantita";
-	}
-}
-
-function uiEventProdottoKeypad() {
-	return function () {
+    function uiEventElimina() {
+        animaClick(this);
+        scontrino.elimina(idx);
+        document.getElementById("scontr").removeChild(tile);
+        updateTotale();
+        modalInput("");
+    }
+    
+    function uiEventKeypad () {
         var tasto = this.innerHTML;
-        if (tasto == "," && prodotto_str.indexOf(",") != -1) { return; };
-
-		animaClick(this);
-
-		if (tasto == "C") {
-			tasto = "";
-			prodotto_str = "";
-		}
-
-		prodotto_str += tasto;
-
+        if (tasto == "," && digits.indexOf(",") != -1) { return; }
+        
+        var tasto = this.innerHTML;
+        if (tasto == "C") {
+            digits = "";
+	    } else {
+            if (digits.length > 9) { return; }
+	        digits += tasto;
+	    }
+        animaClick(this);
+        
         if (prodotto_visore == "prezzo") {
-            var a = String((prodotto_str / 100).toFixed(2));
+            var a = String((digits / 100).toFixed(2));
     	    document.getElementById("prodotto_digit_prezzo").innerHTML = "&euro; " + a.replace(".", ",");
         } else {
-    		document.getElementById("prodotto_digit_quantita").innerHTML = prodotto_str;
+    		document.getElementById("prodotto_digit_quantita").innerHTML = digits;
         }
+    }    
+
+    function keypadReset(tipo) {
+        digits = "";
+        if (prodotto_visore == tipo) { console.log("Non dovrei essere qui"); }
+        prodotto_visore = tipo;
+        if (tipo == "prezzo") {
+            document.getElementById("prodotto_keypad_special").innerHTML = "00";
+            var keypad = document.getElementById("prodotto_keypad");
+            keypad.className = keypad.className.replace(" keypad_quantita", "");
+        } else {
+            document.getElementById("prodotto_keypad_special").innerHTML = ",";
+            var keypad = document.getElementById("prodotto_keypad");
+            keypad.className = keypad.className.replace(" keypad_quantita", "");
+            keypad.className += " keypad_quantita";
+        }
+    }
+
+    function uiEventCambiaPrezzo() {
+        animaClick(this);
+        keypadReset("prezzo");
+		document.getElementById("prodotto_prezzo").style.setProperty("-webkit-animation-name", "move_down");
+		document.getElementById("prodotto_quantita").style.setProperty("-webkit-animation-name", "move_up");
 	}
+
+    function uiEventCambiaQuantita() {
+        animaClick(this);
+        keypadReset("quantita");
+	    document.getElementById("prodotto_prezzo").style.setProperty("-webkit-animation-name", "move_down_reverse");
+	    document.getElementById("prodotto_quantita").style.setProperty("-webkit-animation-name", "move_up_reverse");
+    }
 }
-
-/* *****************************************
-// MODAL_INPUT_PRODOTTO: Fine
-*******************************************/
-
 
 
 function modalInputResto () {
-    var resto_str = "";
+    var digits = "";
     var prev_modal = "";
     if (document.getElementById("modalInputTotale").style.display == "block") { prev_modal = "Totale"; }
     document.getElementById("resto_annulla").onclick = uiEventAnnulla;
@@ -270,14 +276,15 @@ function modalInputResto () {
         animaClick(this);
 	    var tasto = this.innerHTML;
 	    if (tasto == "C") {
-            resto_str = "";
+            digits = "";
 	    } else {
-	        resto_str += tasto;
+            if (digits.length > 9) { return; }
+	        digits += tasto;
 	    }
         updateResto();
     }
     function updateResto() {
-	    var a = String((resto_str / 100).toFixed(2));
+	    var a = String((digits / 100).toFixed(2));
 	    document.getElementById("resto_digitato").innerHTML = "&euro; " + a.replace(".", ",");
 
 	    var b = scontrino.getResto(a)[1];
@@ -285,29 +292,14 @@ function modalInputResto () {
     }
 }
 
-
-
-
-
-    // Variabili globali: chissà se esiste un modo con javascript per renderle più "locali"
-    var prodotto_str = "";
-    var prodotto_visore = "quantita";
-    var prodotto_tile;
-    ////////////////////////////////////////
-
 	window.addEventListener('load', function() {
         new FastClick(document.body); // Caricamento FastClick per iPad
         dyn_dimensions();
+        window.onresize=function() { dyn_dimensions(); }
 
-        // Keypads
-        document.getElementById("prodotto_prezzo").onclick = uiEventProdottoCambiaPrezzo();
-        document.getElementById("prodotto_quantita").onclick = uiEventProdottoCambiaQuantita();
-
-        tasti = document.getElementById("prodotto_keypad").getElementsByTagName("TD");
-        for (var i = 0; i < tasti.length; i++) { tasti[i].onclick = uiEventProdottoKeypad(); }
-        ///////////////////////////
+        loadProdotti();
+        
     }, false);
-
 
 	// Calcolo della dimensione della sezione "prezzi" in base alla spazio disponbile
 	function dyn_dimensions() {
@@ -325,7 +317,21 @@ function modalInputResto () {
         document.getElementById("modalInput").style.width = dyn_width;
         document.getElementById("modalInput").style.height = window.innerHeight;
 	}
-	window.onresize=function() { dyn_dimensions(); }
+    
+    function loadProdotti() {
+        // Chiedere i prodotti con un xml asyncrono?
+        updateReparti();
+    }
+
+    function updateReparti() {
+        for (var i = 0; i < reparti.length; i++) {
+            var divTile = document.createElement("div");
+            divTile.className = "metro-tile tile-reparti " + reparti[i].col;
+            divTile.innerHTML = reparti[i].reparto;
+            divTile.onclick = uiEventCambiaReparto(i);
+            document.getElementById('reparti').insertCell(-1).appendChild(divTile);
+        }
+    }
 
 	function animaClick(tile) {
 		tile.className = tile.className.replace(" tile_reset", "");
@@ -358,15 +364,15 @@ function modalInputResto () {
 	function uiEventCambiaReparto (r) {
 		return function () {
 			animaClick(this);
-		    var table=document.getElementById("prezzi");
-		    while (table.hasChildNodes()) { table.removeChild(table.lastChild); }
+		    var div_prodotti=document.getElementById("prezzi");
+		    while (div_prodotti.hasChildNodes()) { div_prodotti.removeChild(div_prodotti.lastChild); }
 
 			var pr_array = reparti[r].prezzi;
 			for (var i=0; i < pr_array.length; i++) {
 				var divTile = document.createElement("div");
 				divTile.className = "metro-tile " + reparti[r].col + " tile-prezzi";
 				divTile.onclick = uiEventAggiungiProdotto(r, i);
-				table.appendChild(divTile);
+				div_prodotti.appendChild(divTile);
 				var divDesc = document.createElement("div");
 				divDesc.className = "desc "  + reparti[r].col;
 				divDesc.innerHTML = pr_array[i].desc;
@@ -392,42 +398,54 @@ function modalInputResto () {
 			}
 
 			var prezzo = reparti[idx_reparto].prezzi[idx_prezzo].prezzo;
-			var desc = reparti[idx_reparto].prezzi[idx_prezzo].desc;
+            var desc = reparti[idx_reparto].prezzi[idx_prezzo].desc;
             var quant = 1;
 			var divTile;
 			var idx = scontrino.indexOf(idx_reparto, desc, prezzo);
 			if (idx == -1) {
 				idx = scontrino.push(idx_reparto, 1, desc, prezzo);
-
-    			divTile = document.createElement("div");
-    			divTile.className = "metro-tile tile-scontrino " + reparti[idx_reparto].col;
-				divTile.onclick = uiEventCambiaRigaScontrino();
-                divTile.idx_reparto = idx_reparto;
-                divTile.desc = desc;
-                divTile.prezzo = prezzo;
+                divTile = document.createElement("div");
+                divTile.className = "metro-tile tile-scontrino " + reparti[idx_reparto].col;
+				divTile.onclick = uiEventCambiaRigaScontrino;
 				document.getElementById("scontr").appendChild(divTile);
+                
+                if (prezzo.length < 1) {
+                    modalInput("ProdottoPrezzo", divTile);
+                }
 			} else {
 				divTile = document.getElementById("scontr").childNodes[idx];
                 //TODO: non è bello accedere direttamente all'array
-				quant = Number(scontrino.righe[idx].quant) +1;
+				quant = scontrino.righe[idx].quant +1;
 			}
 
             updateTileProdotto(divTile, quant);
 		}
 	}
 
+    // Prezzo e quantità 
     function updateTileProdotto(tile, quant, prezzo, desc) {
         var idx = 0;
         var tiles = document.getElementById("scontr").childNodes;
         for (; idx < tiles.length && tiles[idx] != tile; ++idx) {}
         if (idx == tiles.length) { console.log("Errore in updateTileProdotto"); return; }
+        
+        /*TODO: Se c'è già ***un'altra tile*** con lo stesso reparto, descrizione e prezzo bisognerebbe eleminare questa
+        // e aggiungere la quantità a quell'altra
+        var altro = scontrino.indexOf(scontrino.righe[idx].rep, desc, prezzo);
+        if (altro != -1 && altro != idx) {
+            scontrino.elimina(idx);
+            document.getElementById("scontr").removeChild(tile);
+            tile = tiles[altro];
+            idx = altro;
+            quant += scontrino.getQuantita(idx);
+        }
+        /////////////////////////*/
 
-        //TODO: non è bello accedere direttamente all'array
-        if (desc && desc != "") { scontrino.righe[idx].desc = desc; }
-        if (quant && quant != "") { scontrino.righe[idx].quant = Number(quant); }
-        if (prezzo && prezzo != "") { scontrino.righe[idx].prezzo = prezzo; }
+        
 
-        tile.innerHTML = scontrino.righe[idx].desc + "<br>" + "N. " + String(scontrino.righe[idx].quant).replace(".",",") + "  x  &euro; " + scontrino.righe[idx].prezzo;
+        scontrino.set(idx, quant, prezzo, desc);
+
+        tile.innerHTML = scontrino.getDesc(idx) + "<br>" + "N. " + scontrino.getQuantita(idx) + "  x  &euro; " + scontrino.getPrezzo(idx);
 
         animaSelezionaRigaScontrino(tile);
 
@@ -436,31 +454,26 @@ function modalInputResto () {
 
 	function updateTotale() {
 		var tot = document.getElementById("tot1");
-		tot.onclick = uiEventChiudiScontrino();
+		tot.onclick = uiEventChiudiScontrino;
 		document.getElementById("tot1_riga1").innerHTML = "SubTotale";
 		document.getElementById("tot1_riga2").innerHTML = "&euro; " + scontrino.getTotale();
 	}
 
 	function uiEventCambiaRigaScontrino() {
-		return function () {
-			animaClick(this);
-			if (! scontrino.isAperto()) {
-				uiEventRiapriScontrinoHelper();
-			}
-			var tile = this;
-			animaSelezionaRigaScontrino(tile);
-			modalInput("Prodotto", tile);
+		animaClick(this);
+		if (! scontrino.isAperto()) {
+			helperRiapriScontrinoHelper();
 		}
+		animaSelezionaRigaScontrino(this);
+		modalInput("Prodotto", this);
 	}
 
 	function uiEventRiapriScontrino() {
-		return function () {
-			animaClick(this);
-			uiEventRiapriScontrinoHelper();
-		}
+		animaClick(this);
+		helperRiapriScontrinoHelper();
 	}
 
-	function uiEventRiapriScontrinoHelper() {
+	function helperRiapriScontrinoHelper() {
 		scontrino.Riapri();
 		var div_scontr = document.getElementById("scontr");
 		if (div_scontr.lastChild) { div_scontr.removeChild(div_scontr.lastChild); }
@@ -474,87 +487,85 @@ function modalInputResto () {
 
 
 	function uiEventChiudiScontrino () {
-		return function () {
-            if (document.getElementById("modalInputProdotto").style.display == "block") {
-                //TODO: Sarebbe meglio chiamare la conferma della finestra modale?
-                return;
-            }
+        if (document.getElementById("modalInputProdotto").style.display == "block") {
+            //TODO: Sarebbe meglio chiamare la conferma della finestra modale?
+            return;
+        }
 
-			animaClick(this);
-            var tot = document.getElementById("tot1");
-			tot.onclick = uiEventInviaScontrino();
-            tot.className = tot.className.replace(" tile-totale-subtotale", " tile-totale-stampa");
-			document.getElementById("tot1_riga1").innerHTML = "";
-			document.getElementById("tot1_riga2").innerHTML = "STAMPA";
+		animaClick(this);
+        var tot = document.getElementById("tot1");
+		tot.onclick = uiEventInviaScontrino;
+        tot.className = tot.className.replace(" tile-totale-subtotale", " tile-totale-stampa");
+		document.getElementById("tot1_riga1").innerHTML = "";
+		document.getElementById("tot1_riga2").innerHTML = "STAMPA";
 
-			scontrino.chiudi();
+		scontrino.chiudi();
 
-			animaSelezionaRigaScontrino();
+		animaSelezionaRigaScontrino();
 
-   			var divTile = document.createElement("div");
-   			divTile.className = "metro-tile tile-scontrino-totale";
-			divTile.onclick = uiEventRiapriScontrino();
-			document.getElementById("scontr").appendChild(divTile);
-  			divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>CONTANTI</div>";
-            divTile.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotale();
+        var divTile = document.createElement("div");
+        divTile.className = "metro-tile tile-scontrino-totale";
+		divTile.onclick = uiEventRiapriScontrino;
+		document.getElementById("scontr").appendChild(divTile);
+        divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>CONTANTI</div>";
+        divTile.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotale();
 
-   			var divTile = document.createElement("div");
-   			divTile.className = "metro-tile tile-scontrino-resto";
-			divTile.onclick = function () { animaClick(this); modalInput("Resto"); };
-			document.getElementById("scontr").appendChild(divTile);
-  			divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>RESTO</div>";
-			var i = 0;
-			var resti = scontrino.getResto();
-			while (i < resti.length) {
-	            divTile.innerHTML += "<div style='float:left; width: 44%;'> &euro; " + resti[i++] +
-    			"</div><div style='float:left; width: 20%;'>==></div> &euro; " + resti[i++] + "<br>";
-//				"</div><div style='float:left; width: 20%; height: 10px; background-image: url(img/r_arrow.gif); background-position: center;'></div> &euro; " + resti[i++] + "<br>";
-			}
-			divTile.scrollIntoView();
-
-            modalInput("Totale");
+        var divTile = document.createElement("div");
+        divTile.className = "metro-tile tile-scontrino-resto";
+		divTile.onclick = function () { animaClick(this); modalInput("Resto"); };
+		document.getElementById("scontr").appendChild(divTile);
+        divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>RESTO</div>";
+		var i = 0;
+		var resti = scontrino.getResto();
+		while (i < resti.length) {
+            divTile.innerHTML += "<div style='float:left; width: 44%;'> &euro; " + resti[i++] +
+            "</div><div style='float:left; width: 20%;'>==></div> &euro; " + resti[i++] + "<br>";
 		}
-	}
+		divTile.scrollIntoView();
+
+        modalInput("Totale");
+    }
 
 	function uiEventInviaScontrino() {
-		return function () {
-			animaClick(this);
-            var tot = document.getElementById("tot1");
-			tot.onclick = uiEventLetture();
-            tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-chiusura");
-			document.getElementById("tot1_riga1").innerHTML = "";
-			document.getElementById("tot1_riga2").innerHTML = "";
-			modalInput("");
+		animaClick(this);
+        var tot = document.getElementById("tot1");
+		tot.onclick = uiEventLetture;
+        tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-chiusura");
+		document.getElementById("tot1_riga1").innerHTML = "";
+		document.getElementById("tot1_riga2").innerHTML = "";
+		modalInput("");
 
-            // Disabilitare il click sui prodotti nello scontrino e su riapri scontrino
-            // Mettere anche una qualche segno visivo che lo scontrino è stato stampato?
-            var div_scontr = document.getElementById("scontr");
-            for (var i = div_scontr.childNodes.length; i > 2; i--) {
-                div_scontr.removeChild(div_scontr.firstChild);
-            }
+        // Disabilitare il click sui prodotti nello scontrino e su riapri scontrino
+        // Mettere anche una qualche segno visivo che lo scontrino è stato stampato?
+        var div_scontr = document.getElementById("scontr");
+        for (var i = div_scontr.childNodes.length; i > 2; i--) {
+            div_scontr.removeChild(div_scontr.firstChild);
+        }
 
-			div_scontr.firstChild.onclick = "";
-            div_scontr.firstChild.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>ULTIMA VENDITA</div>";
-            div_scontr.firstChild.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotale();
+		div_scontr.firstChild.onclick = "";
+        div_scontr.firstChild.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>ULTIMA VENDITA</div>";
+        div_scontr.firstChild.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotale();
 
-            scontrino.invia();
-		}
+        scontrino.invia();
 	}
 
 	function uiEventLetture() {
-		return function () {
-			animaClick(this);
-			modalInput("Chiusura");
-		}
+		animaClick(this);
+		modalInput("Chiusura");
 	}
 
 	var scontrino = {};
 	scontrino.id = [];
 	scontrino.righe = [];
-	scontrino.creaID = function (rep, desc, prezzo) { return "r" + rep + "d" + desc + "p" + prezzo; }
+	scontrino.creaID = function (rep, desc, prezzo) { 
+        console.log("r" + rep + "d" + desc + "p" + prezzo);
+        return "r" + rep + "d" + desc + "p" + prezzo; 
+        }
 
 	scontrino.push = function (rep, quant, desc, prezzo) {
 		if (scontrino.id.length != scontrino.righe.length) { scontrino.righe.length = scontrino.id.length; }
+        quant = Number(String(quant).replace(",","."));
+        prezzo = Number(String(prezzo).replace(",","."));
 		scontrino.righe.push({rep: rep, quant: quant, desc: desc, prezzo: prezzo});
 		return scontrino.id.push(scontrino.creaID(rep, desc, prezzo)) -1;
 	}
@@ -563,11 +574,33 @@ function modalInputResto () {
         scontrino.id.splice(idx, 1);
         scontrino.righe.splice(idx, 1);
     }
+    
+    scontrino.set = function (idx, quant, prezzo, desc) {        
+        if (desc && desc != "") { scontrino.righe[idx].desc = desc; }
+        if (quant && quant != "") { scontrino.righe[idx].quant = Number(String(quant).replace(",",".")); }
+        if (prezzo && prezzo != "") { 
+            scontrino.righe[idx].prezzo = Number(String(prezzo).replace(",",".").replace("\u20ac ", "") );
+        }
+        var riga = scontrino.righe[idx];
+        scontrino.id[idx] = scontrino.creaID(riga.rep, riga.desc, riga.prezzo);
+    }
+    
+    scontrino.getPrezzo = function (idx) {
+        return scontrino.righe[idx].prezzo.toFixed(2).replace(".", ",");
+    }
+    
+    scontrino.getQuantita = function (idx) {
+        return String(scontrino.righe[idx].quant).replace(".", ",");
+    }
+    
+    scontrino.getDesc = function (idx) {
+        return scontrino.righe[idx].desc;
+    }
 
 	scontrino.getTotale = function () {
 		var scontrino_totale = 0;
 		for (var i=0; i < scontrino.righe.length; ++i) {
-			scontrino_totale += scontrino.righe[i].quant * scontrino.righe[i].prezzo.replace(",",".");
+			scontrino_totale += scontrino.righe[i].quant * scontrino.righe[i].prezzo;
 		}
 		return scontrino_totale.toFixed(2).replace(".", ",");
 	}
@@ -609,6 +642,7 @@ function modalInputResto () {
         return scontrino.id.length != 0;
 	}
 	scontrino.indexOf = function (rep, desc, prezzo) {
+        prezzo = Number(String(prezzo).replace(",","."));
 		var id = scontrino.creaID(rep, desc, prezzo);
 		return scontrino.id.indexOf(id);
 	}
@@ -620,22 +654,6 @@ function modalInputResto () {
 
 
 <script type="text/javascript">
-
-function updateReparti() {
-  for (var i = 0; i < reparti.length; i++) {
-    var divTile = document.createElement("div");
-    divTile.className = "metro-tile tile-reparti " + reparti[i].col;
-    divTile.innerHTML = reparti[i].reparto;
-    divTile.onclick = uiEventCambiaReparto(i);
-	document.getElementById('reparti').insertCell(-1).appendChild(divTile);
-  }
-}
-
-
-
-
-
-
 
 
 
@@ -651,7 +669,7 @@ reparti.push({reparto: "CUCINA", col: "colore_cucina", prezzi: [
 {desc: "COCA", prezzo: "2,00"}
 ] });
 reparti.push({reparto: "DESSERT", col: "colore_dessert", prezzi: [] });
-reparti.push({reparto: "BAR", col: "metro-tile-purple", prezzi: [] });
+//reparti.push({reparto: "VARIE", col: "blue", prezzi: [] });
 
 
 
@@ -721,12 +739,7 @@ reparti[6].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
 
 
 
-function loadPrezzi() {
-// Leggi da file onload
-  updateReparti();
-}
 
-loadPrezzi();
 
 
 

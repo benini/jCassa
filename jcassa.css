@@ -22,32 +22,6 @@
 	transform: scale(0.92);
 }
 
-.metro-tile-orange {
-	background-color: #D8512B;
-	border-color: #DC6241;
-}
-.metro-tile-green {
-	background-color: #009719;
-	border-color: #1A9F30;
-}
-.metro-tile-blue {
-	background-color: #2878EC;
-	border-color: #4396F1;
-}
-.metro-tile-purple {
-	background-color: #5636B0;
-	border-color: #6449B5;
-}
-.metro-tile-pink {
-	background-color: #BD1E4A;
-	border-color: #B93154;
-}
-.metro-tile-xbox-green {
-	background-color: #6CB71E;
-	border-color: #7ABD34;
-}
-
-
 
 .tile-prezzi {
 	font-size: 18px;
@@ -81,10 +55,12 @@
 
 .tile-scontrino {
 	font-size: 15px;
-    width: 163px;
+    width: 164px;
 	height: 34px;
     margin-top: 2px;
     margin-bottom: 2px;
+    border-left-width: 0px;
+    padding-left: 6px;
     border-right-width: 0px;
     background-image: none;
 }
@@ -92,6 +68,9 @@
 .tile-scontrino-selected {
     margin-top: 15px;
     margin-bottom: 15px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-color: #ffffff;
 }
 
 .tile-scontrino-totale {
@@ -230,6 +209,11 @@
 	100% {-webkit-transform: translate(0px,100px);}
 }
 
+@-webkit-keyframes move_down_fast {
+    0% {-webkit-transform: translate(0px,100px);}
+    100% {-webkit-transform: translate(0px,100px);}
+}
+
 @-webkit-keyframes move_down_reverse {
 	0% {-webkit-transform: translate(0px, 100px);}
 	50% {-webkit-transform: translate(0px, 100px);}
@@ -238,6 +222,11 @@
 
 @-webkit-keyframes move_up {
 	50%   {-webkit-transform: translate(0px,0px);}
+	100% {-webkit-transform: translate(0px,-100px);}
+}
+
+@-webkit-keyframes move_up_fast {
+    0% {-webkit-transform: translate(0px,-100px);}
 	100% {-webkit-transform: translate(0px,-100px);}
 }
 
