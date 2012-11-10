@@ -8,7 +8,7 @@
 </head>
 <body style="background-color: black;">
 
-<audio id="click_snd" src="click.wav"></audio>
+<audio id="click_snd" src="img/click.wav"></audio>
 
 <div id="unknow-width-and-height" style="overflow: auto; position: fixed; left: 0px; top: 0px;">
     <div id="prezzi" style="width:100%"></div>
@@ -23,7 +23,7 @@
 </div>
 
 <div style="position: fixed; right: 0px; bottom: 3px;">
-	<div id="tot1" class="metro-tile tile-totale tile-totale-chiusura">
+	<div id="tot1" class="metro-tile tile-totale tile-totale-menu">
 		<div id="tot1_riga1"></div>
 		<div id="tot1_riga2"></div>
 	</div>
@@ -31,11 +31,11 @@
 
 <div id="modalInput" class="modalInput">
 
-    <div id="modalInputChiusura" class="modalInput">
+    <div id="modalInput Menu" class="modalInput">
 	    <div class="modalInputBackground"></div>
         
         <div style="float:right; margin-right: 10px;">
-            <div id="prog_annulla" class="pulsante pulsante_annulla"></div>
+            <div id="menu_annulla" class="pulsante pulsante_annulla"></div>
         </div>
 
         <div class="pulsante pulsante_menu">
@@ -50,8 +50,17 @@
         <div class="pulsante pulsante_menu">
             <div class="pulsante_menu_2righe">PROGRAM. PRODOTTI</div>
         </div>
+        <div class="pulsante pulsante_menu">
+            <div class="pulsante_menu_2righe">RICHIAMA PRECONTO</div>
+        </div>
         
-        <div style="clear:both">
+		<div style="clear:both; width: 80%; border: solid 2px white; text-align:center; color: white; font-size: 24px; margin: 0 auto;">
+			<p>Versione DEMO</p>
+			<p>X Info:<br>
+				Office Line snc<br>
+				<a href="mailto:officelinefaenza@gmail.com?Subject=Demo jCassa">officelinefaenza@gmail.com</a><br>
+				Tel. 0546.28348
+			</p>
         </div>
     </div>
 
@@ -63,17 +72,22 @@
             <div id="totale_elimina" class="pulsante pulsante_elimina" style="margin-top: 8px; margin-bottom: 10px;"></div>
         </div>
         
-        <div class="pulsante pulsante_menu pulsante_selected">CONTANTI</div>
-        <div class="pulsante pulsante_menu">FATTURA</div>
+        <div class="pulsante pulsante_menu" style="border-color: yellow">CONTANTI</div>
         <div class="pulsante pulsante_menu">BANCOMAT</div>
         <div class="pulsante pulsante_menu">PRECONTO</div>
-        <div class="pulsante pulsante_menu">BUONI PASTO</div>
-        <div class="pulsante pulsante_menu">
+        <div class="pulsante pulsante_menu">FATTURA</div>
+	    <div class="pulsante pulsante_menu">
             <div class="pulsante_menu_2righe">SCONTRINO PARLANTE</div>
         </div>
+        <div class="pulsante pulsante_menu">BUONI PASTO</div>
 
-        <div style="clear:both; color:white;">Input utente
-        <input type="text">Partita IVA</input>
+		<div style="clear:both; width: 80%; border: solid 2px white; text-align:center; color: white; font-size: 24px; margin: 0 auto;">
+			<p>Versione DEMO</p>
+			<p>X Info:<br>
+				Office Line snc<br>
+				<a href="mailto:officelinefaenza@gmail.com?Subject=Demo jCassa">officelinefaenza@gmail.com</a><br>
+				Tel. 0546.28348
+			</p>
         </div>
     </div>
 
@@ -139,7 +153,7 @@
 
 /* *****************************************
 // MODAL_INPUT: Diverse finestre di input:
-- "Chiusura":
+- " Menu":
     	attivata cliccando su totale senza scontrini aperti, cioè dopo aver stampato (o annullato) uno scontrino
 		permette di fare le letture/chiusure di cassa e le stampe del dgfe
 - "Prodotto":
@@ -147,7 +161,7 @@
 		permette di cambiare la quantità ed il prezzo del prodotto nello scontrino
 - "Totale":
 		attivata cliccando su subtotale (scontrino aperto)
-		permette di cambiare il totale di chiusura, fare fatture e scontrini parlanti e pagamenti con i buoni pasto
+		permette di cambiare il totale di  Menu, fare fatture e scontrini parlanti e pagamenti con i buoni pasto
 - "Resto":
 		attivata cliccando su tile-scontrino-resto
 		permette di inserire l'importo esatto su cui calcolare il resto; se attivata prima di stampare lo scontrino l'importo verrà scritto sullo scontrino  stesso
@@ -160,13 +174,13 @@ function modalInput(tipo, tile) {
 	} else if (tipo == "ProdottoPrezzo") {
         tipo = "Prodotto";
         modalInputProdotto(tile, "prezzo");
-	} else if (tipo == "Chiusura") {
-
+	} else if (tipo == " Menu") {
+        modalInputMenu();
 	} else if (tipo == "Totale") {
         modalInputTotale();
 	}
 
-	document.getElementById("modalInputChiusura").style.display = "none";
+	document.getElementById("modalInput Menu").style.display = "none";
     document.getElementById("modalInputProdotto").style.display = "none";
     document.getElementById("modalInputTotale").style.display = "none";
 	document.getElementById("modalInputResto").style.display = "none";
@@ -178,6 +192,15 @@ function modalInput(tipo, tile) {
     	document.getElementById("modalInput" + tipo).style.display = "block";
 	    document.getElementById("modalInput").style.display = "block";
 	}
+}
+
+function modalInputMenu () {
+    document.getElementById("menu_annulla").onclick = uiEventAnnulla;
+    
+    function uiEventAnnulla() {
+        animaClick(this);
+        modalInput("");
+    }
 }
 
 function modalInputTotale () {
@@ -437,7 +460,7 @@ function modalInputResto () {
 				while (div_scontr.hasChildNodes()) { div_scontr.removeChild(div_scontr.lastChild);	}
 
                 var tot = document.getElementById("tot1");
-                tot.className = tot.className.replace(" tile-totale-chiusura", " tile-totale-subtotale");
+                tot.className = tot.className.replace(" tile-totale-menu", " tile-totale-subtotale");
 			}
 
 			var prezzo = reparti[idx_reparto].prezzi[idx_prezzo].prezzo;
@@ -500,8 +523,8 @@ function modalInputResto () {
         }
         
         tot.onclick = uiEventLetture;
-        tot.className = tot.className.replace(" tile-totale-subtotale", " tile-totale-chiusura");
-        tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-chiusura");
+        tot.className = tot.className.replace(" tile-totale-subtotale", " tile-totale-menu");
+        tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-menu");
     	document.getElementById("tot1_riga1").innerHTML = "";
 		document.getElementById("tot1_riga2").innerHTML = "";        
 	}
@@ -589,7 +612,7 @@ function modalInputResto () {
 
 	function uiEventLetture() {
 		animaClick(this);
-		modalInput("Chiusura");
+		modalInput(" Menu");
 	}
 
 	var scontrino = {};

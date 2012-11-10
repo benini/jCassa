@@ -118,7 +118,7 @@
 	border-color: #7ABD34;
 	background-image: url('img/Tot-Stampa.gif');
 }
-.tile-totale-chiusura {
+.tile-totale-menu {
 	background-color: #2878EC;
 	border-color: #4396F1;
 }
@@ -289,6 +289,9 @@
     text-align: center;
     margin-right: 6px;
     margin-bottom: 8px;
+	border-color: transparent;
+	background-image: url('img/pulsante_testo.png');
+	background-size: 100%;
 }
 
 .pulsante_menu_2righe {
