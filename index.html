@@ -33,31 +33,48 @@
 
     <div id="modalInputChiusura" class="modalInput">
 	    <div class="modalInputBackground"></div>
+        
+        <div style="float:right; margin-right: 10px;">
+            <div id="prog_annulla" class="pulsante pulsante_annulla"></div>
+        </div>
 
-        <ul style="color: white;">
-            <li>Lettura/Chiusura fiscale</li>
-            <li>Ristampa non fiscale ultimo scontrino</li>
-            <li>Stampa DGFE fra date</li>
-            <li>Cambia descrizione/prezzi/posizione dei prodotti</li>
-        </ul>
+        <div class="pulsante pulsante_menu">
+            <div class="pulsante_menu_2righe">CHIUSURA FISCALE</div>
+        </div>
+        <div class="pulsante pulsante_menu">
+            <div class="pulsante_menu_2righe">GIORNALE<br>DI FONDO</div>
+        </div>
+        <div class="pulsante pulsante_menu">
+            <div class="pulsante_menu_2righe">RISTAMPA ULTIMO SCONTR.</div>
+        </div>
+        <div class="pulsante pulsante_menu">
+            <div class="pulsante_menu_2righe">PROGRAM. PRODOTTI</div>
+        </div>
+        
+        <div style="clear:both">
+        </div>
     </div>
 
     <div id="modalInputTotale" class="modalInput">
         <div class="modalInputBackground"></div>
         
         <div style="float:right; margin-right: 10px;">
-    	    <div id="totale_annulla" class="pulsante pulsante_annulla"></div>
-		    <div id="totale_elimina" class="pulsante pulsante_elimina" style="margin-top: 40px"></div>
-	    </div>
+            <div id="totale_annulla" class="pulsante pulsante_annulla"></div>
+            <div id="totale_elimina" class="pulsante pulsante_elimina" style="margin-top: 8px; margin-bottom: 10px;"></div>
+        </div>
         
-        <ul style="color: white;">
-            <li>Riapri scontrino</li>
-            <li>Annulla scontrino</li>
-            <li>Scegli totale di chiusura</li>
-            <li>Buoni Pasto</li>
-            <li>Fattura/Scontrino parlante</li>
-            <li>Preconto con salvataggio del nome</li>
-        </ul>
+        <div class="pulsante pulsante_menu pulsante_selected">CONTANTI</div>
+        <div class="pulsante pulsante_menu">FATTURA</div>
+        <div class="pulsante pulsante_menu">BANCOMAT</div>
+        <div class="pulsante pulsante_menu">PRECONTO</div>
+        <div class="pulsante pulsante_menu">BUONI PASTO</div>
+        <div class="pulsante pulsante_menu">
+            <div class="pulsante_menu_2righe">SCONTRINO PARLANTE</div>
+        </div>
+
+        <div style="clear:both; color:white;">Input utente
+        <input type="text">Partita IVA</input>
+        </div>
     </div>
 
     <div id="modalInputProdotto" class="modalInput">
@@ -94,7 +111,7 @@
 
         <div style="float:right; margin-right: 10px;">
     	    <div id="resto_annulla" class="pulsante pulsante_annulla"></div>
-		    <div id="resto_ok" class="pulsante pulsante_ok" style="margin-top: 40px"></div>
+		    <div id="resto_ok" class="pulsante pulsante_ok" style="margin-top: 128px"></div>
 	    </div>
 
         <div style="float:right; margin-top: 8px; margin-right: 50px;">
@@ -102,7 +119,7 @@
                 <div class="keypad_tile-header">RESTO</div>
                 <div id="resto_calcolato" class="keypad_tile-digits"></div>
             </div>
-            <div class="keypad_tile keypad_colore-prezzo" style="height: 40px; margin-top: 10px;">
+            <div class="keypad_tile keypad_colore-prezzo" style="height: 34px; margin-top: 10px;">
                 <div id="resto_digitato" class="keypad_tile-digits"></div>
             </div>
     	    <table id="resto_keypad" class="keypad">

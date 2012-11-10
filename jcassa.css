@@ -253,8 +253,13 @@
 	border-width: 3px;
 	border-style: solid;
 	border-radius: 6px;
+    border-color: #ffffff;
 	background-position: center center;
 	background-repeat: no-repeat;
+}
+
+.pulsante_selected {
+    border-color: yellow;
 }
 
 .pulsante_annulla {
@@ -274,3 +279,21 @@
 	background-size: 70%;
 	background-color: #893bbb;
 }
+
+.pulsante_menu {
+    float: left;
+    width: 164px;
+    font-family: sans-serif;
+    font-size: 18px;
+    line-height: 70px;
+    text-align: center;
+    margin-right: 6px;
+    margin-bottom: 8px;
+}
+
+.pulsante_menu_2righe {
+    line-height: 1.2em;
+    margin-top: 14px;
+}
+
+
