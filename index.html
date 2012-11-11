@@ -1,10 +1,13 @@
 <html>
 <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+
 	<link rel="stylesheet" type="text/css" href="config/colori.css">
 	<link rel="stylesheet" type="text/css" href="jcassa.css">
 
 	<script type='application/javascript' src='fastclick.js'></script>
-	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+
 </head>
 <body style="background-color: black;">
 
@@ -48,13 +51,17 @@
             <div class="pulsante_menu_2righe">RISTAMPA ULTIMO SCONTR.</div>
         </div>
         <div class="pulsante pulsante_menu">
+            <div class="pulsante_menu_2righe">RICHIAMA PRECONTO</div>
+        </div>
+        <div class="pulsante pulsante_menu">
             <div class="pulsante_menu_2righe">PROGRAM. PRODOTTI</div>
         </div>
         <div class="pulsante pulsante_menu">
-            <div class="pulsante_menu_2righe">RICHIAMA PRECONTO</div>
+            <div class="pulsante_menu_2righe">STAMPA ELENCO PRODOTTI</div>
         </div>
+
         
-		<div style="clear:both; width: 80%; border: solid 2px white; text-align:center; color: white; font-size: 24px; margin: 0 auto;">
+		<div style="clear:both; width: 80%; background-color: black; border: solid 2px white; text-align:center; color: white; font-size: 24px; margin: 0 auto;">
 			<p>Versione DEMO</p>
 			<p>X Info:<br>
 				Office Line snc<br>
@@ -81,7 +88,7 @@
         </div>
         <div class="pulsante pulsante_menu">BUONI PASTO</div>
 
-		<div style="clear:both; width: 80%; border: solid 2px white; text-align:center; color: white; font-size: 24px; margin: 0 auto;">
+		<div style="clear:both; width: 80%; background-color: black; border: solid 2px white; text-align:center; color: white; font-size: 24px; margin: 0 auto;">
 			<p>Versione DEMO</p>
 			<p>X Info:<br>
 				Office Line snc<br>
@@ -730,86 +737,89 @@ function modalInputResto () {
 
 
 var reparti = [];
-reparti.push({reparto: "BAR", col: "colore_caffe", prezzi: [] });
-reparti.push({reparto: "BIRRE", col: "colore_birre", prezzi: [] });
-reparti.push({reparto: "VINI", col: "colore_vini", prezzi: [] });
-reparti.push({reparto: "PANINI", col: "colore_panini", prezzi: [] });
+reparti.push({reparto: "BAR", col: "colore_caffe", prezzi: [
+{desc: "BAR", prezzo: ""},
+{desc: "Brioches", prezzo: "1,00"},
+{desc: "Caffè Espresso", prezzo: "0,90"},
+{desc: "Caffè Corretto", prezzo: "1,30"},
+{desc: "Caffè Decaffeinato", prezzo: "1,00"},
+{desc: "Caffè Freddo", prezzo: "1,60"},
+{desc: "Caffè Ginseng Espresso", prezzo: "1,50"},
+{desc: "Caffè Marocchino", prezzo: "1,50"},
+{desc: "Caffè Shakerato", prezzo: "2,00"},
+{desc: "Caffè Shakerato Corretto", prezzo: "2,50"},
+{desc: "Cappuccino", prezzo: "1,20"},
+{desc: "Cappuccino Orzo / Deca", prezzo: "1,30"},
+{desc: "Latte bianco", prezzo: "1,00"},
+{desc: "Latte macchiato", prezzo: "1,30"},
+{desc: "Latte macchiato orzo/deca", prezzo: "1,40"},
+{desc: "Orzo espresso", prezzo: "1,00"},
+{desc: "Orzo in tazza grande", prezzo: "1,30"},
+] });
+reparti.push({reparto: "BEVANDE", col: "colore_bevande", prezzi: [
+{desc: "Bibite alla spina 25 cl.", prezzo: "1,70"},
+{desc: "Bibite alla spina 40 cl.", prezzo: "2,10"},
+{desc: "Bibite alla spina 50 cl.", prezzo: "2,50"},
+{desc: "Bott. Acqua 0,5 L.", prezzo: "1,00"},
+{desc: "Bott. Acqua 1,5 L.", prezzo: "1,80"},
+{desc: "Cedrata / Schweppes / Tonica", prezzo: "1,80"},
+{desc: "Esta The", prezzo: "1,20"},
+{desc: "Gatorade / Powerade", prezzo: "2,40"},
+{desc: "Lattine 33 cl.", prezzo: "1,80"},
+{desc: "Redbull / Burn", prezzo: "2,80"},
+{desc: "Spremuta di agrumi", prezzo: "2,50"},
+{desc: "Succhi di frutta 200 ml.", prezzo: "1,80"},
+{desc: "Tè e infusi (da filtro)", prezzo: "1,30"},
+{desc: "Tè freddo Bott. 0,5 L.", prezzo: "2,00"},
+] });
+reparti.push({reparto: "SNACKS", col: "colore_panini", prezzi: [
+{desc: "Tramezzini", prezzo: "2,00"},
+{desc: "Piadine, Maxi Toast", prezzo: "3,50"},
+{desc: "Panini", prezzo: "3,50"},
+{desc: "Crostini", prezzo: "1,50"},
+{desc: "Pizza Bianca", prezzo: "1,0"},
+{desc: "Pizza Farcita", prezzo: "1,50"},
+{desc: "Pizza Margherita", prezzo: "1,20"},
+] });
 reparti.push({reparto: "CUCINA", col: "colore_cucina", prezzi: [
 {desc: "CAFFE", prezzo: "1,10"},
 {desc: "COCA", prezzo: "2,00"}
 ] });
-reparti.push({reparto: "DESSERT", col: "colore_dessert", prezzi: [] });
-reparti.push({reparto: "VARIE", col: "colore_vini", prezzi: [] });
-
-
-
-
-
-reparti[0].prezzi.push({desc: "BAR", prezzo: ""});
-reparti[0].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
-reparti[1].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
-reparti[1].prezzi.push({desc: "COCA", prezzo: "2,00"});
-reparti[1].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
-reparti[1].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
-reparti[1].prezzi.push({desc: "TEA", prezzo: "1,80"});
-reparti[1].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
-reparti[1].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
-reparti[1].prezzi.push({desc: "COCA", prezzo: "2,00"});
-reparti[1].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
-reparti[1].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
-reparti[1].prezzi.push({desc: "TEA", prezzo: "1,80"});
-reparti[1].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
-reparti[1].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
-reparti[1].prezzi.push({desc: "COCA", prezzo: "2,00"});
-reparti[1].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
-reparti[1].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
-reparti[1].prezzi.push({desc: "TEA", prezzo: "1,80"});
-reparti[1].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
-reparti[1].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
-reparti[1].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
-reparti[1].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
-reparti[1].prezzi.push({desc: "COCA", prezzo: "2,00"});
-reparti[1].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
-reparti[1].prezzi.push({desc: "COCA", prezzo: "2,00"});
-reparti[1].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
-reparti[1].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
-reparti[1].prezzi.push({desc: "TEA", prezzo: "1,80"});
-reparti[1].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
-reparti[1].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
-reparti[2].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
-reparti[2].prezzi.push({desc: "COCA", prezzo: "2,00"});
-reparti[2].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
-reparti[2].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
-reparti[2].prezzi.push({desc: "TEA", prezzo: "1,80"});
-reparti[3].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
-reparti[3].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
-reparti[3].prezzi.push({desc: "COCA", prezzo: "2,00"});
-reparti[3].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
-reparti[3].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
-reparti[3].prezzi.push({desc: "TEA", prezzo: "1,80"});
-reparti[3].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
-reparti[4].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
-reparti[4].prezzi.push({desc: "COCA", prezzo: "2,00"});
-reparti[4].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
-reparti[4].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
-reparti[4].prezzi.push({desc: "TEA", prezzo: "1,80"});
-reparti[4].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
-reparti[5].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
-reparti[5].prezzi.push({desc: "COCA", prezzo: "2,00"});
-reparti[5].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
-reparti[5].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
-reparti[5].prezzi.push({desc: "TEA", prezzo: "1,80"});
-reparti[5].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
-reparti[6].prezzi.push({desc: "CAFFE", prezzo: "1,10"});
-reparti[6].prezzi.push({desc: "COCA", prezzo: "2,00"});
-reparti[6].prezzi.push({desc: "Cappuccino", prezzo: "2,00"});
-reparti[6].prezzi.push({desc: "Descrizione mooooooooooolto lunga", prezzo: "2,00"});
-reparti[6].prezzi.push({desc: "TEA", prezzo: "1,80"});
-reparti[6].prezzi.push({desc: "MENU PRANZO", prezzo: "11,90"});
-
-
-
-
+reparti.push({reparto: "DESSERT", col: "colore_dessert", prezzi: [
+{desc: "Gelato sfuso piccolo", prezzo: "2,00"},
+{desc: "Gelato sfuso grande", prezzo: "3,00"},
+{desc: "Granite", prezzo: "2,00"},
+] });
+reparti.push({reparto: "ALCOLICI", col: "colore_vini", prezzi: [
+{desc: "Birra Becks spina 20 cl.", prezzo: "2,20"},
+{desc: "Birra Becks spina 40 cl.", prezzo: "3,20"},
+{desc: "Beck's 33 cl. / Moretti 33 cl.", prezzo: "2,70"},
+{desc: "Becks 66 cl. / Moretti 66 cl.", prezzo: "3,70"},
+{desc: "Ceres Strong 33 cl.", prezzo: "3,30"},
+{desc: "Corona / Tennents 33 cl.", prezzo: "3,30"},
+{desc: "Hoagarden 33 cl.", prezzo: "3,30"},
+{desc: "Nastro Azzurro 33 cl.", prezzo: "3,30"},
+{desc: "Calice vino", prezzo: "2,00"},
+{desc: "Calice porto", prezzo: "2,50"},
+{desc: "Calice prosecco / spumante", prezzo: "2,50"},
+{desc: "Liquori nazionali", prezzo: "2,30"},
+{desc: "Liquori esteri", prezzo: "2,80"},
+{desc: "Brandy (Stravecchio)", prezzo: "2,80"},
+{desc: "Cognacs", prezzo: "2,80"},
+{desc: "Crema di Whisky", prezzo: "3,00"},
+{desc: "Gin / Rhum / Tequila", prezzo: "3,00"},
+{desc: "Grappa", prezzo: "2,50"},
+{desc: "Grappa Prime Uve", prezzo: "3,00"},
+{desc: "Limoncello", prezzo: "2,00"},
+{desc: "Vermouth (Martini, Cinzano)", prezzo: "2,80"},
+{desc: "Vodka", prezzo: "3,00"},
+{desc: "Whisky", prezzo: "2,80"},
+{desc: "Whisky invecchiati", prezzo: "3,30"}
+] });
+reparti.push({reparto: "VARIE", col: "colore_vini", prezzi: [
+{desc: "Caramelle", prezzo: "3,00"},
+{desc: "Chewing gum", prezzo: "2,00"},
+] });
 
 
 

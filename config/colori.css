@@ -8,6 +8,11 @@
 	border-color: #2c5eff;
 	background-image: url('cucina.jpg');
 }
+.colore_bevande {
+	background-color: #fba431;
+	border-color: #ffa732;
+	background-image: url('bevande.jpg');
+}
 .colore_vini {
 	background-color: #680200;
 	border-color: #730200;
