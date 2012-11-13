@@ -118,11 +118,15 @@
 	text-align: left;
 	background-color: #6CB71E;
 	border-color: #7ABD34;
-	background-image: url('img/Tot-Stampa.gif');
+	background-image: url('img/tot-stampa.gif');
 }
-.tile-totale-menu {
+.tile-totale-menu {	
 	background-color: #2878EC;
 	border-color: #4396F1;
+	background-image: url('img/tot-menu.png');
+	background-size: 90%;
+	background-position: center center;
+	background-repeat: no-repeat;
 }
 
 .modalInput {
@@ -284,7 +288,7 @@
 
 .pulsante_menu {
     float: left;
-    width: 164px;
+    width: 160px;
     font-family: sans-serif;
     font-size: 18px;
     line-height: 70px;

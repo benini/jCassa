@@ -24,14 +24,19 @@
 	background-image: url('birre.jpg');
 }
 .colore_dessert {
-	background-color: #f785bb;
-	border-color: #ff90c1;
+	background-color: #dd1e2a;
+	border-color: #e61f2c;
 	background-image: url('dessert.jpg');
 }
 .colore_panini {
 	background-color: #009719;
 	border-color: #1A9F30;
 	background-image: url('panini.jpg');
+}
+.colore_varie {
+	background-color: #9e1078;
+	border-color: #a6117e;
+	background-image: url('varie.jpg');
 }
 
 
