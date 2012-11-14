@@ -63,7 +63,7 @@
             <div class="pulsante_menu_2righe">APERTURA CASSETTO</div>
         </div>
 
-        
+		<div style="clear:both; height: 20px;"></div>        
 		<div style="clear:both; width: 80%; background-color: black; border: solid 2px white; text-align:center; color: white; font-size: 24px; margin: 0 auto;">
 			<p>Versione DEMO</p>
 			<p>X Info:<br>
@@ -84,13 +84,16 @@
         
         <div class="pulsante pulsante_menu" style="border-color: yellow">CONTANTI</div>
         <div class="pulsante pulsante_menu">BANCOMAT</div>
+        <div class="pulsante pulsante_menu">ASSEGNI</div>
+        <div class="pulsante pulsante_menu">CREDITI</div>
+        <div class="pulsante pulsante_menu">BUONI PASTO</div>
         <div class="pulsante pulsante_menu">PRECONTO</div>
         <div class="pulsante pulsante_menu">FATTURA</div>
 	    <div class="pulsante pulsante_menu">
             <div class="pulsante_menu_2righe">SCONTRINO PARLANTE</div>
         </div>
-        <div class="pulsante pulsante_menu">BUONI PASTO</div>
 
+		<div style="clear:both; height: 20px;"></div>
 		<div style="clear:both; width: 80%; background-color: black; border: solid 2px white; text-align:center; color: white; font-size: 24px; margin: 0 auto;">
 			<p>Versione DEMO</p>
 			<p>X Info:<br>
@@ -758,8 +761,10 @@ reparti.push({reparto: "BAR", col: "colore_caffe", prezzi: [
 {desc: "Latte macchiato orzo/deca", prezzo: "1,40"},
 {desc: "Orzo espresso", prezzo: "1,00"},
 {desc: "Orzo in tazza grande", prezzo: "1,30"},
+{desc: "Cioccolata calda", prezzo: "3,50"},
 ] });
 reparti.push({reparto: "BEVANDE", col: "colore_bevande", prezzi: [
+{desc: "BIBITA", prezzo: ""},
 {desc: "Bibite alla spina 25 cl.", prezzo: "1,70"},
 {desc: "Bibite alla spina 40 cl.", prezzo: "2,10"},
 {desc: "Bibite alla spina 50 cl.", prezzo: "2,50"},
@@ -770,6 +775,7 @@ reparti.push({reparto: "BEVANDE", col: "colore_bevande", prezzi: [
 {desc: "Gatorade / Powerade", prezzo: "2,40"},
 {desc: "Lattine 33 cl.", prezzo: "1,80"},
 {desc: "Redbull / Burn", prezzo: "2,80"},
+{desc: "Succhi di frutta bio", prezzo: "3,00"},
 {desc: "Spremuta di agrumi", prezzo: "2,50"},
 {desc: "Succhi di frutta 200 ml.", prezzo: "1,80"},
 {desc: "Tè e infusi (da filtro)", prezzo: "1,30"},
@@ -806,20 +812,31 @@ reparti.push({reparto: "SNACKS", col: "colore_panini", prezzi: [
 {desc: "Piadine, Maxi Toast", prezzo: "3,50"},
 {desc: "Panini", prezzo: "3,50"},
 {desc: "Crostini", prezzo: "1,50"},
-{desc: "Pizza Bianca", prezzo: "1,0"},
-{desc: "Pizza Farcita", prezzo: "1,50"},
-{desc: "Pizza Margherita", prezzo: "1,20"},
+{desc: "Pizza Bianca (spicchio)", prezzo: "1,0"},
+{desc: "Pizza Farcita (spicchio)", prezzo: "1,50"},
+{desc: "Pizza Margherita (spicchio)", prezzo: "1,20"},
 ] });
 reparti.push({reparto: "CUCINA", col: "colore_cucina", prezzi: [
 {desc: "CAFFE", prezzo: "1,10"},
 {desc: "COCA", prezzo: "2,00"}
 ] });
 reparti.push({reparto: "DESSERT", col: "colore_dessert", prezzi: [
+{desc: "Crepes alla Nutella", prezzo: "5,50"},
+{desc: "Crepes alla Fragole", prezzo: "6,00"},
 {desc: "Gelato sfuso piccolo", prezzo: "2,00"},
 {desc: "Gelato sfuso grande", prezzo: "3,00"},
-{desc: "Granite", prezzo: "2,00"},
+{desc: "Coppa Esotica", prezzo: "5,00"},
+{desc: "Coppa Negrita", prezzo: "4,50"},
+{desc: "Granita", prezzo: "2,00"},
+{desc: "Frappè alla Banana", prezzo: "4,00"},
+{desc: "Frappè al Cioccolato", prezzo: "4,00"},
+{desc: "Frappè al Cocco", prezzo: "4,00"},
+{desc: "Frappè al Fior di Latte", prezzo: "4,00"},
+{desc: "Frappè alla Fragola", prezzo: "4,00"},
+{desc: "Sorbetto al limone", prezzo: "4,00"},
 ] });
 reparti.push({reparto: "VARIE", col: "colore_varie", prezzi: [
+{desc: "VARIE", prezzo: ""},
 {desc: "Caramelle", prezzo: "3,00"},
 {desc: "Chewing gum", prezzo: "2,00"},
 ] });
