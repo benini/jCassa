@@ -377,6 +377,7 @@ function modalInputResto () {
         window.onresize=function() { dyn_dimensions(); }
 
         loadProdotti();
+		updateTotale();
 
     }, false);
 
@@ -811,14 +812,15 @@ reparti.push({reparto: "SNACKS", col: "colore_panini", prezzi: [
 {desc: "Tramezzini", prezzo: "2,00"},
 {desc: "Piadine, Maxi Toast", prezzo: "3,50"},
 {desc: "Panini", prezzo: "3,50"},
-{desc: "Crostini", prezzo: "1,50"},
 {desc: "Pizza Bianca (spicchio)", prezzo: "1,0"},
 {desc: "Pizza Farcita (spicchio)", prezzo: "1,50"},
 {desc: "Pizza Margherita (spicchio)", prezzo: "1,20"},
 ] });
 reparti.push({reparto: "CUCINA", col: "colore_cucina", prezzi: [
-{desc: "CAFFE", prezzo: "1,10"},
-{desc: "COCA", prezzo: "2,00"}
+{desc: "Crostini misti", prezzo: "4,50"},
+{desc: "Insalatona", prezzo: "6,00"}
+{desc: "Menu Colazione", prezzo: "3,90"},
+{desc: "Menu Pranzo", prezzo: "9,90"},
 ] });
 reparti.push({reparto: "DESSERT", col: "colore_dessert", prezzi: [
 {desc: "Crepes alla Nutella", prezzo: "5,50"},
@@ -837,8 +839,9 @@ reparti.push({reparto: "DESSERT", col: "colore_dessert", prezzi: [
 ] });
 reparti.push({reparto: "VARIE", col: "colore_varie", prezzi: [
 {desc: "VARIE", prezzo: ""},
-{desc: "Caramelle", prezzo: "3,00"},
-{desc: "Chewing gum", prezzo: "2,00"},
+{desc: "Mon Cheri / Ferrero Rocher", prezzo: "0,50"},
+{desc: "Kit Kat", prezzo: "2,00"},
+{desc: "Vigorsol / Daygum", prezzo: "2,00"},
 ] });
 
 
