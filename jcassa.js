@@ -107,7 +107,7 @@
 
 			var prezzo = reparti[idx_reparto].prezzi[idx_prezzo].prezzo;
 			var desc = reparti[idx_reparto].prezzi[idx_prezzo].desc;
-			var idx = scontrino.push(idx_reparto, 1, desc, prezzo);
+			var idx = scontrino.push(1 + idx_reparto, 1, desc, prezzo);
 			var divTile = document.createElement("div");
 			divTile.className = "metro-tile tile-scontrino " + reparti[idx_reparto].col;
 			divTile.onclick = uiEventCambiaRigaScontrino;
@@ -241,16 +241,23 @@
 
 	function uiEventInviaScontrino() {
 		animaClick(this);
-		updateTotale();
-		modalInput("");
-		var div_scontr = document.getElementById("scontr");
-		for (var i = div_scontr.childNodes.length; i > 2; i--) {
-			div_scontr.removeChild(div_scontr.firstChild);
-		}
-		div_scontr.firstChild.onclick = "";
-		div_scontr.firstChild.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>ULTIMA VENDITA</div>";
-		div_scontr.firstChild.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotale();
-		scontrino.invia();
+		registratore.setCallback(function (message) {
+			if (message == "OK") {
+				updateTotale();
+				modalInput("");
+				var div_scontr = document.getElementById("scontr");
+				for (var i = div_scontr.childNodes.length; i > 2; i--) {
+					div_scontr.removeChild(div_scontr.firstChild);
+				}
+				div_scontr.firstChild.onclick = "";
+				div_scontr.firstChild.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>ULTIMA VENDITA</div>";
+				div_scontr.firstChild.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotale();
+				scontrino.invia();
+			} else {
+				alert(message);
+			}
+		});
+		registratore.stampaScontrino(scontrino);
 	}
 
 	function uiEventLetture() {
@@ -361,48 +368,80 @@
 		}
 		return -1;
 	}
+
 	scontrino.invia = function () {
 		scontrino.id.length = 0;
+	}
 
-		var pack_id = "0";
+var registratore = new RCH();
 
-		var sc = rch_encode("=K") + "\n";
+function RCH() {
+	var onRisposta = function(message) {
+					if (message != "OK") { alert(message); }
+	};
+	this.setCallback = function(f) { onRisposta = f; }
+
+	this.aperturaCassetto = function () {
+		new cmdQueue("=C1").push("=C86").send();
+		return this;
+	};
+
+	this.letturaGiornaliera = function () {
+		new cmdQueue("=C2").push("=C10").send();
+		return this;
+	};
+
+	this.chiusuraFiscale = function () {
+		new cmdQueue("=C3").push("=C10").send();
+		return this;
+	};
+
+	this.stampaUltimoScontrino = function () {
+		new cmdQueue("=C3").push("=C453/$1").send();
+		return this;
+	};
+
+	this.stampaScontrino = function (scontrino) {
+		var rch = new cmdQueue("=C1");
+		//TODO: l'accesso diretto a scontrino non è bello
 		for (var i = 0; i < scontrino.righe.length; ++i) {
 			var r = "=R" + scontrino.righe[i].rep;
 			r += "/$" + scontrino.righe[i].prezzo.toFixed(2).replace(".", "");
 			if (scontrino.righe[i].quant > 1) {
 				r += "/*" + scontrino.righe[i].quant;
 			}
-			r += "/(" + scontrino.righe[i].desc.slice(0, 36) + ")";
+			var desc = scontrino.getDesc(i);
+			if (desc.length > 0) {
+				r += "/(" + desc.slice(0, 36) + ")";
+			}
 
-			sc += rch_encode(r) + "\n";
+			rch.push(r);
 		}
-		sc += rch_encode("=T1");
-//		sc += rch_encode("<</?s");
+		rch.push("=T1");
+		rch.send();
+		return this;
+	};
 
-		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.onreadystatechange = function() {
-			if (xmlhttp.readyState==4)/* && xmlhttp.status==200) */
-			{
-				if (xmlhttp.responseText != "OK") {
-					alert(xmlhttp.responseText);
+
+	function cmdQueue (chiave) {
+		this.push = function (str) {
+			for (var i=0; i < str.length; i++) {
+				var c = str.charCodeAt(i);
+				if ((c < 32) || (c > 127 && c < 160) || (c > 255) ) {
+					//TODO: sostituire i caratteri illegali
+					alert("Carattere illegale!!");
 				}
 			}
-		}
 
-		xmlhttp.open("POST","rch.php?i=192.168.1.29:23&q=" + encodeURI(sc),true);
-		xmlhttp.send();
-
-
-		function rch_encode (str) {
-			pack_id = String((Number(pack_id) + 1)).slice(-1);
+			pack_id = (pack_id >= 9) ? 0 : pack_id +1;
 
 			var res = "\u000201";
 			res += ("000" + str.length).slice(-3);
 			res = res + "N" + str + pack_id;
 			res += xor_string(res);
 			res += "\u0003";
-			return res;
+			sc += res + "\n";
+			return this;
 
 			function xor_string (str) {
 				var res = 0;
@@ -412,7 +451,41 @@
 				return ("0" + res.toString(16)).slice(-2).toUpperCase();
 			}
 		}
+
+		this.send =	function () {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState==4) {
+					if (xmlhttp.status==200) {
+						onRisposta(xmlhttp.responseText);
+					} else {
+						onRisposta(xmlhttp.statusText);
+					}
+				}
+			}
+
+/*			var enc_sc = encodeURIComponent(sc);
+			if (enc_sc.length < 2000) {
+				xmlhttp.open("GET","rch.php?i=192.168.1.29:23&q=" + encodeURIComponent(sc));
+				xmlhttp.send();
+			} else { */
+			xmlhttp.open("POST", "rch.php", false)
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+			xmlhttp.send("i=192.168.1.29:23&q=" + encodeURIComponent(sc));
+
+			return this;
+		}
+
+	// COSTRUTTORE cmdQueue
+		var pack_id = 0;
+		var sc = "";
+
+		this.push("=K"); // CL
+		// "<</?s" recupera lo stato della cassa (che sia troppo lento?)
+		// "=k" Se c'è uno scontrino aperto annullalo
+		this.push(chiave); //Entra nella chiave richiesta
 	}
+}
 
 
 /* *****************************************
@@ -459,12 +532,28 @@ function modalInput(tipo, tile) {
 }
 
 function modalInputMenu () {
-	document.getElementById("menu_annulla").onclick = uiEventAnnulla;
-	
-	function uiEventAnnulla() {
+	document.getElementById("menu_annulla").onclick = function () {
 		animaClick(this);
 		modalInput("");
 	}
+	document.getElementById("menu_chiusuraFiscale").onclick = function () {
+		animaClick(this);
+		registratore.chiusuraFiscale();
+	}
+	document.getElementById("menu_letturaGiornaliera").onclick = function () {
+		animaClick(this);
+		registratore.letturaGiornaliera();
+	}
+	document.getElementById("menu_aperturaCassetto").onclick = function () {
+		animaClick(this);
+		registratore.aperturaCassetto();
+	}
+	document.getElementById("menu_ultimoScontrino").onclick = function () {
+		animaClick(this);
+		registratore.stampaUltimoScontrino();
+	}
+	
+
 }
 
 function modalInputTotale () {
