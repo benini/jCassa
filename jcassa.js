@@ -11,7 +11,7 @@
 	// Calcolo della dimensione della sezione "prezzi" in base alla spazio disponbile
 	function dyn_dimensions() {
 		// L'idea originale era di creare due classi unknown-width e unknown-height e assegnarle
-		// agli oggetti che ne avevano bisogno, ma è più complicato di quanto pensassi senza jQuery
+		// agli oggetti che ne avevano bisogno, ma e' piu' complicato di quanto pensassi senza jQuery
 		// e per adesso voglio scrivere puro Javascript per imparare i dettagli
 		var dyn_height = window.innerHeight - Math.floor(1.20 * document.getElementById("tot1").offsetHeight);
 		var dyn_width = window.innerWidth - Math.floor(1.05 * document.getElementById("tot1").offsetWidth);
@@ -46,7 +46,7 @@
 		tile.className += " tile_middle";
 		setTimeout(function() {tile.className = tile.className.replace(" tile_middle", " tile_reset");}, 100);
 		var click = document.getElementById("click_snd");
-		try { // Sull'Ipad currentTime a volte non funziona (quando il suono è già finito?)
+		try { // Sull'Ipad currentTime a volte non funziona (quando il suono e' gia' finito?)
 			click.pause();
 			click.currentTime = 0;
 		} catch (e) {}
@@ -125,7 +125,7 @@
 		}
 	}
 
-	// Prezzo e quantità
+	// Prezzo e quantita'
 	function updateTileProdotto(tile, quant, prezzo, desc) {
 		var idx = 0;
 
@@ -135,8 +135,8 @@
 
 		scontrino.set(idx, quant, prezzo, desc);
 /* Questo codice eliminerebbe i duplicati anche se viene cambiato il prezzo in uno uguale;
-// è una finezza, ma mi sembra fuorviante in qualche modo;
-// perciò i duplicati vengono eliminati solo in uiEventAggiungiProdotto
+// e' una finezza, ma mi sembra fuorviante in qualche modo;
+// percio' i duplicati vengono eliminati solo in uiEventAggiungiProdotto
 
 		var idx_duplicato = scontrino.unisciDuplicato(idx);
 		if (idx_duplicato != -1) {
@@ -242,7 +242,11 @@
 	function uiEventInviaScontrino() {
 		animaClick(this);
 		registratore.setCallback(function (message) {
-			if (message == "OK") {
+			if (message.length > 4) {
+				alert(message);
+			}
+
+			if (message.substr(-3, 2) === "OK") {
 				updateTotale();
 				modalInput("");
 				var div_scontr = document.getElementById("scontr");
@@ -253,8 +257,6 @@
 				div_scontr.firstChild.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>ULTIMA VENDITA</div>";
 				div_scontr.firstChild.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotale();
 				scontrino.invia();
-			} else {
-				alert(message);
 			}
 		});
 		registratore.stampaScontrino(scontrino);
@@ -403,7 +405,7 @@ function RCH() {
 
 	this.stampaScontrino = function (scontrino) {
 		var rch = new cmdQueue("=C1");
-		//TODO: l'accesso diretto a scontrino non è bello
+		//TODO: l'accesso diretto a scontrino non e' bello
 		for (var i = 0; i < scontrino.righe.length; ++i) {
 			var r = "=R" + scontrino.righe[i].rep;
 			r += "/$" + scontrino.righe[i].prezzo.toFixed(2).replace(".", "");
@@ -427,9 +429,11 @@ function RCH() {
 		this.push = function (str) {
 			for (var i=0; i < str.length; i++) {
 				var c = str.charCodeAt(i);
-				if ((c < 32) || (c > 127 && c < 160) || (c > 255) ) {
-					//TODO: sostituire i caratteri illegali
-					alert("Carattere illegale!!");
+				if (c < 32 || c > 127) {
+					var new_c = "?";
+					if (c == 232) new_c = "e";
+					else if (c == 224) new_c = "a";
+					str = str.substr(0, i) + new_c + str.substr(i+1);
 				}
 			}
 
@@ -480,9 +484,11 @@ function RCH() {
 		var pack_id = 0;
 		var sc = "";
 
-		this.push("=K"); // CL
-		// "<</?s" recupera lo stato della cassa (che sia troppo lento?)
-		// "=k" Se c'è uno scontrino aperto annullalo
+
+//		this.push("<</?s"); // recupera lo stato della cassa (che sia troppo lento?)
+//		this.push("=K"); // CL
+//		this.push("=k"); // Se c'e' uno scontrino aperto annullalo
+//		this.push("=K"); // CL
 		this.push(chiave); //Entra nella chiave richiesta
 	}
 }
@@ -491,17 +497,17 @@ function RCH() {
 /* *****************************************
 // MODAL_INPUT: Diverse finestre di input:
 - " Menu":
-		attivata cliccando su totale senza scontrini aperti, cioè dopo aver stampato (o annullato) uno scontrino
+		attivata cliccando su totale senza scontrini aperti, cioe' dopo aver stampato (o annullato) uno scontrino
 		permette di fare le letture/chiusure di cassa e le stampe del dgfe
 - "Prodotto":
 		attivata cliccando su tile-scontrino
-		permette di cambiare la quantità ed il prezzo del prodotto nello scontrino
+		permette di cambiare la quantita' ed il prezzo del prodotto nello scontrino
 - "Totale":
 		attivata cliccando su subtotale (scontrino aperto)
 		permette di cambiare il totale di  Menu, fare fatture e scontrini parlanti e pagamenti con i buoni pasto
 - "Resto":
 		attivata cliccando su tile-scontrino-resto
-		permette di inserire l'importo esatto su cui calcolare il resto; se attivata prima di stampare lo scontrino l'importo verrà scritto sullo scontrino  stesso
+		permette di inserire l'importo esatto su cui calcolare il resto; se attivata prima di stampare lo scontrino l'importo verra' scritto sullo scontrino  stesso
 *******************************************/
 function modalInput(tipo, tile) {
 	if (tipo == "Resto") {
