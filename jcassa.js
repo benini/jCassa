@@ -1,14 +1,38 @@
-	window.addEventListener('load', function() {
-		new FastClick(document.body); // Caricamento FastClick per iPad
-		dyn_dimensions();
-		window.onresize=function() { dyn_dimensions(); }
+window.addEventListener('load', function() {
+	new FastClick(document.body); // Caricamento FastClick per iPad
+	dyn_dimensions();
+	window.onresize=function() { dyn_dimensions(); }
 
-		loadProdotti();
-		updateTotale();
-		
-		document.getElementById("menu").onclick = uiEventLetture;
+	//TODO: Verificare aggiornamenti ed applicarli
+	document.getElementById("pg_aggiornamenti").style.backgroundSize = "100%";
+	document.getElementById("pg_aggiornamenti_ok").style.display = "inline";
 
-	}, false);
+	preloadImmagini();
+	loadProdotti();
+	updateTotale();
+	document.getElementById("menu").onclick = uiEventLetture;
+
+	var reg_pg_c = 0;
+	var reg_pg_i = setInterval(function(){
+		reg_pg_c += 4;
+		document.getElementById("pg_fiscale").style.backgroundSize = reg_pg_c + "%";
+	},200);
+	registratore.getInfo(function () {
+		clearInterval(reg_pg_i);
+		document.getElementById("pg_fiscale_err").style.display = "inline";
+		document.getElementById("pg_fiscale").style.backgroundSize = "100%";
+		console.log(this.errore);
+	});
+
+
+	/*TODO: Stampante preconto
+	if (typeof stampante2 !== "undefined") {
+		document.getElementById("schermata_avvio").addChild = etc..
+	}
+	*/
+
+	return;
+
 
 	// Calcolo della dimensione della sezione "prezzi" in base alla spazio disponbile
 	function dyn_dimensions() {
@@ -28,20 +52,37 @@
 		document.getElementById("modalInput").style.height = window.innerHeight;
 	}
 
-	function loadProdotti() {
-		// Chiedere i prodotti con un xml asyncrono?
-		updateReparti();
+	function preloadImmagini() {
+		var imm = ["img/elimina.png", "img/tot-stampa.gif", "img/pulsante_testo.png"];
+		var c = 0
+		var buf = [];
+		for (var i = 0; i < imm.length; i++) {
+			buf[i] = new Image();
+			buf[i].onload = function(){
+				document.getElementById("pg_immagini").style.backgroundSize = 100 * ++c / imm.length + "%";
+				if (c == imm.length) {
+					document.getElementById("pg_immagini_ok").style.display = "inline";
+				}
+			}
+			buf[i].src = imm[i];
+		}
 	}
 
-	function updateReparti() {
+	function loadProdotti() {
+		// Chiedere i prodotti con un xml asyncrono?
 		for (var i = 0; i < reparti.length; i++) {
 			var divTile = document.createElement("div");
 			divTile.className = "metro-tile tile-reparti " + reparti[i].col;
 			divTile.innerHTML = reparti[i].reparto;
 			divTile.onclick = uiEventCambiaReparto(i);
 			document.getElementById('reparti').insertCell(-1).appendChild(divTile);
+
+			document.getElementById("pg_prodotti").style.backgroundSize = 100 * (i+1) / reparti.length + "%";
 		}
+		document.getElementById("pg_prodotti_ok").style.display = "inline";
 	}
+
+}, false);
 
 	function animaClick(tile) {
 		tile.className = tile.className.replace(" tile_reset", "");
@@ -74,6 +115,7 @@
 	function uiEventCambiaReparto (r) {
 		return function () {
 			animaClick(this);
+			document.getElementById("schermata_avvio").style.display = "none";
 			var div_prodotti=document.getElementById("prezzi");
 			while (div_prodotti.hasChildNodes()) { div_prodotti.removeChild(div_prodotti.lastChild); }
 
@@ -172,8 +214,8 @@
 		tot.onclick = "";
 		tot.className = tot.className.replace(" tile-totale-subtotale", " tile-totale-menu");
 		tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-menu");
-		document.getElementById("tot1_riga1").innerHTML = "OFFICE LINE";
-		document.getElementById("tot1_riga2").innerHTML = "Tel. 0546.28348";
+		document.getElementById("tot1_riga1").innerHTML = "jCassa";
+		document.getElementById("tot1_riga2").innerHTML = "v 1.0";
 
 		document.getElementById("menu").style.display = "block";
 	}
@@ -381,123 +423,6 @@
 		scontrino.id.length = 0;
 	}
 
-var registratore = new RCH();
-
-function RCH() {
-	var onRisposta = function(message) {
-					if (message != "OK") { alert(message); }
-	};
-	this.setCallback = function(f) { onRisposta = f; }
-
-	this.aperturaCassetto = function () {
-		new cmdQueue("=C1").push("=C86").send();
-		return this;
-	};
-
-	this.letturaGiornaliera = function () {
-		new cmdQueue("=C2").push("=C10").send();
-		return this;
-	};
-
-	this.chiusuraFiscale = function () {
-		new cmdQueue("=C3").push("=C10").send();
-		return this;
-	};
-
-	this.stampaUltimoScontrino = function () {
-		new cmdQueue("=C3").push("=C453/$1").send();
-		return this;
-	};
-
-	this.stampaScontrino = function (scontrino) {
-		var rch = new cmdQueue("=C1");
-		//TODO: l'accesso diretto a scontrino non e' bello
-		for (var i = 0; i < scontrino.righe.length; ++i) {
-			var r = "=R" + scontrino.righe[i].rep;
-			r += "/$" + scontrino.righe[i].prezzo.toFixed(2).replace(".", "");
-			if (scontrino.righe[i].quant > 1) {
-				r += "/*" + scontrino.righe[i].quant;
-			}
-			var desc = scontrino.getDesc(i);
-			if (desc.length > 0) {
-				r += "/(" + desc.slice(0, 36) + ")";
-			}
-
-			rch.push(r);
-		}
-		rch.push("=T1");
-		rch.send();
-		return this;
-	};
-
-
-	function cmdQueue (chiave) {
-		this.push = function (str) {
-			for (var i=0; i < str.length; i++) {
-				var c = str.charCodeAt(i);
-				if (c < 32 || c > 127) {
-					var new_c = "?";
-					if (c == 232) new_c = "e";
-					else if (c == 224) new_c = "a";
-					str = str.substr(0, i) + new_c + str.substr(i+1);
-				}
-			}
-
-			pack_id = (pack_id >= 9) ? 0 : pack_id +1;
-
-			var res = "\u000201";
-			res += ("000" + str.length).slice(-3);
-			res = res + "N" + str + pack_id;
-			res += xor_string(res);
-			res += "\u0003";
-			sc += res + "\n";
-			return this;
-
-			function xor_string (str) {
-				var res = 0;
-				for (var i=0; i < str.length; i++) {
-					res ^= str.charCodeAt(i);
-				}
-				return ("0" + res.toString(16)).slice(-2).toUpperCase();
-			}
-		}
-
-		this.send =	function () {
-			var xmlhttp = new XMLHttpRequest();
-			xmlhttp.onreadystatechange = function() {
-				if (xmlhttp.readyState==4) {
-					if (xmlhttp.status==200) {
-						onRisposta(xmlhttp.responseText);
-					} else {
-						onRisposta(xmlhttp.statusText);
-					}
-				}
-			}
-
-/*			var enc_sc = encodeURIComponent(sc);
-			if (enc_sc.length < 2000) {
-				xmlhttp.open("GET","rch.php?i=192.168.1.29:23&q=" + encodeURIComponent(sc));
-				xmlhttp.send();
-			} else { */
-			xmlhttp.open("POST", "rch.php", false)
-			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-			xmlhttp.send("i=192.168.1.29:23&q=" + encodeURIComponent(sc));
-
-			return this;
-		}
-
-	// COSTRUTTORE cmdQueue
-		var pack_id = 0;
-		var sc = "";
-
-
-//		this.push("<</?s"); // recupera lo stato della cassa (che sia troppo lento?)
-//		this.push("=K"); // CL
-//		this.push("=k"); // Se c'e' uno scontrino aperto annullalo
-//		this.push("=K"); // CL
-		this.push(chiave); //Entra nella chiave richiesta
-	}
-}
 
 
 /* *****************************************

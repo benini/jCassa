@@ -7,13 +7,47 @@
 
 	<script type='application/javascript' src="fastclick.js"></script>
 	<script type='application/javascript' src="jcassa.js"></script>
-
+	<script type='application/javascript' src="reg/rch.js"></script>
 </head>
-<body style="background-color: black;">
+<body>
 
 <audio id="click_snd" src="img/click.wav"></audio>
 
 <div id="unknow-width-and-height" style="overflow: auto; position: fixed; left: 0px; top: 0px;">
+	<div id="schermata_avvio" style="margin: 0px 30px; color: white;">
+
+		<h1 style="color: #f88f00">jCassa v1.0</h1>
+
+		<div style="margin-top: 16px;">
+			Verifica aggiornamenti
+			<img id="pg_aggiornamenti_ok" src="img/ok.png" style="width:20px; display: none"/>
+			<img id="pg_aggiornamenti_err" src="img/close.png" style="width:20px; display: none"/>
+			<div id="pg_aggiornamenti" class="progress_bar"></div>
+		</div>
+
+		<div style="margin-top: 16px">
+			Caricamento immagini
+			<img id="pg_immagini_ok" src="img/ok.png" style="width: 20px; display: none;"/> 
+			<img id="pg_immagini_err" src="img/close.png" style="width: 20px; display: none;"/>
+			<div id="pg_immagini" class="progress_bar"></div>
+		</div>
+
+		<div style="margin-top: 16px">
+			Caricamento prodotti
+			<img id="pg_prodotti_ok" src="img/ok.png" style="width: 20px; display: none;"/> 
+			<img id="pg_prodotti_err" src="img/close.png" style="width: 20px; display: none;"/>
+			<div id="pg_prodotti" class="progress_bar"></div>
+		</div>
+
+		<div style="margin-top: 16px">
+			Connessione stampante fiscale
+			<img id="pg_fiscale_ok" src="img/ok.png" style="width: 20px; display: none;"/> 
+			<img id="pg_fiscale_err" src="img/close.png" style="width: 20px; display: none;"/>
+			<div id="pg_fiscale" class="progress_bar"></div>
+		</div>
+
+	</div>
+
     <div id="prezzi" style="width:100%"></div>
 </div>
 

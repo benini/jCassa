@@ -1,3 +1,17 @@
+body {
+	background-color: black;
+}
+
+.progress_bar {
+	width:100%;
+	background-color: #ffffff;
+	background-image: url(img/progressbar.png);
+	background-size: 0% 100%;
+	background-repeat: no-repeat;;
+	border-radius: 6px;
+	height: 12px;
+}
+
 .metro-tile {
 	width: 99px;
 	height: 66px;
@@ -128,7 +142,7 @@
 	background-size: 100%;
 	background-position: center center;
 	background-repeat: no-repeat;
-	font-size: 20px;
+	font-size: 22px;
 	border-width: 0px;
     width: 166px;
 	height: 72px;
