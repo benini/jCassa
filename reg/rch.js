@@ -10,14 +10,13 @@ function RCH() {
 	this.onError = function(message) { alert(message); };
 
 	this.getInfo = function(f_callback) {
-		var cmd = new cmdQueue("=C1");
-		cmd.push("<</?d").send(function (message) {
-			console.log(message);
-			f_callback.errore = "eventuali errori";
-			f_callback.data_ora = "data_ora";
-			f_callback.matricola = "R72223442";
-			f_callback.firmware = "firmware";
-			f_callback();
+		var cmd = new cmdQueue().push("=C1");
+		cmd.push("<</?d").push("<</?f").push("<</?m").send(function (risposte) {
+			var res = {};
+			res.data_ora = risposte[1];
+			res.firmware = risposte[2];
+			res.matricola = risposte[3];
+			f_callback(res);
 		});
 /*
 Lettura Data e Ora corrente:
@@ -30,17 +29,17 @@ Lettura Data e Ora corrente:
 	}
 
 	this.aperturaCassetto = function () {
-		new cmdQueue("=C1").push("=C86").send();
+		new cmdQueue().push("=C1").push("=C86").send();
 		return this;
 	};
 
 	this.letturaGiornaliera = function () {
-		new cmdQueue("=C2").push("=C10").send();
+		new cmdQueue().push("=C2").push("=C10").send();
 		return this;
 	};
 
 	this.chiusuraFiscale = function () {
-		new cmdQueue("=C3").push("=C10").send();
+		new cmdQueue().push("=C3").push("=C10").send();
 
 /*
 Dopo la chiusura se la data e ora sull'ipad sono diverse di oltre 5 minuti rispetto alla cassa
@@ -56,12 +55,12 @@ Lettura Data e Ora corrente:
 	};
 
 	this.stampaUltimoScontrino = function () {
-		new cmdQueue("=C3").push("=C453/$1").send();
+		new cmdQueue().push("=C3").push("=C453/$1").send();
 		return this;
 	};
 
-	this.stampaScontrino = function (scontrino) {
-		var rch = new cmdQueue("=C1");
+	this.stampaScontrino = function (scontrino, onCompleted) {
+		var rch = new cmdQueue().push("=C1");
 		//TODO: l'accesso diretto a scontrino non e' bello
 		for (var i = 0; i < scontrino.righe.length; ++i) {
 			var r = "=R" + scontrino.righe[i].rep;
@@ -77,12 +76,20 @@ Lettura Data e Ora corrente:
 			rch.push(r);
 		}
 		rch.push("=T1");
-		rch.send();
+		rch.send(function (risposte) {
+			var res = [];
+			res.push(risposte[risposte.length -1]);
+			res.push(risposte[risposte.length -2]);
+			onCompleted(res);
+		});
 		return this;
 	};
 
 
-	function cmdQueue (chiave) {
+	function cmdQueue() {
+		var pack_id = 0;
+		var sc = "";
+
 		this.push = function (str) {
 			for (var i=0; i < str.length; i++) {
 				var c = str.charCodeAt(i);
@@ -94,7 +101,7 @@ Lettura Data e Ora corrente:
 				}
 			}
 
-	//		pack_id = (pack_id >= 9) ? 0 : pack_id +1;
+			pack_id = (pack_id >= 9) ? 0 : pack_id +1;
 
 			var res = "\u000201";
 			res += ("000" + str.length).slice(-3);
@@ -114,16 +121,19 @@ Lettura Data e Ora corrente:
 		}
 
 		this.send =	function (callback) {
-			var f = (callback != null) ? callback : onRisposta;
 			var xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState==4) {
 					if (xmlhttp.status==200) {
-				alert(sc.split("\n").length);
-				alert(xmlhttp.responseText.split("\n").length);
-						f(xmlhttp.responseText);
+						var res = [];
+						var risposte = xmlhttp.responseText.split("\n");
+						for (var i=0; i < risposte.length; i++) {
+							var buf = traduci(risposte[i]);
+							if (buf.length > 0) res.push(buf);
+						}
+						callback(res);
 					} else {
-						f(xmlhttp.statusText);
+						callback(xmlhttp.statusText);
 					}
 				}
 			}
@@ -140,16 +150,10 @@ Lettura Data e Ora corrente:
 			return this;
 		}
 
-	// COSTRUTTORE cmdQueue
-		var pack_id = "F";
-		var sc = "";
-
-
-//		this.push("<</?s"); // recupera lo stato della cassa (che sia troppo lento?)
-//		this.push("=K"); // CL
-//		this.push("=k"); // Se c'e' uno scontrino aperto annullalo
-		this.push("=K"); // CL
-		this.push(chiave); //Entra nella chiave richiesta
+		function traduci (msg) {
+			if (msg.charCodeAt(0) > 20) return msg;
+			return msg.substr(8, msg.length -12);
+		}
 	}
 }
 

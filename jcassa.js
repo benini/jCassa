@@ -17,11 +17,11 @@ window.addEventListener('load', function() {
 		reg_pg_c += 4;
 		document.getElementById("pg_fiscale").style.backgroundSize = reg_pg_c + "%";
 	},200);
-	registratore.getInfo(function () {
+	registratore.getInfo(function (info) {
 		clearInterval(reg_pg_i);
 		document.getElementById("pg_fiscale_err").style.display = "inline";
 		document.getElementById("pg_fiscale").style.backgroundSize = "100%";
-		console.log(this.errore);
+		console.log(info);
 	});
 
 
@@ -289,12 +289,9 @@ window.addEventListener('load', function() {
 
 	function uiEventInviaScontrino() {
 		animaClick(this);
-		registratore.setCallback(function (message) {
-			if (message.length > 4) {
-				alert(message);
-			}
-
-			if (message.substr(-3, 2) === "OK") {
+//Disabilita input
+		registratore.stampaScontrino(scontrino, function(risposta) {
+			if (risposta[0] !== "ERROR") {
 				updateTotale();
 				modalInput("");
 				var div_scontr = document.getElementById("scontr");
@@ -306,8 +303,8 @@ window.addEventListener('load', function() {
 				div_scontr.firstChild.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotale();
 				scontrino.invia();
 			}
+			if (risposta[0] !== "OK") alert(risposta[1]);
 		});
-		registratore.stampaScontrino(scontrino);
 	}
 
 	function uiEventLetture() {
