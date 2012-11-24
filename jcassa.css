@@ -124,10 +124,28 @@
 .tile-totale-menu {	
 	background-color: #2878EC;
 	border-color: #4396F1;
-	background-image: url('img/tot-menu.png');
+	background-image: url('img/tot-menu.jpg');
+	background-size: 100%;
+	background-position: center center;
+	background-repeat: no-repeat;
+	font-size: 20px;
+	border-width: 0px;
+    width: 166px;
+	height: 72px;
+}
+
+.tile-menu {
+    width: 160px;
+	background-color: #2878EC;
+	border-color: #4396F1;
+	background-image: url('img/menu.png');
 	background-size: 90%;
 	background-position: center center;
 	background-repeat: no-repeat;
+}
+
+.tile-warning {
+	display: none;
 }
 
 .modalInput {

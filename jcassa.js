@@ -5,6 +5,8 @@
 
 		loadProdotti();
 		updateTotale();
+		
+		document.getElementById("menu").onclick = uiEventLetture;
 
 	}, false);
 
@@ -98,6 +100,8 @@
 		return function () {
 			animaClick(this);
 			if (! scontrino.isAperto()) {
+				document.getElementById("menu").style.display = "none";
+
 				var div_scontr = document.getElementById("scontr");
 				while (div_scontr.hasChildNodes()) { div_scontr.removeChild(div_scontr.lastChild);	}
 
@@ -165,11 +169,13 @@
 			}
 		}
 		
-		tot.onclick = uiEventLetture;
+		tot.onclick = "";
 		tot.className = tot.className.replace(" tile-totale-subtotale", " tile-totale-menu");
 		tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-menu");
-		document.getElementById("tot1_riga1").innerHTML = "";
-		document.getElementById("tot1_riga2").innerHTML = "";		
+		document.getElementById("tot1_riga1").innerHTML = "OFFICE LINE";
+		document.getElementById("tot1_riga2").innerHTML = "Tel. 0546.28348";
+
+		document.getElementById("menu").style.display = "block";
 	}
 
 	function uiEventCambiaRigaScontrino() {
