@@ -1,3 +1,24 @@
+function progressbar_com (onCompleted) {
+	document.getElementById("no_input").style.display = "block";
+	var pg_c = 0;
+	var pg_i = setInterval(function(){
+		pg_c += 2;
+		if (pg_c > 19) { // Visualizzo la barra dopo circa 1 secondo
+			document.getElementById("pg_comunicazione_box").style.display = "block";
+			document.getElementById("pg_comunicazione").style.backgroundSize = pg_c + "%";
+		}
+	},100);
+
+	return function(risposta) {
+		clearInterval(pg_i);
+		document.getElementById("no_input").style.display = "none";
+		document.getElementById("pg_comunicazione_box").style.display = "none";
+
+		if (onCompleted != null) return onCompleted(risposta);
+		if (risposta[0] !== "OK") alert(risposta[1]);
+	}
+}
+
 window.addEventListener('load', function() {
 	new FastClick(document.body); // Caricamento FastClick per iPad
 	dyn_dimensions();
@@ -14,14 +35,18 @@ window.addEventListener('load', function() {
 
 	var reg_pg_c = 0;
 	var reg_pg_i = setInterval(function(){
-		reg_pg_c += 4;
+		reg_pg_c += 2;
 		document.getElementById("pg_fiscale").style.backgroundSize = reg_pg_c + "%";
-	},200);
+	},100);
 	registratore.getInfo(function (info) {
 		clearInterval(reg_pg_i);
-		document.getElementById("pg_fiscale_err").style.display = "inline";
 		document.getElementById("pg_fiscale").style.backgroundSize = "100%";
-		console.log(info);
+		if (info[0] === "OK") {
+			document.getElementById("pg_fiscale_ok").style.display = "inline";
+		} else {
+			document.getElementById("pg_fiscale_err").style.display = "inline";
+		}
+		document.getElementById("pg_fiscale_info").innerHTML = info[1];
 	});
 
 
@@ -289,8 +314,7 @@ window.addEventListener('load', function() {
 
 	function uiEventInviaScontrino() {
 		animaClick(this);
-//Disabilita input
-		registratore.stampaScontrino(scontrino, function(risposta) {
+		registratore.stampaScontrino(scontrino, new progressbar_com(function(risposta) {
 			if (risposta[0] !== "ERROR") {
 				updateTotale();
 				modalInput("");
@@ -304,7 +328,7 @@ window.addEventListener('load', function() {
 				scontrino.invia();
 			}
 			if (risposta[0] !== "OK") alert(risposta[1]);
-		});
+		}));
 	}
 
 	function uiEventLetture() {
@@ -472,22 +496,20 @@ function modalInputMenu () {
 	}
 	document.getElementById("menu_chiusuraFiscale").onclick = function () {
 		animaClick(this);
-		registratore.chiusuraFiscale();
+		registratore.chiusuraFiscale(new progressbar_com());
 	}
 	document.getElementById("menu_letturaGiornaliera").onclick = function () {
 		animaClick(this);
-		registratore.letturaGiornaliera();
+		registratore.letturaGiornaliera(new progressbar_com());
 	}
 	document.getElementById("menu_aperturaCassetto").onclick = function () {
 		animaClick(this);
-		registratore.aperturaCassetto();
+		registratore.aperturaCassetto(new progressbar_com());
 	}
 	document.getElementById("menu_ultimoScontrino").onclick = function () {
 		animaClick(this);
-		registratore.stampaUltimoScontrino();
+		registratore.stampaUltimoScontrino(new progressbar_com());
 	}
-	
-
 }
 
 function modalInputTotale () {
