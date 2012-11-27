@@ -6,6 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="jcassa.css">
 
 	<script type='application/javascript' src="fastclick.js"></script>
+	<script type='application/javascript' src="config/prodotti.js"></script>
 	<script type='application/javascript' src="jcassa.js"></script>
 	<script type='application/javascript' src="reg/rch.js"></script>
 </head>
@@ -198,114 +199,6 @@
 <script type="text/javascript">
 
 
-
-
-
-var reparti = [];
-reparti.push({reparto: "BAR", col: "colore_caffe", prezzi: [
-{desc: "BAR", prezzo: ""},
-{desc: "Brioches", prezzo: "1,00"},
-{desc: "Caffè Espresso", prezzo: "0,90"},
-{desc: "Caffà Corretto", prezzo: "1,30"},
-{desc: "Caffù Decaffeinato", prezzo: "1,00"},
-{desc: "Caffì Freddo", prezzo: "1,60"},
-{desc: "Caffè_Ginseng Espresso", prezzo: "1,50"},
-{desc: "Caffè Marocchino", prezzo: "1,50"},
-{desc: "Caffè Shakerato", prezzo: "2,00"},
-{desc: "Caffè Shakerato Corretto", prezzo: "2,50"},
-{desc: "Cappuccino", prezzo: "1,20"},
-{desc: "Cappuccino Orzo / Deca", prezzo: "1,30"},
-{desc: "Latte bianco", prezzo: "1,00"},
-{desc: "Latte macchiato", prezzo: "1,30"},
-{desc: "Latte macchiato orzo/deca", prezzo: "1,40"},
-{desc: "Orzo espresso", prezzo: "1,00"},
-{desc: "Orzo in tazza grande", prezzo: "1,30"},
-{desc: "Cioccolata calda", prezzo: "3,50"},
-] });
-reparti.push({reparto: "BEVANDE", col: "colore_bevande", prezzi: [
-{desc: "BIBITA", prezzo: ""},
-{desc: "Bibite alla spina 25 cl.", prezzo: "1,70"},
-{desc: "Bibite alla spina 40 cl.", prezzo: "2,10"},
-{desc: "Bibite alla spina 50 cl.", prezzo: "2,50"},
-{desc: "Bott. Acqua 0,5 L.", prezzo: "1,00"},
-{desc: "Bott. Acqua 1,5 L.", prezzo: "1,80"},
-{desc: "Cedrata / Schweppes / Tonica", prezzo: "1,80"},
-{desc: "Esta The", prezzo: "1,20"},
-{desc: "Gatorade / Powerade", prezzo: "2,40"},
-{desc: "Lattine 33 cl.", prezzo: "1,80"},
-{desc: "Redbull / Burn", prezzo: "2,80"},
-{desc: "Succhi di frutta bio", prezzo: "3,00"},
-{desc: "Spremuta di agrumi", prezzo: "2,50"},
-{desc: "Succhi di frutta 200 ml.", prezzo: "1,80"},
-{desc: "Tè e infusi (da filtro)", prezzo: "1,30"},
-{desc: "Tè freddo Bott. 0,5 L.", prezzo: "2,00"},
-] });
-reparti.push({reparto: "ALCOLICI", col: "colore_vini", prezzi: [
-{desc: "Birra Becks spina 20 cl.", prezzo: "2,20"},
-{desc: "Birra Becks spina 40 cl.", prezzo: "3,20"},
-{desc: "Beck's 33 cl. / Moretti 33 cl.", prezzo: "2,70"},
-{desc: "Becks 66 cl. / Moretti 66 cl.", prezzo: "3,70"},
-{desc: "Ceres Strong 33 cl.", prezzo: "3,30"},
-{desc: "Corona / Tennents 33 cl.", prezzo: "3,30"},
-{desc: "Hoagarden 33 cl.", prezzo: "3,30"},
-{desc: "Nastro Azzurro 33 cl.", prezzo: "3,30"},
-{desc: "Calice vino", prezzo: "2,00"},
-{desc: "Calice porto", prezzo: "2,50"},
-{desc: "Calice prosecco / spumante", prezzo: "2,50"},
-{desc: "Liquori nazionali", prezzo: "2,30"},
-{desc: "Liquori esteri", prezzo: "2,80"},
-{desc: "Brandy (Stravecchio)", prezzo: "2,80"},
-{desc: "Cognacs", prezzo: "2,80"},
-{desc: "Crema di Whisky", prezzo: "3,00"},
-{desc: "Gin / Rhum / Tequila", prezzo: "3,00"},
-{desc: "Grappa", prezzo: "2,50"},
-{desc: "Grappa Prime Uve", prezzo: "3,00"},
-{desc: "Limoncello", prezzo: "2,00"},
-{desc: "Vermouth (Martini, Cinzano)", prezzo: "2,80"},
-{desc: "Vodka", prezzo: "3,00"},
-{desc: "Whisky", prezzo: "2,80"},
-{desc: "Whisky invecchiati", prezzo: "3,30"}
-] });
-reparti.push({reparto: "SNACKS", col: "colore_panini", prezzi: [
-{desc: "Tramezzini", prezzo: "2,00"},
-{desc: "Piadine, Maxi Toast", prezzo: "3,50"},
-{desc: "Panini", prezzo: "3,50"},
-{desc: "Pizza Bianca (spicchio)", prezzo: "1,0"},
-{desc: "Pizza Farcita (spicchio)", prezzo: "1,50"},
-{desc: "Pizza Margherita (spicchio)", prezzo: "1,20"},
-] });
-reparti.push({reparto: "CUCINA", col: "colore_cucina", prezzi: [
-{desc: "Affettati misti", prezzo: "5,50"},
-{desc: "Crostini misti", prezzo: "4,50"},
-{desc: "Gnocchi ai formaggi", prezzo: "6,00"},
-{desc: "Fusilli alla carbonara", prezzo: "5,50"},
-{desc: "Insalata di Riso", prezzo: "5,00"},
-{desc: "Tagliatelle al ragu", prezzo: "5,00"},
-{desc: "Insalatona", prezzo: "6,00"},
-{desc: "Menu Colazione", prezzo: "3,90"},
-{desc: "Menu Pranzo", prezzo: "9,90"},
-] });
-reparti.push({reparto: "DESSERT", col: "colore_dessert", prezzi: [
-{desc: "Crepes alla Nutella", prezzo: "5,50"},
-{desc: "Crepes alla Fragole", prezzo: "6,00"},
-{desc: "Gelato sfuso piccolo", prezzo: "2,00"},
-{desc: "Gelato sfuso grande", prezzo: "3,00"},
-{desc: "Coppa Esotica", prezzo: "5,00"},
-{desc: "Coppa Negrita", prezzo: "4,50"},
-{desc: "Granita", prezzo: "2,00"},
-{desc: "Frappè alla Banana", prezzo: "4,00"},
-{desc: "Frappè al Cioccolato", prezzo: "4,00"},
-{desc: "Frappè al Cocco", prezzo: "4,00"},
-{desc: "Frappè al Fior di Latte", prezzo: "4,00"},
-{desc: "Frappè alla Fragola", prezzo: "4,00"},
-{desc: "Sorbetto al limone", prezzo: "4,00"},
-] });
-reparti.push({reparto: "VARIE", col: "colore_varie", prezzi: [
-{desc: "VARIE", prezzo: ""},
-{desc: "Mon Cheri / Ferrero Rocher", prezzo: "0,50"},
-{desc: "Kit Kat", prezzo: "2,00"},
-{desc: "Vigorsol / Daygum", prezzo: "2,00"},
-] });
 
 
 
