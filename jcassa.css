@@ -292,7 +292,7 @@ body {
 	border-width: 3px;
 	border-style: solid;
 	border-radius: 6px;
-    border-color: #ffffff;
+	border-color: transparent;
 	background-position: center center;
 	background-repeat: no-repeat;
 }
@@ -305,18 +305,21 @@ body {
 	background-image: url('img/close.png');
 	background-size: 60%;
 	background-color: red;
+    border-color: #ffffff;
 }
 
 .pulsante_ok {
 	background-image: url('img/ok.png');
 	background-size: 60%;
 	background-color: #59bd00;
+    border-color: #ffffff;
 }
 
 .pulsante_elimina {
 	background-image: url('img/elimina.png');
 	background-size: 70%;
 	background-color: #893bbb;
+    border-color: #ffffff;
 }
 
 .pulsante_menu {
@@ -328,7 +331,6 @@ body {
     text-align: center;
     margin-right: 6px;
     margin-bottom: 8px;
-	border-color: transparent;
 	background-image: url('img/pulsante_testo.png');
 	background-size: 100%;
 }

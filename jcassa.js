@@ -64,8 +64,8 @@ window.addEventListener('load', function() {
 		// L'idea originale era di creare due classi unknown-width e unknown-height e assegnarle
 		// agli oggetti che ne avevano bisogno, ma e' piu' complicato di quanto pensassi senza jQuery
 		// e per adesso voglio scrivere puro Javascript per imparare i dettagli
-		var dyn_height = window.innerHeight - Math.floor(1.20 * document.getElementById("tot1").offsetHeight);
-		var dyn_width = window.innerWidth - Math.floor(1.05 * document.getElementById("tot1").offsetWidth);
+		var dyn_height = window.innerHeight - Math.floor(1.20 * document.getElementById("subtot").offsetHeight);
+		var dyn_width = window.innerWidth - Math.floor(1.05 * document.getElementById("subtot").offsetWidth);
 
 		document.getElementById("unknow-width-and-height").style.width = dyn_width;
 		document.getElementById("unknow-width-and-height").style.height = dyn_height;
@@ -113,13 +113,14 @@ window.addEventListener('load', function() {
 		tile.className = tile.className.replace(" tile_reset", "");
 		tile.className += " tile_middle";
 		setTimeout(function() {tile.className = tile.className.replace(" tile_middle", " tile_reset");}, 100);
-		var click = document.getElementById("click_snd");
+/*		var click = document.getElementById("click_snd");
 		try { // Sull'Ipad currentTime a volte non funziona (quando il suono e' gia' finito?)
 			click.pause();
 			click.currentTime = 0;
 		} catch (e) {}
 
 		click.play();
+*/
 	}
 
 	function animaSelezionaRigaScontrino(divTile) {
@@ -172,7 +173,7 @@ window.addEventListener('load', function() {
 				var div_scontr = document.getElementById("scontr");
 				while (div_scontr.hasChildNodes()) { div_scontr.removeChild(div_scontr.lastChild);	}
 
-				var tot = document.getElementById("tot1");
+				var tot = document.getElementById("subtot");
 				tot.className = tot.className.replace(" tile-totale-menu", " tile-totale-subtotale");
 			}
 
@@ -224,12 +225,12 @@ window.addEventListener('load', function() {
 	}
 
 	function updateTotale() {
-		var tot = document.getElementById("tot1");
+		var tot = document.getElementById("subtot");
 		if (scontrino.isAperto()) {
 			if (document.getElementById("scontr").childNodes.length > 0) {
 				tot.onclick = uiEventChiudiScontrino;
-				document.getElementById("tot1_riga1").innerHTML = "SubTotale";
-				document.getElementById("tot1_riga2").innerHTML = "&euro; " + scontrino.getTotale();
+				document.getElementById("subtot_riga1").innerHTML = "SubTotale";
+				document.getElementById("subtot_riga2").innerHTML = "&euro; " + scontrino.getTotale();
 				return;
 			} else {
 				scontrino.chiudi();				
@@ -239,8 +240,8 @@ window.addEventListener('load', function() {
 		tot.onclick = "";
 		tot.className = tot.className.replace(" tile-totale-subtotale", " tile-totale-menu");
 		tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-menu");
-		document.getElementById("tot1_riga1").innerHTML = "jCassa";
-		document.getElementById("tot1_riga2").innerHTML = "v 1.0";
+		document.getElementById("subtot_riga1").innerHTML = "jCassa";
+		document.getElementById("subtot_riga2").innerHTML = "v 1.0";
 
 		document.getElementById("menu").style.display = "block";
 	}
@@ -265,7 +266,7 @@ window.addEventListener('load', function() {
 		if (div_scontr.lastChild) { div_scontr.removeChild(div_scontr.lastChild); }
 		if (div_scontr.lastChild) { div_scontr.removeChild(div_scontr.lastChild); }
 
-		var tot = document.getElementById("tot1");
+		var tot = document.getElementById("subtot");
 		tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-subtotale");
 		updateTotale();
 		modalInput("");
@@ -279,11 +280,11 @@ window.addEventListener('load', function() {
 		}
 
 		animaClick(this);
-		var tot = document.getElementById("tot1");
+		var tot = document.getElementById("subtot");
 		tot.onclick = uiEventInviaScontrino;
 		tot.className = tot.className.replace(" tile-totale-subtotale", " tile-totale-stampa");
-		document.getElementById("tot1_riga1").innerHTML = "";
-		document.getElementById("tot1_riga2").innerHTML = "STAMPA";
+		document.getElementById("subtot_riga1").innerHTML = "";
+		document.getElementById("subtot_riga2").innerHTML = "STAMPA";
 
 		scontrino.chiudi();
 
@@ -343,6 +344,7 @@ window.addEventListener('load', function() {
 	scontrino.creaID = function (rep, desc, prezzo) {
 		return "r" + rep + "d" + desc + "p" + prezzo;
 		}
+	scontrino.totale_cassa = "T1";
 
 	scontrino.push = function (rep, quant, desc, prezzo) {
 		if (scontrino.id.length != scontrino.righe.length) { scontrino.righe.length = scontrino.id.length; }
@@ -515,6 +517,24 @@ function modalInputMenu () {
 function modalInputTotale () {
 	document.getElementById("totale_annulla").onclick = uiEventAnnulla;
 	document.getElementById("totale_elimina").onclick = uiEventElimina;
+
+//TODO: non e' il massimo, usare jQuery
+	for (var i=1; i < 5; i++) {
+		var div = document.getElementById("T" + i);
+		div.className = div.className.replace(" pulsante_selected", "");
+		div.onclick = uiEventTotale;
+	}
+	document.getElementById("T1").className += " pulsante_selected";
+	scontrino.totale_cassa = "T1";
+
+	function uiEventTotale() {
+		for (var i=1; i < 5; i++) {
+			var div = document.getElementById("T" + i);
+			div.className = div.className.replace(" pulsante_selected", "");
+		}
+		this.className += " pulsante_selected";
+		scontrino.totale_cassa = this.id;
+	}
 	
 	function uiEventAnnulla() {
 		animaClick(this);

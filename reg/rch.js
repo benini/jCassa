@@ -82,7 +82,7 @@ Lettura Data e Ora corrente:
 
 			rch.push(r);
 		}
-		rch.push("=T1");
+		rch.push("=" + scontrino.totale_cassa);
 		rch.send(function (risposte) {
 			var res = [risposte[0]];
 
