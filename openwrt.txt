@@ -1,0 +1,2 @@
+
+- Disabilitare magic_quotes in /etc/php.ini

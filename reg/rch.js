@@ -59,10 +59,17 @@ Lettura Data e Ora corrente:
 	};
 
 	this.stampaUltimoScontrino = function (callback) {
-		new cmdQueue().push("=C3").push("=C453/$1").send(function (msg) {
+//		new cmdQueue().push("=C3").push("=C453/$1").send(function (msg) {
+		new cmdQueue().push("=C4").push(">>/?H/$1/(OFFICE LINE SNC)")
+		.push(">>/?H/$2/(Viale delle Ceramiche 22B)")
+		.push(">>/?H/$3/(48018 FAENZA (RA))")
+		.push(">>/?H/$4/(Tel. 0546 28348)")
+		.push(">>/?H/$5/(www.officelinefaenza.it)")
+		.send(function (msg) {
 			msg.splice(1, msg.length -2);
 			callback(msg);
 		});
+
 		return this;
 	};
 
@@ -177,8 +184,8 @@ Lettura Data e Ora corrente:
 				xmlhttp.open("GET","rch.php?i=192.168.1.29:23&q=" + encodeURIComponent(sc));
 				xmlhttp.send();
 			} else { */
-			xmlhttp.open("POST", "rch.php");
-			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xmlhttp.open("POST", "reg/rch.php");
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded;charset=ISO-8859-1");
 			xmlhttp.send("i=192.168.1.29:23&q=" + encodeURIComponent(sc));
 
 			return this;
