@@ -67,14 +67,14 @@ window.addEventListener('load', function() {
 		var dyn_height = window.innerHeight - Math.floor(1.20 * document.getElementById("subtot").offsetHeight);
 		var dyn_width = window.innerWidth - Math.floor(1.05 * document.getElementById("subtot").offsetWidth);
 
-		document.getElementById("unknow-width-and-height").style.width = dyn_width;
-		document.getElementById("unknow-width-and-height").style.height = dyn_height;
-		document.getElementById("unknow-width").style.width = dyn_width;
-		document.getElementById("unknow-height").style.height = dyn_height;
+		document.getElementById("unknow-width-and-height").style.width = dyn_width + "px";
+		document.getElementById("unknow-width-and-height").style.height = dyn_height + "px";
+		document.getElementById("unknow-width").style.width = dyn_width + "px";
+		document.getElementById("unknow-height").style.height = dyn_height + "px";
 
-		document.getElementById("modalInput").style.width = dyn_width;
+		document.getElementById("modalInput").style.width = dyn_width + "px";
 
-		document.getElementById("modalInput").style.height = window.innerHeight;
+		document.getElementById("modalInput").style.height = window.innerHeight + "px";
 	}
 
 	function preloadImmagini() {
