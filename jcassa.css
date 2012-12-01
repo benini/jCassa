@@ -163,19 +163,9 @@ body {
 	top: 0px;
 	width: 100%;
 	height: 100%;
-	z-index: 5;
 	display:none;
-	overflow: hidden;
-}
-
-.modalInputBackground {
-	position:absolute;
-	left:0px;
-	top:0px;
-	width: 100%; height: 100%;
-	background-color:#333333;
-	z-index: -1;
-	opacity: 0.80;
+	overflow: auto;
+	background-color: rgba(51,51,51, 0.8);
 }
 
 .keypad {
