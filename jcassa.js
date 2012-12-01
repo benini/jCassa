@@ -315,6 +315,9 @@ window.addEventListener('load', function() {
 
 	function uiEventInviaScontrino() {
 		animaClick(this);
+		if (scontrino.totale_cassa[0] === "F") {
+			for (var i = 1; i < 5; i++)	scontrino.cliente[i] = "  " + document.getElementById("cliente" +i).value;
+		}
 		registratore.stampaScontrino(scontrino, new progressbar_com(function(risposta) {
 			if (risposta[0] !== "ERROR") {
 				updateTotale();
@@ -341,6 +344,7 @@ window.addEventListener('load', function() {
 	var scontrino = {};
 	scontrino.id = [];
 	scontrino.righe = [];
+	scontrino.cliente = ["Cliente:", "", "", "", ""];
 	scontrino.creaID = function (rep, desc, prezzo) {
 		return "r" + rep + "d" + desc + "p" + prezzo;
 		}
@@ -517,23 +521,29 @@ function modalInputMenu () {
 function modalInputTotale () {
 	document.getElementById("totale_annulla").onclick = uiEventAnnulla;
 	document.getElementById("totale_elimina").onclick = uiEventElimina;
+	document.getElementById("dati_cliente").style.display = "none";
+	for (var i=1; i < 5; i++) document.getElementById("cliente" + i).value = "";
 
 //TODO: non e' il massimo, usare jQuery
-	for (var i=1; i < 5; i++) {
-		var div = document.getElementById("T" + i);
-		div.className = div.className.replace(" pulsante_selected", "");
-		div.onclick = uiEventTotale;
+	var totali = document.getElementsByClassName("pulsante_totale");
+	for (var i=0; i < totali.length; i++) {
+		totali[i].className = totali[i].className.replace(" pulsante_selected", "");
+		totali[i].onclick = uiEventTotale;
 	}
-	document.getElementById("T1").className += " pulsante_selected";
-	scontrino.totale_cassa = "T1";
+	totali[0].className += " pulsante_selected";
+	scontrino.totale_cassa = totali[0].id;
 
 	function uiEventTotale() {
-		for (var i=1; i < 5; i++) {
-			var div = document.getElementById("T" + i);
-			div.className = div.className.replace(" pulsante_selected", "");
-		}
+		var totali = document.getElementsByClassName("pulsante_selected");
+		totali[0].className = totali[0].className.replace(" pulsante_selected", "");
 		this.className += " pulsante_selected";
 		scontrino.totale_cassa = this.id;
+
+		if (this.id[0] === "F") {
+			document.getElementById("dati_cliente").style.display = "block";
+		} else {
+			document.getElementById("dati_cliente").style.display = "none";
+		}
 	}
 	
 	function uiEventAnnulla() {

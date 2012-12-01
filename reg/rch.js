@@ -14,14 +14,6 @@ function RCH() {
 			}
 			f_callback(res);
 		});
-/*
-Lettura Data e Ora corrente:
-“ <</?d ”
-- Lettura revisione del Firmware:
-“ <</?f ”
-- Lettura matricola fiscale:
-“ <</?m ”
-*/
 	}
 
 	this.aperturaCassetto = function (callback) {
@@ -74,8 +66,17 @@ Lettura Data e Ora corrente:
 	};
 
 	this.stampaScontrino = function (scontrino, onCompleted) {
-		var rch = new cmdQueue().push("=C1");
+		var cmd = new cmdQueue().push("=C1");
 		//TODO: l'accesso diretto a scontrino non e' bello
+		if (scontrino.totale_cassa[0] === "F") {
+			for (var i = 1; i < 6; ++i) {
+				cmd.push("=A/$" + i + "/(" + scontrino.cliente[i -1].slice(0, 36) + ")");
+			}
+			cmd.push("=F/*4");
+		} else if (scontrino.totale_cassa[0] === "P") {
+			cmd.push("=F/*0");
+		}
+
 		for (var i = 0; i < scontrino.righe.length; ++i) {
 			var r = "=R" + scontrino.righe[i].rep;
 			r += "/$" + scontrino.righe[i].prezzo.toFixed(2).replace(".", "");
@@ -87,13 +88,13 @@ Lettura Data e Ora corrente:
 				r += "/(" + desc.slice(0, 36) + ")";
 			}
 
-			rch.push(r);
+			cmd.push(r);
 		}
-		rch.push("=" + scontrino.totale_cassa);
-		rch.send(function (risposte) {
+		cmd.push("=T" + scontrino.totale_cassa.substr(1));
+		cmd.send(function (risposte) {
 			var res = [risposte[0]];
 
-			if (risposte[0] === "ERROR" && risposte.length == scontrino.righe.length +3) {
+			if (risposte[0] === "ERROR" && risposte.length -1 == cmd.length) {
 				//Problema fine carta: 
 				//quando finisce la carta la printf memorizza tutti i comandi e poi li stampa automaticamente
 				res[0] = "WARNING";
@@ -114,6 +115,8 @@ Lettura Data e Ora corrente:
 		var pack_id = 0;
 		var sc = "";
 
+		this.length = 0;
+
 		this.push = function (str) {
 			for (var i=0; i < str.length; i++) {
 				var c = str.charCodeAt(i);
@@ -133,6 +136,7 @@ Lettura Data e Ora corrente:
 			res += xor_string(res);
 			res += "\u0003";
 			sc += res + "\n";
+			this.length++;
 			return this;
 
 			function xor_string (str) {

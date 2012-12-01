@@ -21,7 +21,7 @@ body {
 	font-size: 20px;
 	border-width: 3px;
 	border-style: solid;
-    overflow: hidden;
+	overflow: hidden;
 }
 .tile_reset {
 	-webkit-transform: scale(1);
@@ -39,94 +39,94 @@ body {
 
 .tile-prezzi {
 	font-size: 18px;
-    background-color:#eeeeee;
-    width: 107px;
+	background-color:#eeeeee;
+	width: 107px;
 	height: 107px;
 	padding: 0px;
-    margin: 2px;
-    background-image: none;
-    float: left;
+	margin: 2px;
+	background-image: none;
+	float: left;
 }
 
 .desc {
-    height:80px;
+	height:80px;
 	padding: 4px;
-    -moz-border-radius-bottomright: 50px 25px;
-    border-bottom-right-radius: 0px 0px;
-    background-image: none;
+	-moz-border-radius-bottomright: 50px 25px;
+	border-bottom-right-radius: 0px 0px;
+	background-image: none;
 }
 
 .prezzo {
 	padding-right: 3px;
-    color:#000000;
-    font-weight:bold;
-    text-align:right;
+	color:#000000;
+	font-weight:bold;
+	text-align:right;
 }
 
 .tile-reparti {
 	font-size: 16px;
-    background-size:107px 74px;
+	background-size:107px 74px;
 }
 
 .tile-scontrino {
 	font-size: 15px;
-    width: 164px;
+	width: 164px;
 	height: 38px;
-    margin-top: 2px;
-    margin-bottom: 2px;
-    border-right-width: 0px;
-    border-left-width: 0px;
-    border-top-width: 1px;
-    border-bottom-width: 1px;
-    padding-left: 6px;    
-    background-image: none;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	border-right-width: 0px;
+	border-left-width: 0px;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	padding-left: 6px;
+	background-image: none;
 	white-space: nowrap;
 }
 
 .tile-scontrino-selected {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border-color: #ffffff;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	border-color: #ffffff;
 }
 
 .tile-scontrino-totale {
-    font-size: 30px;
-    width: 163px;
-    height: 107px;
+	font-size: 30px;
+	width: 163px;
+	height: 107px;
 	padding: 0px 4px;
-    margin-top: 2px;
-    margin-bottom: 2px;
-    padding-bottom: 4px;
-    border-right-width: 0px;
-    background-color: #D8512B;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	padding-bottom: 4px;
+	border-right-width: 0px;
+	background-color: #D8512B;
 	border-color: #DC6241;
-    text-align:right;
+	text-align:right;
 }
 
 .tile-scontrino-resto {
-    font-size: 16px;
-    width: 163px;
-    height: auto;
-    min-height: 50px;
+	font-size: 16px;
+	width: 163px;
+	height: auto;
+	min-height: 50px;
 	padding: 0px 4px;
-    margin-top: 2px;
-    border-right-width: 0px;
-    background-color: #D8512B;
+	margin-top: 2px;
+	border-right-width: 0px;
+	background-color: #D8512B;
 	border-color: #DC6241;
-    text-align:right;
+	text-align:right;
 	white-space: nowrap;
 }
 
 .tile-totale {
-    width: 160px;
+	width: 160px;
 	color: #FFF;
 	font-size: 30px;
 	text-align: right;
 }
 
 .tile-totale-subtotale {
-    background-color: #D8512B;
-    border-color: #DC6241;
+	background-color: #D8512B;
+	border-color: #DC6241;
 }
 .tile-totale-stampa {
 	font-size: 18px;
@@ -144,12 +144,12 @@ body {
 	background-repeat: no-repeat;
 	font-size: 22px;
 	border-width: 0px;
-    width: 166px;
+	width: 166px;
 	height: 72px;
 }
 
 .tile-menu {
-    width: 160px;
+	width: 160px;
 	background-color: #2878EC;
 	border-color: #4396F1;
 	background-image: url('img/menu.png');
@@ -185,73 +185,73 @@ body {
 
 .keypad {
 	border-spacing: 6px;
-    margin: 0px;
+	margin: 0px;
 }
 
 .keypad td {
 	width: 70px;
 	line-height: 70px;
 	border-style: solid;
-    border-width: 2px;
-    border-color: #037bf2;
+	border-width: 2px;
+	border-color: #037bf2;
 	background-color:#90aaaa;
-    background-color:#037be5;
+	background-color:#037be5;
 	text-align: center;
 	font-family: sans-serif;
 	font-size: 50px;
 	font-weight: 600;
 	color: #ffffff;
-    -webkit-transition: background-color 0.2s 0.2s, border-color 0.2s 0.2s;
+	-webkit-transition: background-color 0.2s 0.2s, border-color 0.2s 0.2s;
 }
 
 .keypad_quantita {}
 .keypad_quantita td {
-    border-color: #01c5ff;
+	border-color: #01c5ff;
 	background-color:#01bcf3;
 }
 
 .keypad_tile {
-    margin-left: 6px;
-    width: 236px;
-    height: 56px;
-    border-style: solid;
-    border-width: 2px;
-    font-family: sans-serif;
-    color: #ffffff;
+	margin-left: 6px;
+	width: 236px;
+	height: 56px;
+	border-style: solid;
+	border-width: 2px;
+	font-family: sans-serif;
+	color: #ffffff;
 }
 
-.keypad_tile-header {    
-    font-size:18px; 
-    text-align:center;
-    margin-bottom: 2px; 
+.keypad_tile-header {
+	font-size:18px;
+	text-align:center;
+	margin-bottom: 2px;
 }
 
 .keypad_tile-digits {
-    font-size: 30px;    
+	font-size: 30px;
 	text-align: right;
 	padding: 0px 16px;
 }
 
 .keypad_colore-prezzo {
-    border-color: #037bf2;
-    background-color:#037be5;
+	border-color: #037bf2;
+	background-color:#037be5;
 }
 
 .keypad_colore-quantita {
-    border-color: #01c5ff;
-    background-color: #01bcf3;
+	border-color: #01c5ff;
+	background-color: #01bcf3;
 }
 
 @-webkit-keyframes move_down {
-    0%   {-webkit-transform: translate(0px,0px);}
-    10%   {-webkit-transform: translate(0px,40px);}
+	0%   {-webkit-transform: translate(0px,0px);}
+	10%   {-webkit-transform: translate(0px,40px);}
 	70%   {-webkit-transform: translate(-90px,40px) rotate(-40deg);}
 	100% {-webkit-transform: translate(0px,100px);}
 }
 
 @-webkit-keyframes move_down_fast {
-    0% {-webkit-transform: translate(0px,100px);}
-    100% {-webkit-transform: translate(0px,100px);}
+	0% {-webkit-transform: translate(0px,100px);}
+	100% {-webkit-transform: translate(0px,100px);}
 }
 
 @-webkit-keyframes move_down_reverse {
@@ -266,7 +266,7 @@ body {
 }
 
 @-webkit-keyframes move_up_fast {
-    0% {-webkit-transform: translate(0px,-100px);}
+	0% {-webkit-transform: translate(0px,-100px);}
 	100% {-webkit-transform: translate(0px,-100px);}
 }
 
@@ -298,46 +298,73 @@ body {
 }
 
 .pulsante_selected {
-    border-color: yellow;
+	border-color: yellow;
 }
 
 .pulsante_annulla {
 	background-image: url('img/close.png');
 	background-size: 60%;
 	background-color: red;
-    border-color: #ffffff;
+	border-color: #ffffff;
 }
 
 .pulsante_ok {
 	background-image: url('img/ok.png');
 	background-size: 60%;
 	background-color: #59bd00;
-    border-color: #ffffff;
+	border-color: #ffffff;
 }
 
 .pulsante_elimina {
 	background-image: url('img/elimina.png');
 	background-size: 70%;
 	background-color: #893bbb;
-    border-color: #ffffff;
+	border-color: #ffffff;
 }
 
 .pulsante_menu {
-    float: left;
-    width: 160px;
-    font-family: sans-serif;
-    font-size: 18px;
-    line-height: 70px;
-    text-align: center;
-    margin-right: 6px;
-    margin-bottom: 8px;
+	float: left;
+	width: 154px;
+	font-family: sans-serif;
+	font-size: 18px;
+	line-height: 70px;
+	text-align: center;
+	margin-right: 6px;
+	margin-bottom: 8px;
 	background-image: url('img/pulsante_testo.png');
 	background-size: 100%;
 }
 
 .pulsante_menu_2righe {
-    line-height: 1.2em;
-    margin-top: 14px;
+	line-height: 1.2em;
+	margin-top: 14px;
 }
 
+.pulsante_totale {
+	float: left;
+	width: 154px;
+	font-family: sans-serif;
+	font-size: 18px;
+	line-height: 70px;
+	text-align: center;
+	margin-right: 6px;
+	margin-bottom: 8px;
+	background-image: url('img/pulsante_testo.png');
+	background-size: 100%;
+}
 
+.dati_cliente {
+	clear: both;
+	color: white;
+	display: none;
+}
+
+.dati_cliente label {
+	width:460px;
+	display:block;
+	text-align:right;
+}
+
+.dati_cliente input {
+	width: 340px;
+}
