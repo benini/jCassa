@@ -1,24 +1,3 @@
-function progressbar_com (onCompleted) {
-	document.getElementById("no_input").style.display = "block";
-	var pg_c = 0;
-	var pg_i = setInterval(function(){
-		pg_c += 2;
-		if (pg_c > 19) { // Visualizzo la barra dopo circa 1 secondo
-			document.getElementById("pg_comunicazione_box").style.display = "block";
-			document.getElementById("pg_comunicazione").style.backgroundSize = pg_c + "%";
-		}
-	},100);
-
-	return function(risposta) {
-		clearInterval(pg_i);
-		document.getElementById("no_input").style.display = "none";
-		document.getElementById("pg_comunicazione_box").style.display = "none";
-
-		if (onCompleted != null) return onCompleted(risposta);
-		if (risposta[0] !== "OK") alert(risposta[1]);
-	}
-}
-
 window.addEventListener('load', function() {
 	new FastClick(document.body); // Caricamento FastClick per iPad
 	dyn_dimensions();
@@ -31,7 +10,11 @@ window.addEventListener('load', function() {
 	preloadImmagini();
 	loadProdotti();
 	updateTotale();
-	document.getElementById("menu").onclick = uiEventLetture;
+	document.getElementById("menu").onclick = function() {
+		animaClick(this);
+		modalInput("Menu");
+	}
+	document.getElementById("scontr_resto").onclick = function () { animaClick(this); modalInput("Resto"); };
 
 	var reg_pg_c = 0;
 	var reg_pg_i = setInterval(function(){
@@ -79,22 +62,19 @@ window.addEventListener('load', function() {
 
 	function preloadImmagini() {
 		var imm = ["img/elimina.png", "img/tot-stampa.gif", "img/pulsante_testo.png"];
-		var c = 0
+		var pg = progress("pg_immagini", imm.length, "pg_immagini_ok");
 		var buf = [];
 		for (var i = 0; i < imm.length; i++) {
 			buf[i] = new Image();
-			buf[i].onload = function(){
-				document.getElementById("pg_immagini").style.backgroundSize = 100 * ++c / imm.length + "%";
-				if (c == imm.length) {
-					document.getElementById("pg_immagini_ok").style.display = "inline";
-				}
-			}
+			buf[i].onload = pg;
 			buf[i].src = imm[i];
 		}
 	}
 
 	function loadProdotti() {
 		// Chiedere i prodotti con un xml asyncrono?
+		var pg = progress("pg_prodotti", reparti.length, "pg_prodotti_ok");
+		var buf = [];
 		for (var i = 0; i < reparti.length; i++) {
 			var divTile = document.createElement("div");
 			divTile.className = "metro-tile tile-reparti " + reparti[i].col;
@@ -102,17 +82,51 @@ window.addEventListener('load', function() {
 			divTile.onclick = uiEventCambiaReparto(i);
 			document.getElementById('reparti').insertCell(-1).appendChild(divTile);
 
-			document.getElementById("pg_prodotti").style.backgroundSize = 100 * (i+1) / reparti.length + "%";
+			/* TODO: Non riesco a prendere l'indirizzo dell'immagine dal css
+			buf[i] = new Image();
+			buf[i].onload = pg;
+			buf[i].src = window.getComputedStyle(divTile).getPropertyValue("background-image");
+			*/
+			pg();
 		}
-		document.getElementById("pg_prodotti_ok").style.display = "inline";
+	}
+
+	function progress (pgbar, length, ok_element) {
+		var c = 0;
+		return function () {
+			document.getElementById(pgbar).style.backgroundSize = 100 * ++c / length + "%";
+			if (c == length) document.getElementById(ok_element).style.display = "inline";
+		};
 	}
 
 }, false);
 
-	function animaClick(tile) {
-		tile.className = tile.className.replace(" tile_reset", "");
-		tile.className += " tile_middle";
-		setTimeout(function() {tile.className = tile.className.replace(" tile_middle", " tile_reset");}, 100);
+function progressbar_com (onCompleted) {
+	document.getElementById("no_input").style.display = "block";
+	var pg_c = 0;
+	var pg_i = setInterval(function(){
+		pg_c += 2;
+		if (pg_c > 19) { // Visualizzo la barra dopo circa 1 secondo
+			document.getElementById("pg_comunicazione_box").style.display = "block";
+			document.getElementById("pg_comunicazione").style.backgroundSize = pg_c + "%";
+		}
+	},100);
+
+	return function(risposta) {
+		clearInterval(pg_i);
+		document.getElementById("no_input").style.display = "none";
+		document.getElementById("pg_comunicazione_box").style.display = "none";
+
+		if (onCompleted != null) return onCompleted(risposta);
+		if (risposta[0] !== "OK") alert(risposta[1]);
+	}
+}
+
+
+function animaClick(tile) {
+	tile.className = tile.className.replace(" tile_reset", "");
+	tile.className += " tile_middle";
+	setTimeout(function() {tile.className = tile.className.replace(" tile_middle", " tile_reset");}, 100);
 /*		var click = document.getElementById("click_snd");
 		try { // Sull'Ipad currentTime a volte non funziona (quando il suono e' gia' finito?)
 			click.pause();
@@ -121,186 +135,141 @@ window.addEventListener('load', function() {
 
 		click.play();
 */
+}
+
+function animaSelezionaRigaScontrino(divTile) {
+	var scontr_last_sel = document.getElementById("scontr_selected");
+	if (scontr_last_sel) {
+		scontr_last_sel.className = scontr_last_sel.className.replace(" tile-scontrino-selected", "");
+		scontr_last_sel.id = "";
 	}
 
-	function animaSelezionaRigaScontrino(divTile) {
-		var scontr_last_sel = document.getElementById("scontr_selected");
-		if (scontr_last_sel) {
-			scontr_last_sel.className = scontr_last_sel.className.replace(" tile-scontrino-selected", "");
-			scontr_last_sel.id = "";
-		}
-
-		if (divTile) {
-			divTile.className += " tile-scontrino-selected";
-			divTile.id = "scontr_selected";
-			divTile.scrollIntoView();
-		}
+	if (divTile) {
+		divTile.className += " tile-scontrino-selected";
+		divTile.id = "scontr_selected";
+		divTile.scrollIntoView();
 	}
+}
 
 
-	function uiEventCambiaReparto (r) {
-		return function () {
-			animaClick(this);
-			document.getElementById("schermata_avvio").style.display = "none";
-			var div_prodotti=document.getElementById("prezzi");
-			while (div_prodotti.hasChildNodes()) { div_prodotti.removeChild(div_prodotti.lastChild); }
+function uiEventCambiaReparto (r) {
+	return function () {
+		animaClick(this);
+		document.getElementById("schermata_avvio").style.display = "none";
+		var div_prodotti=document.getElementById("prezzi");
+		while (div_prodotti.hasChildNodes()) { div_prodotti.removeChild(div_prodotti.lastChild); }
 
-			var pr_array = reparti[r].prezzi;
-			for (var i=0; i < pr_array.length; i++) {
-				var divTile = document.createElement("div");
-				divTile.className = "metro-tile " + reparti[r].col + " tile-prezzi";
-				divTile.onclick = uiEventAggiungiProdotto(r, i);
-				div_prodotti.appendChild(divTile);
-				var divDesc = document.createElement("div");
-				divDesc.className = "desc "  + reparti[r].col;
-				divDesc.innerHTML = pr_array[i].desc;
-				divTile.appendChild(divDesc);
-				var divPrezzo = document.createElement("div");
-				divPrezzo.className = "prezzo";
-				if (pr_array[i].prezzo == "") { divPrezzo.innerHTML = ""; }
-				else { divPrezzo.innerHTML = "&euro; " + pr_array[i].prezzo; }
-				divTile.appendChild(divPrezzo);
-			}
+		var pr_array = reparti[r].prezzi;
+		for (var i=0; i < pr_array.length; i++) {
+			var divTile = document.createElement("div");
+			divTile.className = "metro-tile " + reparti[r].col + " tile-prezzi";
+			divTile.onclick = uiEventAggiungiProdotto(r, i);
+			div_prodotti.appendChild(divTile);
+			var divDesc = document.createElement("div");
+			divDesc.className = "desc "  + reparti[r].col;
+			divDesc.innerHTML = pr_array[i].desc;
+			divTile.appendChild(divDesc);
+			var divPrezzo = document.createElement("div");
+			divPrezzo.className = "prezzo";
+			if (pr_array[i].prezzo == "") { divPrezzo.innerHTML = ""; }
+			else { divPrezzo.innerHTML = "&euro; " + pr_array[i].prezzo; }
+			divTile.appendChild(divPrezzo);
 		}
 	}
 
 	function uiEventAggiungiProdotto(idx_reparto, idx_prezzo) {
+		var divScontr = document.getElementById("scontr");
 		return function () {
 			animaClick(this);
-			if (! scontrino.isAperto()) {
-				document.getElementById("menu").style.display = "none";
-
-				var div_scontr = document.getElementById("scontr");
-				while (div_scontr.hasChildNodes()) { div_scontr.removeChild(div_scontr.lastChild);	}
-
-				var tot = document.getElementById("subtot");
-				tot.className = tot.className.replace(" tile-totale-menu", " tile-totale-subtotale");
-			}
 
 			var prezzo = reparti[idx_reparto].prezzi[idx_prezzo].prezzo;
 			var desc = reparti[idx_reparto].prezzi[idx_prezzo].desc;
-			var idx = scontrino.push(1 + idx_reparto, 1, desc, prezzo);
+
+			if (prezzo.length < 1) {
+				var idx = scontrino.push(1 + idx_reparto, 1, "", 0); // Forzo l'aggiunta di una riga anche se ce n'è un'altra uguale
+				modalInput("ProdottoPrezzo", addTile());
+				updateTileProdotto(idx, 1, prezzo, desc);
+			} else {
+				var idx = scontrino.push(1 + idx_reparto, 1, desc, prezzo);
+				if (idx >= divScontr.childNodes.length) addTile();
+				updateTileProdotto(idx);
+			}
+		}
+
+		function addTile() {
 			var divTile = document.createElement("div");
 			divTile.className = "metro-tile tile-scontrino " + reparti[idx_reparto].col;
-			divTile.onclick = uiEventCambiaRigaScontrino;
-			document.getElementById("scontr").appendChild(divTile);
-			if (prezzo.length < 1) {
-				modalInput("ProdottoPrezzo", divTile);
-			} else {
-				var idx_duplicato = scontrino.unisciDuplicato(idx);
-				if (idx_duplicato != -1) {
-					document.getElementById("scontr").removeChild(divTile);
-					divTile = document.getElementById("scontr").childNodes[idx_duplicato];
+			divTile.onclick = function() {
+				animaClick(this);
+				if (scontrino.getStato() !== "APERTO") {
+					scontrino.Riapri();
+					updateTotale();
 				}
+				animaSelezionaRigaScontrino(this);
+				modalInput("Prodotto", this);
 			}
-			updateTileProdotto(divTile);
+			divScontr.appendChild(divTile);
+			return divTile;
 		}
 	}
+}
 
-	// Prezzo e quantita'
-	function updateTileProdotto(tile, quant, prezzo, desc) {
-		var idx = 0;
-
-		var tiles = document.getElementById("scontr").childNodes;
-		for (; idx < tiles.length && tiles[idx] != tile; ++idx) {}
-		if (idx == tiles.length) { console.log("Errore in updateTileProdotto"); return; }
-
+	function updateTileProdotto(idx, quant, prezzo, desc) {
+		var tile = document.getElementById("scontr").childNodes[idx];
 		scontrino.set(idx, quant, prezzo, desc);
-/* Questo codice eliminerebbe i duplicati anche se viene cambiato il prezzo in uno uguale;
-// e' una finezza, ma mi sembra fuorviante in qualche modo;
-// percio' i duplicati vengono eliminati solo in uiEventAggiungiProdotto
-
-		var idx_duplicato = scontrino.unisciDuplicato(idx);
-		if (idx_duplicato != -1) {
-			document.getElementById("scontr").removeChild(tile);
-			tile = tiles[idx_duplicato];
-			idx = idx_duplicato;
-		}*/
-
 		tile.innerHTML = scontrino.getDesc(idx) + "<br>" + "N. " + scontrino.getQuantita(idx) + "  x  &euro; " + scontrino.getPrezzo(idx);
-
 		animaSelezionaRigaScontrino(tile);
-
 		updateTotale();
 	}
+
+	var stato_precedente = "";
 
 	function updateTotale() {
 		var tot = document.getElementById("subtot");
-		if (scontrino.isAperto()) {
-			if (document.getElementById("scontr").childNodes.length > 0) {
-				tot.onclick = uiEventChiudiScontrino;
-				document.getElementById("subtot_riga1").innerHTML = "SubTotale";
-				document.getElementById("subtot_riga2").innerHTML = "&euro; " + scontrino.getTotale();
-				return;
-			} else {
-				scontrino.chiudi();				
+		var stato = scontrino.getStato();
+		if (stato_precedente !== stato) {
+			if (stato === "INVIATO") {
+				var divScontr = document.getElementById("scontr");
+				while (divScontr.hasChildNodes()) { divScontr.removeChild(divScontr.lastChild); }
+				tot.onclick = "";
+				tot.className = tot.className.replace(" tile-totale-subtotale", " tile-totale-menu");
+				tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-menu");
+				document.getElementById("subtot_riga1").innerHTML = "jCassa";
+				document.getElementById("subtot_riga2").innerHTML = "v 1.0";
+				document.getElementById("menu").style.display = "block";
+				var sc_display = (scontrino.getTotale() !== "0,00") ? "block" : "none";
+				document.getElementById("scontr_chiusura").style.display = sc_display;
+			} else if (stato === "APERTO") {
+				tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-subtotale");
+				tot.className = tot.className.replace(" tile-totale-menu", " tile-totale-subtotale");
+				document.getElementById("menu").style.display = "none";
+				document.getElementById("scontr_chiusura").style.display = "none";
+			} else if (stato === "CHIUSO") {
+				tot.onclick = uiEventInviaScontrino;
+				tot.className = tot.className.replace(" tile-totale-subtotale", " tile-totale-stampa");
+				document.getElementById("subtot_riga1").innerHTML = "";
+				document.getElementById("subtot_riga2").innerHTML = "STAMPA";
+				document.getElementById("scontr_chiusura").style.display = "block";
 			}
+
+			stato_precedente = stato;
 		}
-		
-		tot.onclick = "";
-		tot.className = tot.className.replace(" tile-totale-subtotale", " tile-totale-menu");
-		tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-menu");
-		document.getElementById("subtot_riga1").innerHTML = "jCassa";
-		document.getElementById("subtot_riga2").innerHTML = "v 1.0";
 
-		document.getElementById("menu").style.display = "block";
-	}
-
-	function uiEventCambiaRigaScontrino() {
-		animaClick(this);
-		if (! scontrino.isAperto()) {
-			helperRiapriScontrino();
-		}
-		animaSelezionaRigaScontrino(this);
-		modalInput("Prodotto", this);
-	}
-
-	function uiEventRiapriScontrino() {
-		animaClick(this);
-		helperRiapriScontrino();
-	}
-
-	function helperRiapriScontrino() {
-		scontrino.Riapri();
-		var div_scontr = document.getElementById("scontr");
-		if (div_scontr.lastChild) { div_scontr.removeChild(div_scontr.lastChild); }
-		if (div_scontr.lastChild) { div_scontr.removeChild(div_scontr.lastChild); }
-
-		var tot = document.getElementById("subtot");
-		tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-subtotale");
-		updateTotale();
-		modalInput("");
-	}
-
-
-	function uiEventChiudiScontrino () {
-		if (document.getElementById("modalInputProdotto").style.display == "block") {
-			//TODO: Sarebbe meglio chiamare la conferma della finestra modale?
+		if (stato === "APERTO") {
+			tot.onclick = uiEventChiudiScontrino; //ModalInputProdotto cambia la funzione su onclick
+			document.getElementById("subtot_riga1").innerHTML = "SubTotale";
+			document.getElementById("subtot_riga2").innerHTML = "&euro; " + scontrino.getTotale();
 			return;
 		}
-
-		animaClick(this);
-		var tot = document.getElementById("subtot");
-		tot.onclick = uiEventInviaScontrino;
-		tot.className = tot.className.replace(" tile-totale-subtotale", " tile-totale-stampa");
-		document.getElementById("subtot_riga1").innerHTML = "";
-		document.getElementById("subtot_riga2").innerHTML = "STAMPA";
-
-		scontrino.chiudi();
-
-		animaSelezionaRigaScontrino();
-
-		var divTile = document.createElement("div");
-		divTile.className = "metro-tile tile-scontrino-totale";
-		divTile.onclick = uiEventRiapriScontrino;
-		document.getElementById("scontr").appendChild(divTile);
-		divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>CONTANTI</div>";
+		var intestazione = "ULTIMA VENDITA";
+		if (stato === "CHIUSO") {
+			intestazione = document.getElementById(scontrino.totale_cassa).innerHTML;
+		}
+		var divTile = document.getElementById("scontr_totale");
+		divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>" + intestazione + "</div>";
 		divTile.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotale();
 
-		var divTile = document.createElement("div");
-		divTile.className = "metro-tile tile-scontrino-resto";
-		divTile.onclick = function () { animaClick(this); modalInput("Resto"); };
-		document.getElementById("scontr").appendChild(divTile);
+		divTile = document.getElementById("scontr_resto");
 		divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>RESTO</div>";
 		var i = 0;
 		var resti = scontrino.getResto();
@@ -310,57 +279,69 @@ window.addEventListener('load', function() {
 		}
 		divTile.scrollIntoView();
 
-		modalInput("Totale");
-	}
-
-	function uiEventInviaScontrino() {
-		animaClick(this);
-		if (scontrino.totale_cassa[0] === "F") {
-			for (var i = 1; i < 5; i++)	scontrino.cliente[i] = "  " + document.getElementById("cliente" +i).value;
+		function uiEventChiudiScontrino () {
+			animaClick(this);
+			scontrino.chiudi();
+			updateTotale();
+			animaSelezionaRigaScontrino();
+			modalInput("Totale");
 		}
-		registratore.stampaScontrino(scontrino, new progressbar_com(function(risposta) {
-			if (risposta[0] !== "ERROR") {
-				updateTotale();
-				modalInput("");
-				var div_scontr = document.getElementById("scontr");
-				for (var i = div_scontr.childNodes.length; i > 2; i--) {
-					div_scontr.removeChild(div_scontr.firstChild);
-				}
-				div_scontr.firstChild.onclick = "";
-				div_scontr.firstChild.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>ULTIMA VENDITA</div>";
-				div_scontr.firstChild.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotale();
-				scontrino.invia();
+
+		function uiEventInviaScontrino() {
+			animaClick(this);
+			if (scontrino.totale_cassa[0] === "F") {
+				for (var i = 1; i < 5; i++)	scontrino.cliente[i] = "  " + document.getElementById("cliente" +i).value;
 			}
-			if (risposta[0] !== "OK") alert(risposta[1]);
-		}));
+			registratore.stampaScontrino(scontrino, new progressbar_com(function(risposta) {
+				if (risposta[0] !== "ERROR") {
+					scontrino.invia();
+					updateTotale();
+					modalInput("");
+				}
+				if (risposta[0] !== "OK") alert(risposta[1]);
+			}));
+		}
 	}
 
-	function uiEventLetture() {
-		animaClick(this);
-		modalInput(" Menu");
-
-	}
 
 	var scontrino = {};
-	scontrino.id = [];
 	scontrino.righe = [];
 	scontrino.cliente = ["Cliente:", "", "", "", ""];
+	scontrino.totale_cassa = "";
+
+	// Funzioni private
+	scontrino.id = [];
 	scontrino.creaID = function (rep, desc, prezzo) {
 		return "r" + rep + "d" + desc + "p" + prezzo;
-		}
-	scontrino.totale_cassa = "T1";
+	}
 
+	// Funzioni pubbliche
 	scontrino.push = function (rep, quant, desc, prezzo) {
-		if (scontrino.id.length != scontrino.righe.length) { scontrino.righe.length = scontrino.id.length; }
+		if (scontrino.id.length != scontrino.righe.length) scontrino.righe.length = scontrino.id.length;
+
 		quant = Number(String(quant).replace(",","."));
 		prezzo = Number(String(prezzo).replace(",","."));
+		var id = scontrino.creaID(rep, desc, prezzo);
+
+		for (var i = 0; i < scontrino.id.length; i++) {
+			if (id === scontrino.id[i]) {
+				scontrino.righe[i].quant += quant;
+				return i;
+			}
+		}
+
 		scontrino.righe.push({rep: rep, quant: quant, desc: desc, prezzo: prezzo});
-		return scontrino.id.push(scontrino.creaID(rep, desc, prezzo)) -1;
+		return scontrino.id.push(id) -1;
 	}
 
 	scontrino.elimina = function (idx) {
-		scontrino.id.splice(idx, 1);
-		scontrino.righe.splice(idx, 1);
+		if (idx == null) {
+			scontrino.id.length = scontrino.righe.length = 0;
+			scontrino.totale_cassa = "";
+		} else {
+			scontrino.id.splice(idx, 1);
+			scontrino.righe.splice(idx, 1);
+		}
 	}
 
 	scontrino.set = function (idx, quant, prezzo, desc) {
@@ -392,9 +373,6 @@ window.addEventListener('load', function() {
 		}
 		return scontrino_totale.toFixed(2).replace(".", ",");
 	}
-	scontrino.chiudi = function () {
-		scontrino.id.length = 0;
-	}
 	scontrino.getResto = function (resto) {
 		var res = [];
 		var tot = scontrino.getTotale().replace(",", ".");
@@ -419,36 +397,29 @@ window.addEventListener('load', function() {
 
 		return res;
 	}
+	scontrino.chiudi = function () {
+		scontrino.totale_cassa = "T1";
+	}
+	scontrino.invia = function () {
+		scontrino.id.length = 0;
+		scontrino.totale_cassa = "";
+	}
 	scontrino.Riapri = function () {
+		scontrino.totale_cassa = "";
 		scontrino.id.length = 0;
 		for (var i=0; i<scontrino.righe.length; ++i) {
 			var riga = scontrino.righe[i];
 			scontrino.id.push(scontrino.creaID(riga.rep, riga.desc, riga.prezzo));
 		}
 	}
-	scontrino.isAperto = function () {
-		return scontrino.id.length != 0;
-	}
-	scontrino.indexOf = function (rep, desc, prezzo) {
-		prezzo = Number(String(prezzo).replace(",","."));
-		var id = scontrino.creaID(rep, desc, prezzo);
-		return scontrino.id.indexOf(id);
-	}
-	scontrino.unisciDuplicato = function (idx) {
-		for (var i = 0; i < scontrino.id.length; ++i) {
-			if (i != idx && scontrino.id[idx] == scontrino.id[i]) {
-
-				scontrino.righe[i].quant += scontrino.righe[idx].quant;
-				scontrino.elimina(idx);
-				return i;
-			}
+	scontrino.getStato = function () {
+		if (scontrino.id.length > 0) {
+			if (scontrino.totale_cassa === "") return "APERTO";
+			return "CHIUSO";
 		}
-		return -1;
+		return "INVIATO";
 	}
 
-	scontrino.invia = function () {
-		scontrino.id.length = 0;
-	}
 
 
 
@@ -475,13 +446,13 @@ function modalInput(tipo, tile) {
 	} else if (tipo == "ProdottoPrezzo") {
 		tipo = "Prodotto";
 		modalInputProdotto(tile, "prezzo");
-	} else if (tipo == " Menu") {
+	} else if (tipo == "Menu") {
 		modalInputMenu();
 	} else if (tipo == "Totale") {
 		modalInputTotale();
 	}
 
-	document.getElementById("modalInput Menu").style.display = "none";
+	document.getElementById("modalInputMenu").style.display = "none";
 	document.getElementById("modalInputProdotto").style.display = "none";
 	document.getElementById("modalInputTotale").style.display = "none";
 	document.getElementById("modalInputResto").style.display = "none";
@@ -493,7 +464,9 @@ function modalInput(tipo, tile) {
 		document.getElementById("modalInput" + tipo).style.display = "block";
 		document.getElementById("modalInput").style.display = "block";
 	}
-}
+
+	return;
+
 
 function modalInputMenu () {
 	document.getElementById("menu_annulla").onclick = function () {
@@ -538,6 +511,7 @@ function modalInputTotale () {
 		totali[0].className = totali[0].className.replace(" pulsante_selected", "");
 		this.className += " pulsante_selected";
 		scontrino.totale_cassa = this.id;
+		updateTotale();
 
 		if (this.id[0] === "F") {
 			document.getElementById("dati_cliente").style.display = "block";
@@ -548,16 +522,14 @@ function modalInputTotale () {
 	
 	function uiEventAnnulla() {
 		animaClick(this);
-		helperRiapriScontrino();
+		scontrino.Riapri();
+		updateTotale();
 		modalInput("");
 	}
 
 	function uiEventElimina() {
 		animaClick(this);
-		var div_scontr = document.getElementById("scontr");
-		for (var i = div_scontr.childNodes.length; i > 0; i--) {
-			div_scontr.removeChild(div_scontr.firstChild);
-		}
+		scontrino.elimina();
 		updateTotale();
 		modalInput("");
 	}
@@ -582,6 +554,7 @@ function modalInputProdotto (tile, keypad_iniziale) {
 	document.getElementById("prodotto_annulla").onclick = uiEventAnnulla;
 	document.getElementById("prodotto_elimina").onclick = uiEventElimina;
 	document.getElementById("prodotto_ok").onclick = uiEventOK;
+	document.getElementById("subtot").onclick = uiEventOK;
 	document.getElementById("prodotto_prezzo").onclick = uiEventCambiaPrezzo;
 	document.getElementById("prodotto_quantita").onclick = uiEventCambiaQuantita;
 	var tasti = document.getElementById("prodotto_keypad").getElementsByTagName("TD");
@@ -592,12 +565,13 @@ function modalInputProdotto (tile, keypad_iniziale) {
 
 	function uiEventAnnulla() {
 		animaClick(this);
+		updateTotale();
 		modalInput("");
 	}
 
 	function uiEventOK() {
 		animaClick(this);
-		updateTileProdotto(tile, document.getElementById("prodotto_digit_quantita").innerHTML, document.getElementById("prodotto_digit_prezzo").innerHTML);
+		updateTileProdotto(idx, document.getElementById("prodotto_digit_quantita").innerHTML, document.getElementById("prodotto_digit_prezzo").innerHTML);
 		modalInput("");
 	}
 
@@ -697,4 +671,4 @@ function modalInputResto () {
 	}
 }
 
-
+}

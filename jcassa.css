@@ -129,6 +129,7 @@ body {
 
 .tile-totale-subtotale {
 	width: 160px;
+	height: 66px;
 	color: #FFF;
 	font-size: 28px;
 	text-align: right;
@@ -138,6 +139,7 @@ body {
 
 .tile-totale-stampa {
 	width: 160px;
+	height: 66px;
 	color: #FFF;
 	font-size: 18px;
 	text-align: left;
@@ -240,7 +242,7 @@ body {
 }
 
 .dati_cliente {
-	clear: both;
+	clear: left;
 	color: white;
 	display: none;
 }
