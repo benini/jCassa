@@ -270,13 +270,15 @@ body {
 }
 
 .keypad {
-	border-spacing: 6px;
+	float: right;
+	clear: right;
+	border-spacing: 2px;
 	margin: 0px;
 }
 
 .keypad td {
-	width: 70px;
-	line-height: 70px;
+	width: 72px;
+	line-height: 72px;
 	border-style: solid;
 	border-width: 2px;
 	border-color: #037bf2;
@@ -290,6 +292,12 @@ body {
 	-webkit-transition: background-color 0.2s 0.2s, border-color 0.2s 0.2s;
 }
 
+.keypad .keypad_sconto {
+	font-size: 30px;
+	border-radius: 3px;
+	background-color: orange;
+}
+
 .keypad_quantita {}
 .keypad_quantita td {
 	border-color: #01c5ff;
@@ -297,8 +305,10 @@ body {
 }
 
 .keypad_tile {
-	margin-left: 6px;
-	width: 236px;
+	float: right;
+	clear: right;
+	margin-right: 2px;
+	width: 234px;
 	height: 56px;
 	border-style: solid;
 	border-width: 2px;
@@ -324,6 +334,11 @@ body {
 }
 
 .keypad_colore-quantita {
+	border-color: #01c5ff;
+	background-color: #01bcf3;
+}
+
+.keypad_colore-sconto {
 	border-color: #01c5ff;
 	background-color: #01bcf3;
 }

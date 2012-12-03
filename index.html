@@ -154,6 +154,10 @@
 		</div>
 
 		<div style="float:right; margin-top: 8px; margin-right: 50px;">
+			<div id="prodotto_sconto" class="keypad_tile keypad_animazione keypad_colore-sconto" style="margin-bottom: 4px;">
+				<div class="keypad_tile-header">SCONTI/MAGGIOR.</div>
+				<div id="prodotto_digit_sconto" class="keypad_tile-digits"></div>
+			</div>
 			<div id="prodotto_prezzo" class="keypad_tile keypad_animazione keypad_colore-prezzo" style="margin-bottom: 40px;">
 				<div class="keypad_tile-header">PREZZO UNITARIO</div>
 				<div id="prodotto_digit_prezzo" class="keypad_tile-digits"></div>
@@ -165,10 +169,10 @@
 			</div>
 
 			<table id="prodotto_keypad" class="keypad keypad_quantita">
-				<tr><td>1</td><td>2</td><td>3</td></tr>
-				<tr><td>4</td><td>5</td><td>6</td></tr>
-				<tr><td>7</td><td>8</td><td>9</td></tr>
-				<tr><td>0</td><td id="prodotto_keypad_special">00</td><td style="color: red;">C</td></tr>
+				<tr><td class="keypad_sconto">-%</td><td>1</td><td>2</td><td>3</td></tr>
+				<tr><td class="keypad_sconto">+%</td><td>4</td><td>5</td><td>6</td></tr>
+				<tr><td class="keypad_sconto">-&euro;</td><td>7</td><td>8</td><td>9</td></tr>
+				<tr><<td class="keypad_sconto">+&euro;</td><td>0</td><td id="prodotto_keypad_special">00</td><td style="color: red;">C</td></tr>
 			</table>
 		</div>
 	</div>
