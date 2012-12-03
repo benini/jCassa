@@ -541,6 +541,7 @@ function modalInputProdotto (tile, keypad_iniziale) {
 	if (idx == tiles.length) { console.log("Errore in modalInputProdotto"); return; }
 
 	var digits = "";
+	var sconto_tipo = "-%";
 	var prodotto_visore = "";
 	keypadReset(keypad_iniziale);
 	if (keypad_iniziale == "prezzo") {
@@ -555,10 +556,14 @@ function modalInputProdotto (tile, keypad_iniziale) {
 	document.getElementById("prodotto_elimina").onclick = uiEventElimina;
 	document.getElementById("prodotto_ok").onclick = uiEventOK;
 	document.getElementById("subtot").onclick = uiEventOK;
+	document.getElementById("prodotto_sconto").onclick = uiEventCambiaSconto;
 	document.getElementById("prodotto_prezzo").onclick = uiEventCambiaPrezzo;
 	document.getElementById("prodotto_quantita").onclick = uiEventCambiaQuantita;
 	var tasti = document.getElementById("prodotto_keypad").getElementsByTagName("TD");
 	for (var i = 0; i < tasti.length; i++) { tasti[i].onclick = uiEventKeypad; }
+	var tasti_sconto = document.getElementsByClassName("keypad_tasti_sconto");
+	selSconto(tasti_sconto[0]);
+	for (var i = 0; i < tasti_sconto.length; i++) tasti_sconto[i].onclick = uiEventScontoTipo;
 
 	document.getElementById("prodotto_digit_prezzo").innerHTML = "&euro; " + scontrino.getPrezzo(idx);
 	document.getElementById("prodotto_digit_quantita").innerHTML = scontrino.getQuantita(idx);
@@ -571,7 +576,9 @@ function modalInputProdotto (tile, keypad_iniziale) {
 
 	function uiEventOK() {
 		animaClick(this);
-		updateTileProdotto(idx, document.getElementById("prodotto_digit_quantita").innerHTML, document.getElementById("prodotto_digit_prezzo").innerHTML);
+		updateTileProdotto(idx,
+			document.getElementById("prodotto_digit_quantita").innerHTML,
+			document.getElementById("prodotto_digit_prezzo").innerHTML);
 		modalInput("");
 	}
 
@@ -583,22 +590,39 @@ function modalInputProdotto (tile, keypad_iniziale) {
 		modalInput("");
 	}
 
+	function selSconto(tile) {
+		var a = document.getElementsByClassName(" keypad_tasti_sconto_sel");
+		for (var i=0; i < a.length; i++) a[i].className = a[i].className.replace(" keypad_tasti_sconto_sel", "");		
+		tile.className += " keypad_tasti_sconto_sel";
+	}
+
+	function uiEventScontoTipo () {
+		animaClick(this);
+		selSconto(this);
+		sconto_tipo = this.innerHTML;
+		keypadReset("sconto");
+		updateVisore();
+	}
+
 	function uiEventKeypad () {
 		var tasto = this.innerHTML;
-		if (tasto == "," && digits.indexOf(",") != -1) { return; }
-
-		var tasto = this.innerHTML;
+		if (tasto == "," && digits.indexOf(",") != -1) return;
 		if (tasto == "C") {
 			digits = "";
 		} else {
-			if (digits.length > 8) { return; }
+			if (digits.length > 8) return;
 			digits += tasto;
 		}
 		animaClick(this);
+		updateVisore();
+	}
 
+	function updateVisore() {
 		if (prodotto_visore == "prezzo") {
 			var a = String((digits / 100).toFixed(2));
 			document.getElementById("prodotto_digit_prezzo").innerHTML = "&euro; " + a.replace(".", ",");
+		} else if (prodotto_visore == "sconto") {
+			document.getElementById("prodotto_digit_sconto").innerHTML = sconto_tipo + digits;
 		} else {
 			document.getElementById("prodotto_digit_quantita").innerHTML = digits;
 		}
@@ -606,18 +630,29 @@ function modalInputProdotto (tile, keypad_iniziale) {
 
 	function keypadReset(tipo) {
 		digits = "";
-		if (prodotto_visore == tipo) { console.log("Non dovrei essere qui"); }
 		prodotto_visore = tipo;
-		if (tipo == "prezzo") {
+		tasti_sconto_display = "none";
+
+		if (tipo == "sconto") {
+			tasti_sconto_display = "block";
 			document.getElementById("prodotto_keypad_special").innerHTML = "00";
-			var keypad = document.getElementById("prodotto_keypad");
-			keypad.className = keypad.className.replace(" keypad_quantita", "");
+		} else if (tipo == "prezzo") {
+			document.getElementById("prodotto_keypad_special").innerHTML = "00";
 		} else {
-			document.getElementById("prodotto_keypad_special").innerHTML = ",";
-			var keypad = document.getElementById("prodotto_keypad");
-			keypad.className = keypad.className.replace(" keypad_quantita", "");
-			keypad.className += " keypad_quantita";
+			document.getElementById("prodotto_keypad_special").innerHTML = ",";	
 		}
+
+		var tasti_sconto = document.getElementsByClassName("keypad_tasti_sconto");
+		for (var i = 0; i < tasti_sconto.length; i++) tasti_sconto[i].style.display = tasti_sconto_display;
+		var keypad = document.getElementById("prodotto_keypad");
+		keypad.className = keypad.className.replace(" keypad_sconto", "");
+		keypad.className = keypad.className.replace(" keypad_quantita", "");
+		keypad.className += " keypad_" + tipo;
+	}
+
+	function uiEventCambiaSconto() {
+		animaClick(this);
+		keypadReset("sconto");
 	}
 
 	function uiEventCambiaPrezzo() {
