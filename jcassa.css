@@ -93,6 +93,10 @@ body {
 	white-space: nowrap;
 }
 
+.tile-scontrino-variaz {
+	height: 50px;
+}
+
 .tile-scontrino-selected {
 	margin-top: 20px;
 	margin-bottom: 20px;
@@ -292,19 +296,19 @@ body {
 	-webkit-transition: background-color 0.2s 0.2s, border-color 0.2s 0.2s;
 }
 
-.keypad .keypad_tasti_sconto {
+.keypad .keypad_tasti_variaz {
 	font-size: 30px;
 	border-radius: 3px;
 	background-color: orange;
 	-webkit-transition: none;
 }
 
-.keypad .keypad_tasti_sconto_sel {
+.keypad .keypad_tasti_variaz_sel {
 	border-color: yellow;
 }
 
-.keypad_sconto {}
-.keypad_sconto td {
+.keypad_variaz {}
+.keypad_variaz td {
 	border-color: #01c5ff;
 	background-color:#01bcf3;
 }
@@ -351,7 +355,7 @@ body {
 	background-color: #01bcf3;
 }
 
-.keypad_colore-sconto {
+.keypad_colore-variaz {
 	border-color: #01c5ff;
 	background-color: #01bcf3;
 }

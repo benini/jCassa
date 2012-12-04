@@ -214,10 +214,17 @@ function uiEventCambiaReparto (r) {
 	}
 }
 
-	function updateTileProdotto(idx, quant, prezzo, desc) {
+	function updateTileProdotto(idx, quant, prezzo, desc, variaz) {
 		var tile = document.getElementById("scontr").childNodes[idx];
-		scontrino.set(idx, quant, prezzo, desc);
+		scontrino.set(idx, quant, prezzo, desc, variaz);
 		tile.innerHTML = scontrino.getDesc(idx) + "<br>" + "N. " + scontrino.getQuantita(idx) + "  x  &euro; " + scontrino.getPrezzo(idx);
+		var v = scontrino.getVariaz(idx);
+		if (v.length > 0) {
+			tile.innerHTML += "<br>" + v;
+			tile.className += " tile-scontrino-variaz"
+		} else {
+			tile.className = tile.className.replace(" tile-scontrino-variaz", "");
+		}
 		animaSelezionaRigaScontrino(tile);
 		updateTotale();
 	}
@@ -311,8 +318,8 @@ function uiEventCambiaReparto (r) {
 
 	// Funzioni private
 	scontrino.id = [];
-	scontrino.creaID = function (rep, desc, prezzo) {
-		return "r" + rep + "d" + desc + "p" + prezzo;
+	scontrino.creaID = function (rep, desc, prezzo, variaz) {
+		return "r" + rep + "d" + desc + "p" + prezzo + variaz;
 	}
 
 	// Funzioni pubbliche
@@ -321,7 +328,7 @@ function uiEventCambiaReparto (r) {
 
 		quant = Number(String(quant).replace(",","."));
 		prezzo = Number(String(prezzo).replace(",","."));
-		var id = scontrino.creaID(rep, desc, prezzo);
+		var id = scontrino.creaID(rep, desc, prezzo, "");
 
 		for (var i = 0; i < scontrino.id.length; i++) {
 			if (id === scontrino.id[i]) {
@@ -330,7 +337,7 @@ function uiEventCambiaReparto (r) {
 			}
 		}
 
-		scontrino.righe.push({rep: rep, quant: quant, desc: desc, prezzo: prezzo});
+		scontrino.righe.push({rep: rep, quant: quant, desc: desc, prezzo: prezzo, variaz: ""});
 		return scontrino.id.push(id) -1;
 	}
 
@@ -344,14 +351,19 @@ function uiEventCambiaReparto (r) {
 		}
 	}
 
-	scontrino.set = function (idx, quant, prezzo, desc) {
+	scontrino.set = function (idx, quant, prezzo, desc, variaz) {
 		if (desc && desc != "") { scontrino.righe[idx].desc = desc; }
 		if (quant && quant != "") { scontrino.righe[idx].quant = Number(String(quant).replace(",",".")); }
 		if (prezzo && prezzo != "") {
 			scontrino.righe[idx].prezzo = Number(String(prezzo).replace(",",".").replace("\u20ac ", "") );
 		}
+		if (variaz) {
+			var v = variaz.replace(",",".").replace("\u20ac ", "");
+			if (Number(v.slice(1).replace("%", "")) == 0) v = "";
+			scontrino.righe[idx].variaz = v;
+		}
 		var riga = scontrino.righe[idx];
-		scontrino.id[idx] = scontrino.creaID(riga.rep, riga.desc, riga.prezzo);
+		scontrino.id[idx] = scontrino.creaID(riga.rep, riga.desc, riga.prezzo, riga.variaz);
 	}
 
 	scontrino.getPrezzo = function (idx) {
@@ -366,10 +378,31 @@ function uiEventCambiaReparto (r) {
 		return scontrino.righe[idx].desc;
 	}
 
+	scontrino.getVariaz = function (idx) {
+		var res = String(scontrino.righe[idx].variaz);
+		if (res.length > 0 && res.indexOf("%") == -1) {
+			res = res[0] + " &euro;" + res.slice (1);
+		}
+		return res.replace(".", ",");
+	}
+
+	scontrino.getVariazNumber = function(idx) {
+		var variaz = String(scontrino.righe[idx].variaz).replace(",", ".");
+		if (variaz.indexOf("%") == -1) {
+			var v = Number(variaz.slice(1));
+		} else {
+			var perc = Number(variaz.slice(1, -1));
+			var imp = scontrino.righe[idx].quant * scontrino.righe[idx].prezzo;
+			var v = Math.round(imp * perc) / 100;
+		}
+		if (variaz[0] == "-") v = -v;
+		return v;
+	}
+
 	scontrino.getTotale = function () {
 		var scontrino_totale = 0;
 		for (var i=0; i < scontrino.righe.length; ++i) {
-			scontrino_totale += scontrino.righe[i].quant * scontrino.righe[i].prezzo;
+			scontrino_totale += scontrino.righe[i].quant * scontrino.righe[i].prezzo + scontrino.getVariazNumber(i);
 		}
 		return scontrino_totale.toFixed(2).replace(".", ",");
 	}
@@ -541,7 +574,7 @@ function modalInputProdotto (tile, keypad_iniziale) {
 	if (idx == tiles.length) { console.log("Errore in modalInputProdotto"); return; }
 
 	var digits = "";
-	var sconto_tipo = "-%";
+	var variaz_tipo = "-%";
 	var prodotto_visore = "";
 	keypadReset(keypad_iniziale);
 	if (keypad_iniziale == "prezzo") {
@@ -556,15 +589,16 @@ function modalInputProdotto (tile, keypad_iniziale) {
 	document.getElementById("prodotto_elimina").onclick = uiEventElimina;
 	document.getElementById("prodotto_ok").onclick = uiEventOK;
 	document.getElementById("subtot").onclick = uiEventOK;
-	document.getElementById("prodotto_sconto").onclick = uiEventCambiaSconto;
+	document.getElementById("prodotto_variaz").onclick = uiEventCambiaVariaz;
 	document.getElementById("prodotto_prezzo").onclick = uiEventCambiaPrezzo;
 	document.getElementById("prodotto_quantita").onclick = uiEventCambiaQuantita;
 	var tasti = document.getElementById("prodotto_keypad").getElementsByTagName("TD");
 	for (var i = 0; i < tasti.length; i++) { tasti[i].onclick = uiEventKeypad; }
-	var tasti_sconto = document.getElementsByClassName("keypad_tasti_sconto");
-	selSconto(tasti_sconto[0]);
-	for (var i = 0; i < tasti_sconto.length; i++) tasti_sconto[i].onclick = uiEventScontoTipo;
+	var tasti_variaz = document.getElementsByClassName("keypad_tasti_variaz");
+	selVariaz(tasti_variaz[0]);
+	for (var i = 0; i < tasti_variaz.length; i++) tasti_variaz[i].onclick = uiEventVariazTipo;
 
+	document.getElementById("prodotto_digit_variaz").innerHTML = scontrino.getVariaz(idx);
 	document.getElementById("prodotto_digit_prezzo").innerHTML = "&euro; " + scontrino.getPrezzo(idx);
 	document.getElementById("prodotto_digit_quantita").innerHTML = scontrino.getQuantita(idx);
 
@@ -578,7 +612,8 @@ function modalInputProdotto (tile, keypad_iniziale) {
 		animaClick(this);
 		updateTileProdotto(idx,
 			document.getElementById("prodotto_digit_quantita").innerHTML,
-			document.getElementById("prodotto_digit_prezzo").innerHTML);
+			document.getElementById("prodotto_digit_prezzo").innerHTML, "",
+			document.getElementById("prodotto_digit_variaz").innerHTML);
 		modalInput("");
 	}
 
@@ -590,17 +625,17 @@ function modalInputProdotto (tile, keypad_iniziale) {
 		modalInput("");
 	}
 
-	function selSconto(tile) {
-		var a = document.getElementsByClassName(" keypad_tasti_sconto_sel");
-		for (var i=0; i < a.length; i++) a[i].className = a[i].className.replace(" keypad_tasti_sconto_sel", "");		
-		tile.className += " keypad_tasti_sconto_sel";
+	function selVariaz(tile) {
+		var a = document.getElementsByClassName(" keypad_tasti_variaz_sel");
+		for (var i=0; i < a.length; i++) a[i].className = a[i].className.replace(" keypad_tasti_variaz_sel", "");		
+		tile.className += " keypad_tasti_variaz_sel";
 	}
 
-	function uiEventScontoTipo () {
+	function uiEventVariazTipo () {
 		animaClick(this);
-		selSconto(this);
-		sconto_tipo = this.innerHTML;
-		keypadReset("sconto");
+		selVariaz(this);
+		variaz_tipo = this.innerHTML;
+		keypadReset("variaz");
 		updateVisore();
 	}
 
@@ -621,8 +656,16 @@ function modalInputProdotto (tile, keypad_iniziale) {
 		if (prodotto_visore == "prezzo") {
 			var a = String((digits / 100).toFixed(2));
 			document.getElementById("prodotto_digit_prezzo").innerHTML = "&euro; " + a.replace(".", ",");
-		} else if (prodotto_visore == "sconto") {
-			document.getElementById("prodotto_digit_sconto").innerHTML = sconto_tipo + digits;
+		} else if (prodotto_visore == "variaz") {
+			if (variaz_tipo.indexOf("%") != -1) {
+				document.getElementById("prodotto_keypad_special").innerHTML = ",";
+				var d = (digits.length > 0) ? digits : 0;
+				var s = variaz_tipo[0] + " " + d + "%";
+			} else {
+				document.getElementById("prodotto_keypad_special").innerHTML = "00";
+				var s =  variaz_tipo[0] + " &euro; " + String((digits / 100).toFixed(2)).replace(".", ",");
+			}
+			document.getElementById("prodotto_digit_variaz").innerHTML = s;
 		} else {
 			document.getElementById("prodotto_digit_quantita").innerHTML = digits;
 		}
@@ -631,28 +674,27 @@ function modalInputProdotto (tile, keypad_iniziale) {
 	function keypadReset(tipo) {
 		digits = "";
 		prodotto_visore = tipo;
-		tasti_sconto_display = "none";
+		tasti_variaz_display = "none";
 
-		if (tipo == "sconto") {
-			tasti_sconto_display = "block";
-			document.getElementById("prodotto_keypad_special").innerHTML = "00";
+		if (tipo == "variaz") {
+			tasti_variaz_display = "block";
 		} else if (tipo == "prezzo") {
 			document.getElementById("prodotto_keypad_special").innerHTML = "00";
 		} else {
 			document.getElementById("prodotto_keypad_special").innerHTML = ",";	
 		}
 
-		var tasti_sconto = document.getElementsByClassName("keypad_tasti_sconto");
-		for (var i = 0; i < tasti_sconto.length; i++) tasti_sconto[i].style.display = tasti_sconto_display;
+		var tasti_variaz = document.getElementsByClassName("keypad_tasti_variaz");
+		for (var i = 0; i < tasti_variaz.length; i++) tasti_variaz[i].style.display = tasti_variaz_display;
 		var keypad = document.getElementById("prodotto_keypad");
-		keypad.className = keypad.className.replace(" keypad_sconto", "");
+		keypad.className = keypad.className.replace(" keypad_variaz", "");
 		keypad.className = keypad.className.replace(" keypad_quantita", "");
 		keypad.className += " keypad_" + tipo;
 	}
 
-	function uiEventCambiaSconto() {
+	function uiEventCambiaVariaz() {
 		animaClick(this);
-		keypadReset("sconto");
+		keypadReset("variaz");
 	}
 
 	function uiEventCambiaPrezzo() {
@@ -702,7 +744,7 @@ function modalInputResto () {
 		document.getElementById("resto_digitato").innerHTML = "&euro; " + a.replace(".", ",");
 
 		var b = scontrino.getResto(a)[1];
-		document.getElementById("resto_calcolato").innerHTML = "&euro; " + b.replace(".", ",");
+		document.getElementById("resto_calcolato").innerHTML = "&euro; " + b;
 	}
 }
 

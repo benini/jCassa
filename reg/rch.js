@@ -87,8 +87,24 @@ Lettura Data e Ora corrente:
 			if (desc.length > 0) {
 				r += "/(" + desc.slice(0, 36) + ")";
 			}
-
 			cmd.push(r);
+
+			var segno = "+";
+			var v = scontrino.getVariazNumber(i).toFixed(2).replace(".", "");
+			if (v < 0) {
+				segno = "-";
+				v = -v;
+			}
+			if (v > 0) {
+				var desc = "";
+				if (String(scontrino.righe[i].variaz).indexOf("%") != -1) {
+					//Non uso lo sconto/maggiorazione percentuale per via dei problemi con gli arrotondamenti
+					//cmd.push("=%" + variaz[0] + "/*" + Number(variaz.slice(1, -1)));
+					desc = "/(" + scontrino.getVariaz(i) + ")";
+				}
+				alert("=V" + segno + "/$" + v + desc);
+				if (v != 0) cmd.push("=V" + segno + "/$" + v + desc);
+			}	
 		}
 		cmd.push("=T" + scontrino.totale_cassa.substr(1));
 		cmd.send(function (risposte) {
