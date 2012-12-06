@@ -244,7 +244,7 @@ function uiEventCambiaReparto (r) {
 				document.getElementById("subtot_riga1").innerHTML = "jCassa";
 				document.getElementById("subtot_riga2").innerHTML = "v 1.0";
 				document.getElementById("menu").style.display = "block";
-				var sc_display = (scontrino.getTotale() !== "0,00") ? "block" : "none";
+				var sc_display = (scontrino.getTotale() != 0) ? "block" : "none";
 				document.getElementById("scontr_chiusura").style.display = sc_display;
 			} else if (stato === "APERTO") {
 				tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-subtotale");
@@ -265,7 +265,7 @@ function uiEventCambiaReparto (r) {
 		if (stato === "APERTO") {
 			tot.onclick = uiEventChiudiScontrino; //ModalInputProdotto cambia la funzione su onclick
 			document.getElementById("subtot_riga1").innerHTML = "SubTotale";
-			document.getElementById("subtot_riga2").innerHTML = "&euro; " + scontrino.getTotale();
+			document.getElementById("subtot_riga2").innerHTML = "&euro; " + scontrino.getTotaleStr();
 			return;
 		}
 		var intestazione = "ULTIMA VENDITA";
@@ -274,7 +274,7 @@ function uiEventCambiaReparto (r) {
 		}
 		var divTile = document.getElementById("scontr_totale");
 		divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>" + intestazione + "</div>";
-		divTile.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotale();
+		divTile.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotaleStr();
 
 		divTile = document.getElementById("scontr_resto");
 		divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>RESTO</div>";
@@ -301,7 +301,7 @@ function uiEventCambiaReparto (r) {
 			} else if (scontrino.totali[0].id[0] === "P") {
 				//alert(JSON.stringify(scontrino.scontrino.totali[0].importorighe));
 			} else if (scontrino.totali[0].importo != 0) {
-				var tot_sc = Number(scontrino.getTotale().replace(",", "."));
+				var tot_sc = scontrino.getTotale();
 				if (scontrino.totali[0].importo != tot_sc) {
 					scontrino.totali.push({id: "T1", importo: 0});
 				} else {
@@ -414,11 +414,14 @@ function uiEventCambiaReparto (r) {
 		for (var i=0; i < scontrino.righe.length; ++i) {
 			scontrino_totale += scontrino.righe[i].quant * scontrino.righe[i].prezzo + scontrino.getVariazNumber(i);
 		}
-		return scontrino_totale.toFixed(2).replace(".", ",");
+		return scontrino_totale;
+	}
+	scontrino.getTotaleStr = function () {
+		return scontrino.getTotale().toFixed(2).replace(".", ",");
 	}
 	scontrino.getResto = function (resto) {
 		var res = [];
-		var tot = scontrino.getTotale().replace(",", ".");
+		var tot = scontrino.getTotale();
 
 		if (resto != null) {
 			resto = String(resto);
@@ -585,7 +588,7 @@ function modalInputTotale () {
 		if (this.id[0] === "F") {
 			document.getElementById("dati_cliente").style.display = "block";
 		} else if (this.innerHTML === "BUONI PASTO") {
-			scontrino.totali[0].importo = Number(scontrino.getTotale().replace(",", "."));
+			scontrino.totali[0].importo = scontrino.getTotale();
 			updateVisore();
 			document.getElementById("bpasto").style.display = "block";
 		}
