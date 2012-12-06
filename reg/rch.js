@@ -90,20 +90,19 @@ Lettura Data e Ora corrente:
 			cmd.push(r);
 
 			var segno = "+";
-			var v = scontrino.getVariazNumber(i).toFixed(2).replace(".", "");
+			var v = scontrino.getVariazNumber(i);
 			if (v < 0) {
 				segno = "-";
 				v = -v;
 			}
 			if (v > 0) {
 				var desc = "";
-				if (String(scontrino.righe[i].variaz).indexOf("%") != -1) {
+				if (scontrino.getVariaz(i).indexOf("%") != -1) {
 					//Non uso lo sconto/maggiorazione percentuale per via dei problemi con gli arrotondamenti
 					//cmd.push("=%" + variaz[0] + "/*" + Number(variaz.slice(1, -1)));
 					desc = "/(" + scontrino.getVariaz(i) + ")";
 				}
-				alert("=V" + segno + "/$" + v + desc);
-				if (v != 0) cmd.push("=V" + segno + "/$" + v + desc);
+				cmd.push("=V" + segno + "/$" + v.toFixed(2).replace(".", "") + desc);
 			}	
 		}
 		for (var t = 0; t < scontrino.totali.length; t++) {
