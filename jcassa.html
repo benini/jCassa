@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="ISO-8859-1"> 
+	<meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1;">
+	<title>jCassa</title>
+
+	<link rel="stylesheet" type="text/css" href="config/colori.css">
+	<link rel="stylesheet" type="text/css" href="jcassa.css">
+
+	<script type='application/javascript' src="fastclick.js"></script>
+	<script type='application/javascript' src="config/prodotti.js"></script>
+	<script type='application/javascript' src="jcassa.js"></script>
+	<script type='application/javascript' src="reg/rch.js"></script>
+</head>
+<body>
+
+<audio id="click_snd" src="img/click.wav"></audio>
+
+<div id="unknow-width-and-height" style="overflow: auto; position: fixed; left: 0px; top: 0px;">
+	<div id="schermata_avvio" style="margin: 0px 30px; color: white;">
+
+		<h1 style="color: #f88f00">jCassa v1.0</h1>
+
+		<div style="margin-top: 16px;">
+			Verifica aggiornamenti
+			<img id="pg_aggiornamenti_ok" src="img/ok.png" style="width:20px; display: none"/>
+			<img id="pg_aggiornamenti_err" src="img/close.png" style="width:20px; display: none"/>
+			<div id="pg_aggiornamenti" class="progress_bar"></div>
+		</div>
+
+		<div style="margin-top: 16px">
+			Caricamento immagini
+			<img id="pg_immagini_ok" src="img/ok.png" style="width: 20px; display: none;"/> 
+			<img id="pg_immagini_err" src="img/close.png" style="width: 20px; display: none;"/>
+			<div id="pg_immagini" class="progress_bar"></div>
+		</div>
+
+		<div style="margin-top: 16px">
+			Caricamento prodotti
+			<img id="pg_prodotti_ok" src="img/ok.png" style="width: 20px; display: none;"/> 
+			<img id="pg_prodotti_err" src="img/close.png" style="width: 20px; display: none;"/>
+			<div id="pg_prodotti" class="progress_bar"></div>
+		</div>
+
+		<div style="margin-top: 16px;">
+			Connessione stampante fiscale
+			<img id="pg_fiscale_ok" src="img/ok.png" style="width: 20px; display: none;"/> 
+			<img id="pg_fiscale_err" src="img/close.png" style="width: 20px; display: none;"/>
+			<span id="pg_fiscale_info" style="float: right; margin-top: 6px;"></span>
+			<div id="pg_fiscale" class="progress_bar" style="clear:both;"></div>
+		</div>
+
+	</div>
+
+	<div id="prezzi" style="width:100%"></div>
+</div>
+
+
+<div id="unknow-height" style="overflow: auto; position: fixed; right: 0px; top: 0px;">
+	<div id="menu" class="metro-tile tile-menu"></div>
+	<div id="scontr"></div>
+	<div id="scontr_chiusura" style="display:none">
+		<div id="scontr_totale" class="metro-tile tile-scontrino-totale"></div>
+		<div id="scontr_resto" class="metro-tile tile-scontrino-resto"></div>
+	</div>
+</div>
+
+<div id="unknow-width" style="overflow: auto; position: fixed; left: 0px; bottom: 0px;">
+	<table><tr id="reparti"></tr></table>
+</div>
+
+<div style="position: fixed; right: 0px; bottom: 3px;">
+	<div id="subtot" class="metro-tile tile-totale-menu">
+		<div id="subtot_riga1"></div>
+		<div id="subtot_riga2"></div>
+	</div>
+</div>
+
+<div id="no_input" class="no_input">
+</div>
+<div id="pg_comunicazione_box" style="display: none; position: fixed; left: 0px; top: 20px; width: 100%; z-index: 9999">
+	<div style="margin: 10px auto; width: 80%; padding: 12px; background-color: black; border: solid 2px white; text-align:center; color: white; font-size: 24px;">
+		Attesa stampante fiscale
+		<div id="pg_comunicazione" class="progress_bar" style="width: 70%; margin: 10px auto"></div>
+	</div>
+</div>
+
+<div id="modalInput" style="position: absolute; left: 0px; top: 0px; z-index: 5; display:none;">
+
+	<div id="modalInputMenu" class="modalInput">
+		<div style="float:right; margin-right: 10px; margin-bottom: 10px;">
+			<div id="menu_annulla" class="pulsante pulsante_annulla"></div>
+		</div>
+
+		<div class="pulsante pulsante_menu">
+			<div id="menu_chiusuraFiscale" class="pulsante_menu_2righe">CHIUSURA FISCALE</div>
+		</div>
+		<div class="pulsante pulsante_menu">
+			<div id="menu_letturaGiornaliera" class="pulsante_menu_2righe">LETTURA GIORNALIERA</div>
+		</div>
+		<div class="pulsante pulsante_menu">
+			<div id="menu_aperturaCassetto" class="pulsante_menu_2righe">APERTURA CASSETTO</div>
+		</div>
+		<div class="pulsante pulsante_menu">
+			<div id="menu_ultimoScontrino" class="pulsante_menu_2righe">RISTAMPA ULTIMO SCONTR.</div>
+		</div>
+		<div class="pulsante pulsante_menu" style="display:none">
+			<div class="pulsante_menu_2righe">GIORNALE<br>DI FONDO</div>
+		</div>
+		<div class="pulsante pulsante_menu" style="display:none">
+			<div class="pulsante_menu_2righe">RICHIAMA PRECONTO</div>
+		</div>
+		<div class="pulsante pulsante_menu" style="display:none">
+			<div class="pulsante_menu_2righe">PROGRAM. PRODOTTI</div>
+		</div>
+		<div class="pulsante pulsante_menu" style="display:none">
+			<div class="pulsante_menu_2righe">STAMPA ELENCO PRODOTTI</div>
+		</div>
+
+	</div>
+
+	<div id="modalInputTotale" class="modalInput">
+		<div style="float:right; margin-right: 10px;">
+			<div id="totale_annulla" class="pulsante pulsante_annulla"></div>
+			<div id="totale_elimina" class="pulsante pulsante_elimina" style="margin-top: 8px; margin-bottom: 10px;"></div>
+		</div>
+
+		<div id="T1" class="pulsante pulsante_totale">CONTANTI</div>
+		<div id="T2" class="pulsante pulsante_totale">CREDITI</div>
+		<div id="T4" class="pulsante pulsante_totale">CARTE CREDITO</div>
+		<div id="T6" class="pulsante pulsante_totale">BANCOMAT</div>
+		<div id="F5" class="pulsante pulsante_totale">FATTURA</div>
+		<div id="P1" class="pulsante pulsante_totale">PRECONTO</div>
+		<div id="T3" class="pulsante pulsante_totale" style="display:none">BUONI PASTO</div>
+		<div class="pulsante pulsante_totale" style="display:none">
+			<div class="pulsante_menu_2righe">SCONTRINO PARLANTE</div>
+		</div>
+
+		<div id="dati_cliente" class="dati_cliente">
+			<label>Ragione sociale:<input type="text" id="cliente1"/></label>
+			<label>Indirizzo1:<input type="text" id="cliente2" /></label>
+			<label>Indirizzo2:<input type="text" id="cliente3" /></label>
+			<label>P.IVA - C.F.:<input type="text" id="cliente4" /></label>
+		</div>
+
+	</div>
+
+	<div id="modalInputProdotto" class="modalInput">
+		<div style="float:right; margin-right: 10px;">
+			<div id="prodotto_annulla" class="pulsante pulsante_annulla"></div>
+			<div id="prodotto_elimina" class="pulsante pulsante_elimina" style="margin-top: 40px"></div>
+			<div id="prodotto_ok" class="pulsante pulsante_ok" style="margin-top: 40px"></div>
+		</div>
+
+		<div style="float:right; margin-top: 8px; margin-right: 50px;">
+			<div id="prodotto_variaz" class="keypad_tile keypad_animazione keypad_colore-variaz" style="margin-bottom: 4px;">
+				<div class="keypad_tile-header">SCONTI/MAGGIOR.</div>
+				<div id="prodotto_digit_variaz" class="keypad_tile-digits"></div>
+			</div>
+			<div id="prodotto_prezzo" class="keypad_tile keypad_animazione keypad_colore-prezzo" style="margin-bottom: 40px;">
+				<div class="keypad_tile-header">PREZZO UNITARIO</div>
+				<div id="prodotto_digit_prezzo" class="keypad_tile-digits"></div>
+			</div>
+
+			<div id="prodotto_quantita" class="keypad_tile keypad_animazione keypad_colore-quantita">
+				<div class="keypad_tile-header">QUANTITA'</div>
+				<div id="prodotto_digit_quantita" class="keypad_tile-digits"></div>
+			</div>
+
+			<table id="prodotto_keypad" class="keypad keypad_quantita">
+				<tr><td class="keypad_tasti_variaz">-%</td><td>1</td><td>2</td><td>3</td></tr>
+				<tr><td class="keypad_tasti_variaz">+%</td><td>4</td><td>5</td><td>6</td></tr>
+				<tr><td class="keypad_tasti_variaz">-&euro;</td><td>7</td><td>8</td><td>9</td></tr>
+				<tr><<td class="keypad_tasti_variaz">+&euro;</td><td>0</td><td id="prodotto_keypad_special">00</td><td style="color: red;">C</td></tr>
+			</table>
+		</div>
+	</div>
+
+	<div id="modalInputResto" class="modalInput">
+		<div style="float:right; margin-right: 10px;">
+			<div id="resto_annulla" class="pulsante pulsante_annulla"></div>
+			<div id="resto_ok" class="pulsante pulsante_ok" style="margin-top: 128px"></div>
+		</div>
+
+		<div style="float:right; margin-top: 8px; margin-right: 50px;">
+			<div class="keypad_tile keypad_colore-resto">
+				<div class="keypad_tile-header">RESTO</div>
+				<div id="resto_calcolato" class="keypad_tile-digits"></div>
+			</div>
+			<div class="keypad_tile keypad_colore-prezzo" style="height: 34px; margin-top: 10px;">
+				<div id="resto_digitato" class="keypad_tile-digits"></div>
+			</div>
+			<table id="resto_keypad" class="keypad">
+				<tr><td>1</td><td>2</td><td>3</td></tr>
+				<tr><td>4</td><td>5</td><td>6</td></tr>
+				<tr><td>7</td><td>8</td><td>9</td></tr>
+				<tr><td>0</td><td>00</td><td style="color: red;">C</td></tr>
+			</table>
+		</div>
+	</div>
+
+</div>
+
+</body>
+</html>
