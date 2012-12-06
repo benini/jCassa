@@ -270,7 +270,7 @@ function uiEventCambiaReparto (r) {
 		}
 		var intestazione = "ULTIMA VENDITA";
 		if (stato === "CHIUSO") {
-			intestazione = document.getElementById(scontrino.totale_cassa).innerHTML;
+			intestazione = document.getElementById(scontrino.totali[0].id).innerHTML;
 		}
 		var divTile = document.getElementById("scontr_totale");
 		divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>" + intestazione + "</div>";
@@ -296,11 +296,19 @@ function uiEventCambiaReparto (r) {
 
 		function uiEventInviaScontrino() {
 			animaClick(this);
-			if (scontrino.totale_cassa[0] === "F") {
+			if (scontrino.totali[0].id[0] === "F") {
 				for (var i = 1; i < 5; i++)	scontrino.cliente[i] = "  " + document.getElementById("cliente" +i).value;
-			} else if (scontrino.totale_cassa[0] === "P") {
-				//alert(JSON.stringify(scontrino.righe));
+			} else if (scontrino.totali[0].id[0] === "P") {
+				//alert(JSON.stringify(scontrino.scontrino.totali[0].importorighe));
+			} else if (scontrino.totali[0].importo != 0) {
+				var tot_sc = Number(scontrino.getTotale().replace(",", "."));
+				if (scontrino.totali[0].importo != tot_sc) {
+					scontrino.totali.push({id: "T1", importo: 0});
+				} else {
+					scontrino.totali[0].importo = 0;
+				}
 			}
+
 			registratore.stampaScontrino(scontrino, new progressbar_com(function(risposta) {
 				if (risposta[0] !== "ERROR") {
 					scontrino.invia();
@@ -315,8 +323,8 @@ function uiEventCambiaReparto (r) {
 
 	var scontrino = {};
 	scontrino.righe = [];
+	scontrino.totali = [];
 	scontrino.cliente = ["Cliente:", "", "", "", ""];
-	scontrino.totale_cassa = "";
 
 	// Funzioni private
 	scontrino.id = [];
@@ -346,7 +354,7 @@ function uiEventCambiaReparto (r) {
 	scontrino.elimina = function (idx) {
 		if (idx == null) {
 			scontrino.id.length = scontrino.righe.length = 0;
-			scontrino.totale_cassa = "";
+			scontrino.totali.length = 0;
 		} else {
 			scontrino.id.splice(idx, 1);
 			scontrino.righe.splice(idx, 1);
@@ -412,7 +420,8 @@ function uiEventCambiaReparto (r) {
 		var res = [];
 		var tot = scontrino.getTotale().replace(",", ".");
 
-		if (resto) {
+		if (resto != null) {
+			resto = String(resto);
 			var a = Number(resto.replace(",", ".")) - tot;
 			if (a < 0) { a = 0; }
 			res.push(resto);
@@ -433,14 +442,14 @@ function uiEventCambiaReparto (r) {
 		return res;
 	}
 	scontrino.chiudi = function () {
-		scontrino.totale_cassa = "T1";
+		scontrino.totali.push({id: "T1", importo: 0});
 	}
 	scontrino.invia = function () {
 		scontrino.id.length = 0;
-		scontrino.totale_cassa = "";
+		scontrino.totali.length = 0;
 	}
 	scontrino.Riapri = function () {
-		scontrino.totale_cassa = "";
+		scontrino.totali.length = 0;
 		scontrino.id.length = 0;
 		for (var i=0; i<scontrino.righe.length; ++i) {
 			var riga = scontrino.righe[i];
@@ -449,7 +458,7 @@ function uiEventCambiaReparto (r) {
 	}
 	scontrino.getStato = function () {
 		if (scontrino.id.length > 0) {
-			if (scontrino.totale_cassa === "") return "APERTO";
+			if (scontrino.totali.length == 0) return "APERTO";
 			return "CHIUSO";
 		}
 		return "INVIATO";
@@ -527,31 +536,58 @@ function modalInputMenu () {
 }
 
 function modalInputTotale () {
-	document.getElementById("totale_annulla").onclick = uiEventAnnulla;
-	document.getElementById("totale_elimina").onclick = uiEventElimina;
+	var digits = "";
 	document.getElementById("dati_cliente").style.display = "none";
+	document.getElementById("bpasto").style.display = "none";
 	for (var i=1; i < 5; i++) document.getElementById("cliente" + i).value = "";
 
-//TODO: non e' il massimo, usare jQuery
 	var totali = document.getElementsByClassName("pulsante_totale");
 	for (var i=0; i < totali.length; i++) {
 		totali[i].className = totali[i].className.replace(" pulsante_selected", "");
 		totali[i].onclick = uiEventTotale;
 	}
 	totali[0].className += " pulsante_selected";
-	scontrino.totale_cassa = totali[0].id;
+	scontrino.totali[0].id = totali[0].id;
+
+	document.getElementById("totale_annulla").onclick = uiEventAnnulla;
+	document.getElementById("totale_elimina").onclick = uiEventElimina;
+	var tasti = document.getElementById("bpasto_keypad").getElementsByTagName("TD");
+	for (var i = 0; i < tasti.length; i++) { tasti[i].onclick = uiEventKeypad; }
+
+
+	function uiEventKeypad () {
+		animaClick(this);
+		var tasto = this.innerHTML;
+		if (tasto == "C") {
+			digits = "";
+		} else {
+			if (digits.length > 8) { return; }
+			digits += tasto;
+		}
+		scontrino.totali[0].importo = digits / 100;
+		updateVisore();
+	}
+	function updateVisore() {
+		document.getElementById("bpasto_digitato").innerHTML = "&euro; " +
+			scontrino.totali[0].importo.toFixed(2).replace(".", ",");
+	}
 
 	function uiEventTotale() {
+		document.getElementById("dati_cliente").style.display = "none";
+		document.getElementById("bpasto").style.display = "none";
 		var totali = document.getElementsByClassName("pulsante_selected");
 		totali[0].className = totali[0].className.replace(" pulsante_selected", "");
 		this.className += " pulsante_selected";
-		scontrino.totale_cassa = this.id;
+		scontrino.totali[0].id = this.id;
+		scontrino.totali[0].importo = 0;
 		updateTotale();
 
 		if (this.id[0] === "F") {
 			document.getElementById("dati_cliente").style.display = "block";
-		} else {
-			document.getElementById("dati_cliente").style.display = "none";
+		} else if (this.innerHTML === "BUONI PASTO") {
+			scontrino.totali[0].importo = Number(scontrino.getTotale().replace(",", "."));
+			updateVisore();
+			document.getElementById("bpasto").style.display = "block";
 		}
 	}
 	
@@ -742,11 +778,8 @@ function modalInputResto () {
 		updateResto();
 	}
 	function updateResto() {
-		var a = String((digits / 100).toFixed(2));
-		document.getElementById("resto_digitato").innerHTML = "&euro; " + a.replace(".", ",");
-
-		var b = scontrino.getResto(a)[1];
-		document.getElementById("resto_calcolato").innerHTML = "&euro; " + b;
+		document.getElementById("resto_digitato").innerHTML = "&euro; " + (digits / 100).toFixed(2).replace(".", ",");
+		document.getElementById("resto_calcolato").innerHTML = "&euro; " + scontrino.getResto(a)[1];
 	}
 }
 

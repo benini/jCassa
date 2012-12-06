@@ -68,12 +68,12 @@ Lettura Data e Ora corrente:
 	this.stampaScontrino = function (scontrino, onCompleted) {
 		var cmd = new cmdQueue().push("=C1");
 		//TODO: l'accesso diretto a scontrino non e' bello
-		if (scontrino.totale_cassa[0] === "F") {
+		if (scontrino.totali[0].id[0] === "F") {
 			for (var i = 1; i < 6; ++i) {
 				cmd.push("=A/$" + i + "/(" + scontrino.cliente[i -1].slice(0, 36) + ")");
 			}
 			cmd.push("=F/*4");
-		} else if (scontrino.totale_cassa[0] === "P") {
+		} else if (scontrino.totali[0].id[0] === "P") {
 			cmd.push("=F/*0");
 		}
 
@@ -106,7 +106,14 @@ Lettura Data e Ora corrente:
 				if (v != 0) cmd.push("=V" + segno + "/$" + v + desc);
 			}	
 		}
-		cmd.push("=T" + scontrino.totale_cassa.substr(1));
+		for (var t = 0; t < scontrino.totali.length; t++) {
+			var tot = "=T" + scontrino.totali[t].id.substr(1);
+			if (scontrino.totali[t].importo != 0) {
+				tot += "/$" + scontrino.totali[t].importo.toFixed(2).replace(".", "")
+			}
+			cmd.push(tot);
+		}
+
 		cmd.send(function (risposte) {
 			var res = [risposte[0]];
 
