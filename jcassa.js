@@ -298,6 +298,8 @@ function uiEventCambiaReparto (r) {
 			animaClick(this);
 			if (scontrino.totale_cassa[0] === "F") {
 				for (var i = 1; i < 5; i++)	scontrino.cliente[i] = "  " + document.getElementById("cliente" +i).value;
+			} else if (scontrino.totale_cassa[0] === "P") {
+				//alert(JSON.stringify(scontrino.righe));
 			}
 			registratore.stampaScontrino(scontrino, new progressbar_com(function(risposta) {
 				if (risposta[0] !== "ERROR") {
