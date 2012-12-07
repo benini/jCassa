@@ -90,10 +90,12 @@ Lettura Data e Ora corrente:
 		}
 
 		for (var i = 0; i < scontrino.righe.length; ++i) {
-			var r = "=R" + scontrino.righe[i].rep;
-			r += "/$" + scontrino.righe[i].prezzo.toFixed(2).replace(".", "");
-			if (scontrino.righe[i].quant > 1) {
+			if (scontrino.righe[i].quant * scontrino.righe[i].prezzo != 0) {
+				var r = "=R" + scontrino.righe[i].rep;
+				r += "/$" + scontrino.righe[i].prezzo.toFixed(2).replace(".", "");
 				r += "/*" + scontrino.righe[i].quant;
+			} else {
+				var r = '="/?A';
 			}
 			var desc = scontrino.getDesc(i);
 			if (desc.length > 0) {

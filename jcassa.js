@@ -304,6 +304,9 @@ function uiEventCambiaReparto (r) {
 				//alert(JSON.stringify(scontrino.scontrino.totali[0].importorighe));
 			} else if (scontrino.totali[0].importo != 0) {
 				var tot_sc = scontrino.getTotale();
+				if (scontrino.totali[0].importo > tot_sc) {
+					return alert("Errore: Importo buoni pasto superiore a totale scontrino");
+				}
 				if (scontrino.totali[0].importo != tot_sc) {
 					scontrino.totali.push({id: "T1", importo: 0});
 				} else {
