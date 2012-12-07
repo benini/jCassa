@@ -3,7 +3,7 @@ var registratore = new RCH();
 function RCH() {
 	this.getInfo = function(f_callback) {
 		var cmd = new cmdQueue().push("=C1");
-		cmd.push("<</?d").push("<</?f").push("<</?m").send(function (risposte) {
+		cmd.push("<</?d").push("<</?f").push("<</?m").push("=D1/(jCassa)").push("=D2/(v1.0)").send(function (risposte) {
 			var res = [risposte[0]];
 			if (risposte[0] === "OK") {
 				res.push(risposte[2].substr(1) 
@@ -64,6 +64,18 @@ Lettura Data e Ora corrente:
 
 		return this;
 	};
+
+	this.visualizzaResto = function (importo, resto) {
+		importo = String(importo).replace("\u20ac ", "");
+		resto = String(resto).replace("\u20ac ", "");
+		var d1 = "EURO                ".slice(0, 20 - importo.length);
+		var d2 = "RESTO               ".slice(0, 20 - resto.length);
+
+		var cmd = new cmdQueue();
+		cmd.push("=D1/(" + d1 + importo + ")");
+		cmd.push("=D2/(" + d2 + resto + ")");
+		cmd.send(function (msg) {});
+	}
 
 	this.stampaScontrino = function (scontrino, onCompleted) {
 		var cmd = new cmdQueue().push("=C1");

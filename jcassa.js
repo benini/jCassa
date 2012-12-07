@@ -180,20 +180,21 @@ function uiEventCambiaReparto (r) {
 	function uiEventAggiungiProdotto(idx_reparto, idx_prezzo) {
 		var divScontr = document.getElementById("scontr");
 		return function () {
-			animaClick(this);
-
 			var prezzo = reparti[idx_reparto].prezzi[idx_prezzo].prezzo;
 			var desc = reparti[idx_reparto].prezzi[idx_prezzo].desc;
 
 			if (prezzo.length < 1) {
 				var idx = scontrino.push(1 + idx_reparto, 1, "", 0); // Forzo l'aggiunta di una riga anche se ce n'è un'altra uguale
-				modalInput("ProdottoPrezzo", addTile());
+				var tile = addTile();
 				updateTileProdotto(idx, 1, prezzo, desc);
+				modalInput("ProdottoPrezzo", tile);
 			} else {
 				var idx = scontrino.push(1 + idx_reparto, 1, desc, prezzo);
 				if (idx >= divScontr.childNodes.length) addTile();
 				updateTileProdotto(idx);
 			}
+
+			animaClick(this);
 		}
 
 		function addTile() {
@@ -782,13 +783,25 @@ function modalInputResto () {
 	var prev_modal = "";
 	if (document.getElementById("modalInputTotale").style.display == "block") { prev_modal = "Totale"; }
 	document.getElementById("resto_annulla").onclick = uiEventAnnulla;
-	document.getElementById("resto_ok").onclick = uiEventAnnulla;
+	document.getElementById("resto_ok").onclick = uiEventOK;
 	var tasti = document.getElementById("resto_keypad").getElementsByTagName("TD");
 	for (var i = 0; i < tasti.length; i++) { tasti[i].onclick = uiEventKeypad; }
 	updateResto();
 
 	function uiEventAnnulla() {
 		animaClick(this);
+		chiudi();
+	}
+
+	function uiEventOK() {
+		animaClick(this);
+		registratore.visualizzaResto(
+			document.getElementById("resto_digitato").innerHTML,
+			document.getElementById("resto_calcolato").innerHTML);
+		chiudi();
+	}
+
+	function chiudi() {
 		if (prev_modal != "") {
 			document.getElementById("modalInputResto").style.display = "none";
 			document.getElementById("modalInputTotale").style.display = "block";
