@@ -8,6 +8,8 @@ function DEMO() {
 
 	this.aperturaCassetto = this.letturaGiornaliera = this.chiusuraFiscale = this.stampaUltimoScontrino = this.getInfo;
 
+	this.visualizzaResto = function() {};
+
 	this.stampaScontrino = function (scontrino, onCompleted) {
 		var res = ["WARNING", "Versione Demo!"];
 		onCompleted(res);

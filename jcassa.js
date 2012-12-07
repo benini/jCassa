@@ -447,6 +447,9 @@ function uiEventCambiaReparto (r) {
 	scontrino.getTotaleStr = function () {
 		return scontrino.getTotale().toFixed(2).replace(".", ",");
 	}
+
+	scontrino.importo_resto = 0;
+
 	scontrino.getResto = function (resto) {
 		var res = [];
 		var tot = scontrino.getTotale();
@@ -459,6 +462,8 @@ function uiEventCambiaReparto (r) {
 			res.push(a.toFixed(2).replace(".", ","));
 		} else {
 			var tagli = [1, 5, 10, 50];
+			if (scontrino.importo_resto > tot) tagli = [scontrino.importo_resto];
+
 			for (var i = 0; i < tagli.length; i++) {
 				var a = Math.ceil(tot / tagli[i]) * tagli[i];
 				var b = a - tot;
@@ -473,6 +478,7 @@ function uiEventCambiaReparto (r) {
 		return res;
 	}
 	scontrino.chiudi = function () {
+		scontrino.importo_resto = 0;
 		scontrino.totali.push({id: "T1", importo: 0});
 	}
 	scontrino.invia = function () {
@@ -795,6 +801,8 @@ function modalInputResto () {
 
 	function uiEventOK() {
 		animaClick(this);
+		scontrino.importo_resto = digits / 100;
+		updateTotale();
 		registratore.visualizzaResto(
 			document.getElementById("resto_digitato").innerHTML,
 			document.getElementById("resto_calcolato").innerHTML);
