@@ -391,7 +391,7 @@ function uiEventCambiaReparto (r) {
 		scontrino.righe[idx].quant = riga.quant;
 		scontrino.righe[idx].prezzo = riga.prezzo;
 		scontrino.righe[idx].variaz =riga.variaz;
-		scontrino.id[idx] = scontrino.creaID(riga.rep, riga.desc, riga.prezzo, riga.variaz);
+		scontrino.id[idx] = scontrino.creaID(scontrino.righe[idx].rep, riga.desc, riga.prezzo, riga.variaz);
 		return "";
 	}
 
@@ -789,7 +789,12 @@ function modalInputResto () {
 
 	function uiEventAnnulla() {
 		animaClick(this);
-		modalInput(prev_modal);
+		if (prev_modal != "") {
+			document.getElementById("modalInputResto").style.display = "none";
+			document.getElementById("modalInputTotale").style.display = "block";
+		} else {
+			modalInput(prev_modal);
+		}
 	}
 
 	function uiEventKeypad () {
@@ -804,7 +809,8 @@ function modalInputResto () {
 		updateResto();
 	}
 	function updateResto() {
-		document.getElementById("resto_digitato").innerHTML = "&euro; " + (digits / 100).toFixed(2).replace(".", ",");
+		var a = digits / 100;
+		document.getElementById("resto_digitato").innerHTML = "&euro; " + a.toFixed(2).replace(".", ",");
 		document.getElementById("resto_calcolato").innerHTML = "&euro; " + scontrino.getResto(a)[1];
 	}
 }
