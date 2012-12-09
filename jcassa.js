@@ -624,6 +624,15 @@ function modalInputTotale () {
 
 		if (this.id[0] === "F") {
 			document.getElementById("dati_cliente").style.display = "block";
+			var inputs = document.getElementById("dati_cliente").getElementsByTagName("input");
+			for (var i = 0; i < inputs.length; i++) inputs[i].onkeydown = function(e) {
+			    if (e && e.keyCode == 13) {//Enter
+					var idx = Number(this.id.slice(7));
+					if (idx++ == 4) this.blur();
+					else document.getElementById("cliente" + idx).focus();
+				}
+			}
+			inputs[0].focus();
 		} else if (this.innerHTML === "BUONI PASTO") {
 			scontrino.totali[0].importo = scontrino.getTotale();
 			updateVisore();
