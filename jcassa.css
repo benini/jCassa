@@ -304,7 +304,8 @@ body {
 }
 
 .keypad .keypad_tasti_variaz_sel {
-	border-color: yellow;
+	border-width: 3px;
+	border-color: #f5fc00;
 }
 
 .keypad_variaz {}
@@ -326,7 +327,7 @@ body {
 	clear: right;
 	margin-right: 2px;
 	width: 234px;
-	height: 56px;
+	height: 54px;
 	border-style: solid;
 	border-width: 2px;
 	font-family: sans-serif;
@@ -336,7 +337,6 @@ body {
 .keypad_tile-header {
 	font-size:18px;
 	text-align:center;
-	margin-bottom: 2px;
 }
 
 .keypad_tile-digits {
@@ -351,8 +351,8 @@ body {
 }
 
 .keypad_colore-quantita {
-	border-color: #01c5ff;
-	background-color: #01bcf3;
+	border-color: #34d065;
+	background-color: #65d065;
 }
 
 .keypad_colore-variaz {
@@ -367,43 +367,44 @@ body {
 
 
 .keypad_animazione {
+	position: absolute;
+	right: 0px;
 	-webkit-animation-duration:0.3s;
 	-webkit-animation-timing-function: linear;
 	-webkit-animation-fill-mode: forwards;
 }
 
-@-webkit-keyframes move_down {
-	0%   {-webkit-transform: translate(0px,0px);}
-	10%   {-webkit-transform: translate(0px,40px);}
-	70%   {-webkit-transform: translate(-90px,40px) rotate(-40deg);}
-	100% {-webkit-transform: translate(0px,100px);}
+@-webkit-keyframes pos0 {
+	0% {-webkit-transform: translate(0px,0px) scale(1, 0.90);}
+	100% {-webkit-transform: translate(0px,0px) scale(1, 0.90);}
 }
 
-@-webkit-keyframes move_down_fast {
-	0% {-webkit-transform: translate(0px,100px);}
-	100% {-webkit-transform: translate(0px,100px);}
+@-webkit-keyframes pos1 {
+	0% {-webkit-transform: translate(0px,56px) scale(1, 0.90);}
+	100% {-webkit-transform: translate(0px,56px) scale(1, 0.90);}
 }
 
-@-webkit-keyframes move_down_reverse {
-	0% {-webkit-transform: translate(0px, 100px);}
-	50% {-webkit-transform: translate(0px, 100px);}
-	100%   {-webkit-transform: translate(0px,0px);}
+@-webkit-keyframes pos2 {
+	0% {-webkit-transform: translate(0px,150px);}
+	100% {-webkit-transform: translate(0px,150px);}
 }
 
-@-webkit-keyframes move_up {
-	50%   {-webkit-transform: translate(0px,0px);}
-	100% {-webkit-transform: translate(0px,-100px);}
+@-webkit-keyframes from0 {
+	0% {-webkit-transform: translate(0px,0px) scale(1, 0.90);}
+	100% {-webkit-transform: translate(0px,150px);}
 }
 
-@-webkit-keyframes move_up_fast {
-	0% {-webkit-transform: translate(0px,-100px);}
-	100% {-webkit-transform: translate(0px,-100px);}
+@-webkit-keyframes to0 {
+	0% {-webkit-transform: translate(0px,150px);}
+	100% {-webkit-transform: translate(0px,0px) scale(1, 0.90);}
 }
 
-@-webkit-keyframes move_up_reverse {
-	0%   {-webkit-transform: translate(0px,-100px);}
-	10%   {-webkit-transform: translate(0px,-56px);}
-	70%   {-webkit-transform: translate(-90px,-56px) rotate(-40deg);}
-	100% {-webkit-transform: translate(0px,0px);}
+@-webkit-keyframes from1 {
+	0% {-webkit-transform: translate(0px,56px) scale(1, 0.90);}
+	100% {-webkit-transform: translate(0px,150px);}
 }
 
+@-webkit-keyframes to1 {
+	0% {-webkit-transform: translate(0px,150px);}
+	100% {-webkit-transform: translate(0px,56px) scale(1, 0.90);}
+}
