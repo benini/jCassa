@@ -15,6 +15,7 @@ window.addEventListener('load', function() {
 		modalInput("Menu");
 	}
 	document.getElementById("scontr_resto").onclick = function () { animaClick(this); modalInput("Resto"); };
+	document.getElementById("scontr_variaz").onclick = function () { animaClick(this); };
 
 	var reg_pg_c = 0;
 	var reg_pg_i = setInterval(function(){
@@ -122,18 +123,30 @@ function progressbar_com (onCompleted) {
 	}
 }
 
+//ios6 bug: sembra che lo scroll annulli i timeout (ad esempio se il pulsante viene premuto strisciando)
+window.addEventListener('scroll', function () {
+//	resetTiles();
+	setTimeout(resetTiles, 60);
+});
+
+function resetTiles() {
+	var t = document.getElementsByClassName("tile_middle");
+	for (var i=0; i < t.length; i++) {
+		t[i].className = t[i].className.replace(" tile_middle", "");
+	}
+}
 
 function animaClick(tile) {
-	tile.className = tile.className.replace(" tile_reset", "");
 	tile.className += " tile_middle";
-	setTimeout(function() {tile.className = tile.className.replace(" tile_middle", " tile_reset");}, 100);
-/*		var click = document.getElementById("click_snd");
-		try { // Sull'Ipad currentTime a volte non funziona (quando il suono e' gia' finito?)
-			click.pause();
-			click.currentTime = 0;
-		} catch (e) {}
+	setTimeout(resetTiles, 70);
 
-		click.play();
+/*	var click = document.getElementById("click_snd");
+	try { // Sull'Ipad currentTime a volte non funziona (quando il suono e' gia' finito?)
+		click.pause();
+		click.currentTime = 0;
+	} catch (e) {}
+
+	click.play();
 */
 }
 

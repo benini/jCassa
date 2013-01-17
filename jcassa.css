@@ -32,13 +32,6 @@ body {
 	overflow: hidden;
 }
 
-.tile_reset {
-	-webkit-transform: scale(1);
-	-moz-transform: scale(1);
-	-ms-transform: scale(1);
-	transform: scale(1);
-}
-
 .tile_middle {
 	-webkit-transform: scale(0.92);
 	-moz-transform: scale(0.92);
@@ -73,7 +66,7 @@ body {
 
 .tile-reparti {
 	width: 99px;
-	height: 66px;
+	height: 70px;
     padding-top: 0px;
 	font-size: 16px;
 	background-size:107px 74px;
@@ -148,9 +141,12 @@ body {
 	color: #FFF;
 	font-size: 18px;
 	text-align: left;
-	background-color: #6CB71E;
-	border-color: #7ABD34;
+	background-color: #D8512B;
+	border-color: #DC6241;
 	background-image: url('img/tot-stampa.gif');
+	background-size: 100%;
+	background-position: center center;
+	background-repeat: no-repeat;
 }
 
 .tile-totale-menu {
@@ -210,7 +206,7 @@ body {
 
 .pulsante_elimina {
 	background-image: url('img/elimina.png');
-	background-size: 70%;
+	background-size: 50px;
 	background-color: #893bbb;
 	border-color: #ffffff;
 }
@@ -223,7 +219,7 @@ body {
 	text-align: center;
 	margin-right: 6px;
 	margin-bottom: 8px;
-	background-image: url('img/pulsante_testo.png');
+	background-image: url('img/pulsante_testo.jpg');
 	background-size: 100%;
 }
 
@@ -240,7 +236,7 @@ body {
 	text-align: center;
 	margin-right: 6px;
 	margin-bottom: 8px;
-	background-image: url('img/pulsante_testo.png');
+	background-image: url('img/pulsante_testo.jpg');
 	background-size: 100%;
 }
 

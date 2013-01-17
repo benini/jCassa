@@ -226,7 +226,7 @@ Lettura Data e Ora corrente:
 			} else { */
 			xmlhttp.open("POST", "reg/rch.php");
 			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded;charset=ISO-8859-1");
-			xmlhttp.send("i=192.168.1.29:23&q=" + encodeURIComponent(sc));
+			xmlhttp.send("i=192.168.1.10:23&q=" + encodeURIComponent(sc));
 
 			return this;
 		}
