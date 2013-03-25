@@ -9,7 +9,7 @@ window.addEventListener('load', function() {
 
 	preloadImmagini();
 	loadProdotti();
-	updateTotale();
+	updateTotale("INVIATO");
 	document.getElementById("menu").onclick = function() {
 		animaClick(this);
 		modalInput("Menu");
@@ -193,6 +193,7 @@ function uiEventCambiaReparto (r) {
 	function uiEventAggiungiProdotto(idx_reparto, idx_prezzo) {
 		var divScontr = document.getElementById("scontr");
 		return function () {
+			if (stato_precedente === "INVIATO") scontrino.reset();
 			var prezzo = reparti[idx_reparto].prezzi[idx_prezzo].prezzo;
 			var desc = reparti[idx_reparto].prezzi[idx_prezzo].desc;
 
@@ -215,10 +216,7 @@ function uiEventCambiaReparto (r) {
 			divTile.className = "metro-tile tile-scontrino " + reparti[idx_reparto].col;
 			divTile.onclick = function() {
 				animaClick(this);
-				if (scontrino.getStato() !== "APERTO") {
-					scontrino.Riapri();
-					updateTotale();
-				}
+				updateTotale("APERTO");
 				animaSelezionaRigaScontrino(this);
 				modalInput("Prodotto", this);
 			}
@@ -240,15 +238,15 @@ function uiEventCambiaReparto (r) {
 			tile.className = tile.className.replace(" tile-scontrino-variaz", "");
 		}
 		animaSelezionaRigaScontrino(tile);
-		updateTotale();
+		updateTotale("APERTO");
 		return res;
 	}
 
 	var stato_precedente = "";
 
-	function updateTotale() {
+	function updateTotale(stato) {
 		var tot = document.getElementById("subtot");
-		var stato = scontrino.getStato();
+		if (typeof stato === "undefined") stato = stato_precedente;
 		if (stato_precedente !== stato) {
 			if (stato === "INVIATO") {
 				var divScontr = document.getElementById("scontr");
@@ -256,15 +254,15 @@ function uiEventCambiaReparto (r) {
 				tot.onclick = "";
 				tot.className = tot.className.replace(" tile-totale-subtotale", " tile-totale-menu");
 				tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-menu");
-				document.getElementById("subtot_riga1").innerHTML = "jCassa";
-				document.getElementById("subtot_riga2").innerHTML = "v 1.0";
+				document.getElementById("subtot_riga1").innerHTML = "";
+				document.getElementById("subtot_riga2").innerHTML = "";
 				document.getElementById("menu").style.display = "block";
-				var sc_display = (scontrino.getTotale() != 0) ? "block" : "none";
-				document.getElementById("scontr_chiusura").style.display = sc_display;
+				document.getElementById("scontr_variaz").style.display = "none";
 			} else if (stato === "APERTO") {
 				tot.className = tot.className.replace(" tile-totale-stampa", " tile-totale-subtotale");
 				tot.className = tot.className.replace(" tile-totale-menu", " tile-totale-subtotale");
 				document.getElementById("menu").style.display = "none";
+				document.getElementById("subtot_riga1").innerHTML = "SubTotale";
 				document.getElementById("scontr_chiusura").style.display = "none";
 			} else if (stato === "CHIUSO") {
 				tot.onclick = uiEventInviaScontrino;
@@ -272,6 +270,7 @@ function uiEventCambiaReparto (r) {
 				document.getElementById("subtot_riga1").innerHTML = "";
 				document.getElementById("subtot_riga2").innerHTML = "STAMPA";
 				document.getElementById("scontr_chiusura").style.display = "block";
+				document.getElementById("scontr_variaz").style.display = "block";
 			}
 
 			stato_precedente = stato;
@@ -279,58 +278,63 @@ function uiEventCambiaReparto (r) {
 
 		if (stato === "APERTO") {
 			tot.onclick = uiEventChiudiScontrino; //ModalInputProdotto cambia la funzione su onclick
-			document.getElementById("subtot_riga1").innerHTML = "SubTotale";
-			document.getElementById("subtot_riga2").innerHTML = "&euro; " + scontrino.getTotaleStr();
-			return;
-		}
-		var intestazione = "ULTIMA VENDITA";
-		if (stato === "CHIUSO") {
-			intestazione = document.getElementById(scontrino.totali[0].id).innerHTML;
-		}
-		var divTile = document.getElementById("scontr_totale");
-		divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>" + intestazione + "</div>";
-		divTile.innerHTML += "TOTALE<br> &euro; " + scontrino.getTotaleStr();
+			document.getElementById("subtot_riga2").innerHTML = "&euro; " + scontrino.getTotale().toFixed(2).replace(".", ",");
+		} else {
+			var elem = document.getElementById("scontr_totale");
+			if (stato === "CHIUSO") {
+				elem.innerHTML = "<div style='text-align:center;'>" + "TOTALE" + "</div>";
+			} else if (stato === "INVIATO") {
+				elem.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>" + "ULTIMA VENDITA" + "</div>";
+				elem.innerHTML += "TOTALE<br>";
+				document.getElementById("scontr_chiusura").style.display = (scontrino.getTotale() != 0) ? "block" : "none";
+			}
 
-		divTile = document.getElementById("scontr_resto");
-		divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>RESTO</div>";
-		var i = 0;
-		var resti = scontrino.getResto();
-		while (i < resti.length) {
-			divTile.innerHTML += "<div style='float:left; width: 44%;'> &euro; " + resti[i++] +
-			"</div><div style='float:left; width: 20%;'>==></div> &euro; " + resti[i++] + "<br>";
+			var totali = scontrino.getTotaliArray();
+			elem.innerHTML += "&euro; " + totali[0].importo.toFixed(2).replace(".", ",");
+			for (var i = 1; totali.length > 2 && i < totali.length; i++) {
+				elem.innerHTML += "<div style='font-size:16px; margin-top: 10px; text-align:right;'>"
+					+ document.getElementById(totali[i].id).innerHTML
+					+ "<br>&euro; " + totali[i].importo.toFixed(2).replace(".", ",") + "</div>";
+			}
+
+			var divTile = document.getElementById("scontr_resto");
+			divTile.innerHTML = "<div style='font-size:18px; margin-bottom: 10px; text-align:center;'>RESTO</div>";
+
+			var resti = scontrino.getResto();
+			if (resti.length == 0) {
+				divTile.innerHTML += "<div style='float:left; width: 44%;'></div>" +
+				"<div style='float:left; width: 20%;'></div> &euro; 0,00";
+			}
+			for (var i = 0; i < resti.length;) {
+				divTile.innerHTML += "<div style='float:left; width: 44%;'> &euro; " + resti[i++] +
+				"</div><div style='float:left; width: 20%;'>==></div> &euro; " + resti[i++] + "<br>";
+			}
+			divTile.scrollIntoView();
 		}
-		divTile.scrollIntoView();
 
 		function uiEventChiudiScontrino () {
 			animaClick(this);
-			scontrino.chiudi();
-			updateTotale();
+			updateTotale("CHIUSO");
 			animaSelezionaRigaScontrino();
 			modalInput("Totale");
 		}
 
 		function uiEventInviaScontrino() {
 			animaClick(this);
-			if (scontrino.totali[0].id[0] === "F") {
+			var totali = scontrino.getTotaliArray();
+			if (totali[totali.length -1].importo < 0) {
+				return alert("Errore: Importo buoni pasto superiore a totale scontrino");
+			}
+			var tipo_totale = totali[1].id[0];
+			if (tipo_totale === "F") {
 				for (var i = 1; i < 5; i++)	scontrino.cliente[i] = "  " + document.getElementById("cliente" +i).value;
-			} else if (scontrino.totali[0].id[0] === "P") {
+			} else if (tipo_totale === "P") {
 				//alert(JSON.stringify(scontrino.scontrino.totali[0].importorighe));
-			} else if (scontrino.totali[0].importo != 0) {
-				var tot_sc = scontrino.getTotale();
-				if (scontrino.totali[0].importo > tot_sc) {
-					return alert("Errore: Importo buoni pasto superiore a totale scontrino");
-				}
-				if (scontrino.totali[0].importo != tot_sc) {
-					scontrino.totali.push({id: "T1", importo: 0});
-				} else {
-					scontrino.totali[0].importo = 0;
-				}
 			}
 
 			registratore.stampaScontrino(scontrino, new progressbar_com(function(risposta) {
 				if (risposta[0] !== "ERROR") {
-					scontrino.invia();
-					updateTotale();
+					updateTotale("INVIATO");
 					modalInput("");
 				}
 				if (risposta[0] !== "OK") alert(risposta[1]);
@@ -339,52 +343,43 @@ function uiEventCambiaReparto (r) {
 	}
 
 
-	var scontrino = {};
-	scontrino.righe = [];
-	scontrino.totali = [];
-	scontrino.cliente = ["Cliente:", "", "", "", ""];
+	var scontrino = new Scontrino();
 
-	// Funzioni private
-	scontrino.id = [];
-	scontrino.creaID = function (rep, desc, prezzo, variaz) {
-		return "r" + rep + "d" + desc + "p" + prezzo + variaz;
-	}
+function Scontrino() {
+	this.righe = [];
+	this.totali = [];
+	this.cliente = [];
 
-	// Funzioni pubbliche
-	scontrino.push = function (rep, quant, desc, prezzo) {
-		if (scontrino.id.length != scontrino.righe.length) scontrino.righe.length = scontrino.id.length;
+	this.reset = function () { init.call(this);}
 
+	this.push = function (rep, quant, desc, prezzo) {
 		quant = Number(String(quant).replace(",","."));
 		prezzo = Number(String(prezzo).replace(",","."));
-		var id = scontrino.creaID(rep, desc, prezzo, "");
+		var id = creaID(rep, desc, prezzo, "");
 
-		for (var i = 0; i < scontrino.id.length; i++) {
-			if (id === scontrino.id[i]) {
-				scontrino.righe[i].quant += quant;
+		for (var i = 0; i < index_.length; i++) {
+			if (id === index_[i]) {
+				this.righe[i].quant += quant;
 				return i;
 			}
 		}
 
-		scontrino.righe.push({rep: rep, quant: quant, desc: desc, prezzo: prezzo, variaz: ""});
-		return scontrino.id.push(id) -1;
+		this.righe.push({rep: rep, quant: quant, desc: desc, prezzo: prezzo, variaz: ""});
+		return index_.push(id) -1;
 	}
 
-	scontrino.elimina = function (idx) {
-		if (idx == null) {
-			scontrino.id.length = scontrino.righe.length = 0;
-			scontrino.totali.length = 0;
-		} else {
-			scontrino.id.splice(idx, 1);
-			scontrino.righe.splice(idx, 1);
-		}
+	this.elimina = function (idx) {
+		index_.splice(idx, 1);
+		this.righe.splice(idx, 1);
+		return index_.length;
 	}
 
-	scontrino.set = function (idx, quant, prezzo, desc, variaz) {
+	this.set = function (idx, quant, prezzo, desc, variaz) {
 		var riga = {
-			desc: scontrino.righe[idx].desc,
-			quant: scontrino.righe[idx].quant,
-			prezzo: scontrino.righe[idx].prezzo,
-			variaz: scontrino.righe[idx].variaz
+			desc: this.righe[idx].desc,
+			quant: this.righe[idx].quant,
+			prezzo: this.righe[idx].prezzo,
+			variaz: this.righe[idx].variaz
 		};
 
 		if (desc && desc != "") { riga.desc = desc; }
@@ -399,125 +394,124 @@ function uiEventCambiaReparto (r) {
 		}
 
 		// Controllo che la riga non sia negativa
-		var chk_variaz_number = scontrino.calcolaVariaz(riga.quant, riga.prezzo, riga.variaz);
+		var chk_variaz_number = calcolaVariaz(riga.quant * riga.prezzo, riga.variaz);
 		if ((riga.quant * riga.prezzo + chk_variaz_number) < 0) {
 			return "Errore: importo negativo";
 		}
 
-		scontrino.righe[idx].desc = riga.desc;
-		scontrino.righe[idx].quant = riga.quant;
-		scontrino.righe[idx].prezzo = riga.prezzo;
-		scontrino.righe[idx].variaz =riga.variaz;
-		scontrino.id[idx] = scontrino.creaID(scontrino.righe[idx].rep, riga.desc, riga.prezzo, riga.variaz);
+		this.righe[idx].desc = riga.desc;
+		this.righe[idx].quant = riga.quant;
+		this.righe[idx].prezzo = riga.prezzo;
+		this.righe[idx].variaz =riga.variaz;
+		index_[idx] = creaID(this.righe[idx].rep, riga.desc, riga.prezzo, riga.variaz);
 		return "";
 	}
 
-	scontrino.getPrezzo = function (idx) {
-		return scontrino.righe[idx].prezzo.toFixed(2).replace(".", ",");
+	this.getPrezzo = function (idx) {
+		return this.righe[idx].prezzo.toFixed(2).replace(".", ",");
 	}
 
-	scontrino.getQuantita = function (idx) {
-		return String(scontrino.righe[idx].quant).replace(".", ",");
+	this.getQuantita = function (idx) {
+		return String(this.righe[idx].quant).replace(".", ",");
 	}
 
-	scontrino.getDesc = function (idx) {
-		return scontrino.righe[idx].desc;
+	this.getDesc = function (idx) {
+		return this.righe[idx].desc;
 	}
 
-	scontrino.getVariaz = function (idx) {
-		var res = String(scontrino.righe[idx].variaz);
+	this.getVariaz = function (idx) {
+		var res = String(this.righe[idx].variaz);
 		if (res.length > 0 && res.indexOf("%") == -1) {
 			res = res[0] + " &euro;" + res.slice (1);
 		}
 		return res.replace(".", ",");
 	}
 
-	scontrino.calcolaVariaz = function(quant, prezzo, variaz) {
+	this.getVariazNumber = function(idx) {
+		return calcolaVariaz(this.righe[idx].quant * this.righe[idx].prezzo, this.righe[idx].variaz);
+	}
+
+	this.getTotale = function () {
+		var scontrino_totale = 0;
+		for (var i=0; i < this.righe.length; ++i) {
+			scontrino_totale += this.righe[i].quant * this.righe[i].prezzo + this.getVariazNumber(i);
+		}
+		return scontrino_totale;
+	}
+
+	this.getTotaliArray = function () {
+		var res = [{id: "", importo: this.getTotale()}];
+		var tot_parz = 0;
+		for (var i = 0; i < this.totali.length; i++) {
+			tot_parz += this.totali[i].importo;
+			res.push({id: this.totali[i].id, importo: this.totali[i].importo});
+		}
+		if (res[res.length -1].importo != 0) res.push({id: "T1", importo: 0});
+		res[res.length -1].importo = this.getTotale() - tot_parz;
+		return res;
+	}
+
+	this.setResto = function (resto) {
+		if (resto != 0) resto_ = [resto];
+	}
+
+	this.getResto = function () { // Ritorniamo il resto sull'ultimo totale
+		var res = [];
+		var tot = this.getTotale();
+		for (var i = 0; i < this.totali.length; i++) { tot -= this.totali[i].importo; }
+		//var totali = this.getTotaliArray();
+		//var tot = totali[totali.length -1].importo;
+		if (tot < 0) return res;
+
+		if (resto_.length == 1) {
+			var b = resto_[0] - tot;
+			if (b < 0) b= 0;
+			res.push(resto_[0]);
+			res.push(b);
+		} else {
+			for (var i = 0; i < resto_.length; i++) {
+				var a = Math.ceil(tot / resto_[i]) * resto_[i];
+				var b = a - tot;
+				if (b != 0 && res.indexOf(a) == -1) { res.push(a); res.push(b); }
+			}
+		}
+
+		for (var i = 0; i < res.length; i++) {
+			res[i] = res[i].toFixed(2).replace(".", ",");
+		}
+		return res;
+	}
+
+	//Private:
+	var resto_ = [];
+	var index_ = [];
+
+	return init.call(this);
+
+	function init () {
+		resto_ = [1, 5, 10, 50];
+		index_ = [];
+		this.righe = [];
+		this.totali = [{id: "T1", importo: 0}];
+		this.cliente = ["Cliente:", "", "", "", ""];
+	}
+
+	function creaID (rep, desc, prezzo, variaz) {
+		return "r" + rep + "d" + desc + "p" + prezzo + variaz;
+	}
+
+	function calcolaVariaz (importo, variaz) {
 		variaz = String(variaz).replace(",", ".");
 		if (variaz.indexOf("%") == -1) {
 			var v = Number(variaz.slice(1));
 		} else {
 			var perc = Number(variaz.slice(1, -1));
-			var imp = quant * prezzo;
-			var v = Math.round(imp * perc) / 100;
+			var v = Math.round(importo * perc) / 100;
 		}
 		if (variaz[0] == "-") v = -v;
 		return v;
 	}
-
-	scontrino.getVariazNumber = function(idx) {
-		return scontrino.calcolaVariaz(
-			scontrino.righe[idx].quant,
-			scontrino.righe[idx].prezzo,
-			scontrino.righe[idx].variaz
-		);
-	}
-
-	scontrino.getTotale = function () {
-		var scontrino_totale = 0;
-		for (var i=0; i < scontrino.righe.length; ++i) {
-			scontrino_totale += scontrino.righe[i].quant * scontrino.righe[i].prezzo + scontrino.getVariazNumber(i);
-		}
-		return scontrino_totale;
-	}
-	scontrino.getTotaleStr = function () {
-		return scontrino.getTotale().toFixed(2).replace(".", ",");
-	}
-
-	scontrino.importo_resto = 0;
-
-	scontrino.getResto = function (resto) {
-		var res = [];
-		var tot = scontrino.getTotale();
-
-		if (resto != null) {
-			resto = String(resto);
-			var a = Number(resto.replace(",", ".")) - tot;
-			if (a < 0) { a = 0; }
-			res.push(resto);
-			res.push(a.toFixed(2).replace(".", ","));
-		} else {
-			var tagli = [1, 5, 10, 50];
-			if (scontrino.importo_resto > tot) tagli = [scontrino.importo_resto];
-
-			for (var i = 0; i < tagli.length; i++) {
-				var a = Math.ceil(tot / tagli[i]) * tagli[i];
-				var b = a - tot;
-				if (b != 0 && res.indexOf(a) == -1) { res.push(a); res.push(b); }
-			}
-
-			for (var i = 0; i < res.length; i++) {
-				res[i] = res[i].toFixed(2).replace(".", ",");
-			}
-		}
-
-		return res;
-	}
-	scontrino.chiudi = function () {
-		scontrino.importo_resto = 0;
-		scontrino.totali.push({id: "T1", importo: 0});
-	}
-	scontrino.invia = function () {
-		scontrino.id.length = 0;
-		scontrino.totali.length = 0;
-	}
-	scontrino.Riapri = function () {
-		scontrino.totali.length = 0;
-		scontrino.id.length = 0;
-		for (var i=0; i<scontrino.righe.length; ++i) {
-			var riga = scontrino.righe[i];
-			scontrino.id.push(scontrino.creaID(riga.rep, riga.desc, riga.prezzo));
-		}
-	}
-	scontrino.getStato = function () {
-		if (scontrino.id.length > 0) {
-			if (scontrino.totali.length == 0) return "APERTO";
-			return "CHIUSO";
-		}
-		return "INVIATO";
-	}
-
-
+}
 
 
 /* *****************************************
@@ -619,6 +613,7 @@ function modalInputTotale () {
 		}
 		scontrino.totali[0].importo = digits / 100;
 		updateVisore();
+		updateTotale("CHIUSO");
 	}
 	function updateVisore() {
 		document.getElementById("bpasto_digitato").innerHTML = "&euro; " +
@@ -633,7 +628,7 @@ function modalInputTotale () {
 		this.className += " pulsante_selected";
 		scontrino.totali[0].id = this.id;
 		scontrino.totali[0].importo = 0;
-		updateTotale();
+		digits = "";
 
 		if (this.id[0] === "F") {
 			document.getElementById("dati_cliente").style.display = "block";
@@ -651,19 +646,19 @@ function modalInputTotale () {
 			updateVisore();
 			document.getElementById("bpasto").style.display = "block";
 		}
+		updateTotale("CHIUSO");
 	}
 	
 	function uiEventAnnulla() {
 		animaClick(this);
-		scontrino.Riapri();
-		updateTotale();
+		updateTotale("APERTO");
 		modalInput("");
 	}
 
 	function uiEventElimina() {
 		animaClick(this);
-		scontrino.elimina();
-		updateTotale();
+		scontrino.reset();
+		updateTotale("INVIATO");
 		modalInput("");
 	}
 }
@@ -700,7 +695,7 @@ function modalInputProdotto (tile, keypad_iniziale) {
 
 	function uiEventAnnulla() {
 		animaClick(this);
-		updateTotale();
+		updateTotale("APERTO");
 		modalInput("");
 	}
 
@@ -716,9 +711,13 @@ function modalInputProdotto (tile, keypad_iniziale) {
 
 	function uiEventElimina() {
 		animaClick(this);
-		scontrino.elimina(idx);
 		document.getElementById("scontr").removeChild(tile);
-		updateTotale();
+		if (scontrino.elimina(idx) != 0) {
+			updateTotale("APERTO");
+		} else {
+			scontrino.reset();
+			updateTotale("INVIATO");
+		}
 		modalInput("");
 	}
 
@@ -822,7 +821,7 @@ function modalInputResto () {
 
 	function uiEventOK() {
 		animaClick(this);
-		scontrino.importo_resto = digits / 100;
+		scontrino.setResto(digits / 100);
 		updateTotale();
 		registratore.visualizzaResto(
 			document.getElementById("resto_digitato").innerHTML,
@@ -852,8 +851,12 @@ function modalInputResto () {
 	}
 	function updateResto() {
 		var a = digits / 100;
+		var totali = scontrino.getTotaliArray();
+		var tot = totali[totali.length -1].importo;
+		var r = (tot < 0) ? 0 : a - tot;
+		var resto = (r < 0) ? "0,00" : r.toFixed(2).replace(".", ",");
 		document.getElementById("resto_digitato").innerHTML = "&euro; " + a.toFixed(2).replace(".", ",");
-		document.getElementById("resto_calcolato").innerHTML = "&euro; " + scontrino.getResto(a)[1];
+		document.getElementById("resto_calcolato").innerHTML = "&euro; " + resto;
 	}
 }
 

@@ -80,24 +80,28 @@ Lettura Data e Ora corrente:
 	this.stampaScontrino = function (scontrino, onCompleted) {
 		var cmd = new cmdQueue().push("=C1");
 		//TODO: l'accesso diretto a scontrino non e' bello
-		if (scontrino.totali[0].id[0] === "F") {
+		var totali = scontrino.getTotaliArray();
+		var tipo_totale = totali[1].id[0];
+		if (tipo_totale === "F") {
 			for (var i = 1; i < 6; ++i) {
 				cmd.push("=A/$" + i + "/(" + scontrino.cliente[i -1].slice(0, 36) + ")");
 			}
 			cmd.push("=F/*4");
-		} else if (scontrino.totali[0].id[0] === "P") {
+		} else if (tipo_totale === "P") {
 			cmd.push("=F/*0");
 		}
 
 		for (var i = 0; i < scontrino.righe.length; ++i) {
-			if (scontrino.righe[i].quant * scontrino.righe[i].prezzo != 0) {
+			var quant = scontrino.righe[i].quant
+			var desc = scontrino.getDesc(i);
+			if (quant * scontrino.righe[i].prezzo != 0) {
 				var r = "=R" + scontrino.righe[i].rep;
 				r += "/$" + scontrino.righe[i].prezzo.toFixed(2).replace(".", "");
-				r += "/*" + scontrino.righe[i].quant;
+				r += "/*" + quant;
 			} else {
 				var r = '="/?A';
+				if (quant >  1)	desc = "n. " + quant + " " + desc;
 			}
-			var desc = scontrino.getDesc(i);
 			if (desc.length > 0) {
 				r += "/(" + desc.slice(0, 36) + ")";
 			}
@@ -119,10 +123,10 @@ Lettura Data e Ora corrente:
 				cmd.push("=V" + segno + "/$" + v.toFixed(2).replace(".", "") + desc);
 			}	
 		}
-		for (var t = 0; t < scontrino.totali.length; t++) {
-			var tot = "=T" + scontrino.totali[t].id.substr(1);
-			if (scontrino.totali[t].importo != 0) {
-				tot += "/$" + scontrino.totali[t].importo.toFixed(2).replace(".", "")
+		for (var t = 1; t < totali.length; t++) {
+			var tot = "=T" + totali[t].id.substr(1);
+			if (t +1 < totali.length) { //Non voglio rischiare di lasciare degli scontrini aperti
+				tot += "/$" + totali[t].importo.toFixed(2).replace(".", "")
 			}
 			cmd.push(tot);
 		}
