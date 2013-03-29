@@ -323,6 +323,7 @@ function uiEventCambiaReparto (r) {
 			animaClick(this);
 			var totali = scontrino.getTotaliArray();
 			if (totali[totali.length -1].importo < 0) {
+				digits_buonipasto = "";
 				return alert("Errore: Importo buoni pasto superiore a totale scontrino");
 			}
 			var tipo_totale = totali[1].id[0];
@@ -513,6 +514,7 @@ function Scontrino() {
 	}
 }
 
+var digits_buonipasto = "";
 
 /* *****************************************
 // MODAL_INPUT: Diverse finestre di input:
@@ -582,8 +584,10 @@ function modalInputMenu () {
 	}
 }
 
+
+
 function modalInputTotale () {
-	var digits = "";
+	digits_buonipasto = "";
 	document.getElementById("dati_cliente").style.display = "none";
 	document.getElementById("bpasto").style.display = "none";
 	for (var i=1; i < 5; i++) document.getElementById("cliente" + i).value = "";
@@ -601,17 +605,16 @@ function modalInputTotale () {
 	var tasti = document.getElementById("bpasto_keypad").getElementsByTagName("TD");
 	for (var i = 0; i < tasti.length; i++) { tasti[i].onclick = uiEventKeypad; }
 
-
 	function uiEventKeypad () {
 		animaClick(this);
 		var tasto = this.innerHTML;
 		if (tasto == "C") {
-			digits = "";
+			digits_buonipasto = "";
 		} else {
-			if (digits.length > 8) { return; }
-			digits += tasto;
+			if (digits_buonipasto.length > 8) { return; }
+			digits_buonipasto += tasto;
 		}
-		scontrino.totali[0].importo = digits / 100;
+		scontrino.totali[0].importo = digits_buonipasto / 100;
 		updateVisore();
 		updateTotale("CHIUSO");
 	}
@@ -628,7 +631,7 @@ function modalInputTotale () {
 		this.className += " pulsante_selected";
 		scontrino.totali[0].id = this.id;
 		scontrino.totali[0].importo = 0;
-		digits = "";
+		digits_buonipasto = "";
 
 		if (this.id[0] === "F") {
 			document.getElementById("dati_cliente").style.display = "block";
