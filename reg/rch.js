@@ -223,15 +223,9 @@ Lettura Data e Ora corrente:
 				}
 			}
 
-/*			var enc_sc = encodeURIComponent(sc);
-			if (enc_sc.length < 2000) {
-				xmlhttp.open("GET","rch.php?i=192.168.1.29:23&q=" + encodeURIComponent(sc));
-				xmlhttp.send();
-			} else { */
-			xmlhttp.open("POST", "reg/rch.php");
-			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded;charset=ISO-8859-1");
-			xmlhttp.send("i=192.168.1.10:23&q=" + encodeURIComponent(sc));
-
+//			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded;charset=ISO-8859-1");
+			xmlhttp.open("GET","reg/rch.php?i=192.168.1.10:23&q=" + encodeURIComponent(sc));
+			xmlhttp.send();
 			return this;
 		}
 
