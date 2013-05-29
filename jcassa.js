@@ -62,7 +62,7 @@ window.addEventListener('load', function() {
 	}
 
 	function preloadImmagini() {
-		var imm = ["img/elimina.png", "img/tot-stampa.gif", "img/pulsante_testo.png"];
+		var imm = ["img/elimina.png", "img/tot-stampa.gif", "img/pulsante_testo.jpg"];
 		var pg = progress("pg_immagini", imm.length, "pg_immagini_ok");
 		var buf = [];
 		for (var i = 0; i < imm.length; i++) {
