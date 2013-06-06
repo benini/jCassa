@@ -3,7 +3,7 @@ var registratore = new RCH();
 function RCH() {
 	this.getInfo = function(f_callback) {
 		var cmd = new cmdQueue().push("=C1");
-		cmd.push("<</?d").push("<</?f").push("<</?m").push("=D1/(jCassa)").push("=D2/(v1.0)").send(function (risposte) {
+		cmd.push("<</?d").push("<</?f").push("<</?m").push("=D1/(jCassa)").push("=D2/(v1.1)").send(function (risposte) {
 			var res = [risposte[0]];
 			if (risposte[0] === "OK") {
 				res.push(risposte[2].substr(1) 
