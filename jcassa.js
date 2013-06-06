@@ -323,8 +323,11 @@ function uiEventCambiaReparto (r) {
 			animaClick(this);
 			var totali = scontrino.getTotaliArray();
 			if (totali[totali.length -1].importo < 0) {
+				function fastclickBug () {
 				digits_buonipasto = "";
-				return alert("Errore: Importo buoni pasto superiore a totale scontrino");
+				alert("Errore: Importo buoni pasto superiore a totale scontrino");
+				}
+				return setTimeout(fastclickBug, 50);
 			}
 			var tipo_totale = totali[1].id[0];
 			if (tipo_totale === "F") {
