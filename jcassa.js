@@ -123,20 +123,14 @@ function progressbar_com (onCompleted) {
 	}
 }
 
-//ios6 bug: sembra che lo scroll annulli i timeout (ad esempio se il pulsante viene premuto strisciando)
-window.addEventListener('scroll', function () {
-//	resetTiles();
-	setTimeout(resetTiles, 60);
-});
-
-function resetTiles() {
-	var t = document.getElementsByClassName("tile_middle");
-	for (var i=0; i < t.length; i++) {
-		t[i].className = t[i].className.replace(" tile_middle", "");
-	}
-}
-
 function animaClick(tile) {
+	function resetTiles() {
+		var t = document.getElementsByClassName("tile_middle");
+		for (var i=0; i < t.length; i++) {
+			t[i].className = t[i].className.replace(" tile_middle", "");
+		}
+	}
+
 	tile.className += " tile_middle";
 	setTimeout(resetTiles, 70);
 
