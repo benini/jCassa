@@ -70,6 +70,7 @@ body {
     padding-top: 0px;
 	font-size: 16px;
 	background-size:107px 74px;
+	border-radius: 6px;
 }
 
 .tile-scontrino {
@@ -155,10 +156,6 @@ body {
 	color: #FFF;
 	font-size: 22px;
 	text-align: right;
-	background-image: url('img/tot-menu.jpg');
-	background-size: 100%;
-	background-position: center center;
-	background-repeat: no-repeat;
 }
 
 .tile-menu {
@@ -170,6 +167,8 @@ body {
 	background-size: 90%;
 	background-position: center center;
 	background-repeat: no-repeat;
+	border-radius: 6px;
+	margin-bottom: 24px;
 }
 
 .pulsante {
